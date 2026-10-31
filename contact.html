@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<!-- =====================================================================
+     PAGE: contact.html (the Contact page)
+     WHAT: The page where visitors reach you.
+     DOES: Shows a page header, a contact form, and your contact details.
+           The form is for looks only until you connect a form service
+           (read the CONTACT FORM note below).
+     EDIT: Look for "EDIT ME:" notes. Change the details to your own.
+     ===================================================================== -->
+<html lang="en" class="no-js">
+<head>
+  <!-- ===================================================================
+       PAGE SETTINGS (the "head": information for the browser)
+       WHAT: Settings that don't appear on the page itself.
+       DOES: Sets the text encoding, phone-friendly scaling, the browser
+             tab title, the search summary, and the tab icon. It also
+             loads the stylesheet (the look) and the script (the behavior).
+       EDIT: Change the <title> and the description on each page.
+             Paths such as css/style.css are "relative": they start from
+             this file's own folder. That's why the site works on any
+             host and when you double-click a file. Never start a path
+             with a slash ("/").
+       =================================================================== -->
+  <meta charset="UTF-8">
+  <!-- Makes the page fit phone screens instead of showing a tiny desktop page. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- EDIT ME: The title on the browser tab and in search results. -->
+  <title>Contact | Kenneth Heisler</title>
+
+  <!-- EDIT ME: A one-sentence summary of this page for search results. -->
+  <meta name="description" content="Contact Kenneth Heisler. Send a message, or find my email and phone number.">
+
+  <!-- The small icon on the browser tab (a "favicon").
+       EDIT ME: point href at your own logo file. -->
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+
+  <!-- The look of the site. -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- The behavior of the site. It loads here in the head (not at the
+       bottom) so it can apply the saved light/dark theme BEFORE the page
+       is drawn. That prevents a flash of the wrong colors. -->
+  <script src="js/main.js"></script>
+</head>
+<body>
+
+  <!-- =================================================================
+       SHARED HEADER (the bar at the top of every page)
+       WHAT: Your brand name, the main menu, and the light/dark button.
+             It sticks to the top of the screen as you scroll.
+       DOES: Links to every page. On small screens the menu folds into
+             a "hamburger" button (three lines). JavaScript highlights
+             the page you are on, so you never mark it by hand.
+       EDIT: This exact block is copied on EVERY page. When you change
+             it here, paste the same change into all the other pages.
+       ================================================================= -->
+  <header class="site-header" id="top">
+
+    <!-- Skip link: invisible until someone presses the Tab key. It lets
+         keyboard and screen reader users jump past the menu, straight
+         to the page content. Keep it as the first thing in the header. -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="container header-inner">
+
+      <!-- EDIT ME: Your brand. Change "Brand Name" to your own name.
+           Logo: replace images/logo.svg with your logo file (keep the
+           name logo.svg, or change src="..." to your file's name).
+           alt="" is empty on purpose: the brand name beside the logo
+           already says what it is, so screen readers skip the picture. -->
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+        <span class="brand-name">Kenneth Heisler</span>
+      </a>
+
+      <!-- MAIN MENU. A <nav> marks a group of navigation links.
+           aria-label="Main" names it for screen readers. -->
+      <nav class="site-nav" aria-label="Main">
+
+        <!-- Hamburger button (small screens only). aria-expanded tells
+             screen readers whether the menu is open ("true") or closed
+             ("false"); JavaScript keeps it updated. aria-controls holds
+             the id of the list this button opens. -->
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="sr-only">Menu</span>
+        </button>
+
+        <!-- EDIT ME: Menu links. Change the words to rename a link.
+             href="..." is the file the link opens. To add a page, copy
+             one <li> line (see README.md, "Add a new page").
+             role="list" keeps this announced as a list in Safari. -->
+        <ul class="nav-list" id="site-menu" role="list">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li><a class="nav-link" href="about.html">About</a></li>
+          <li><a class="nav-link" href="showcase.html">Experience</a></li>
+          <li><a class="nav-link" href="features.html">Skills</a></li>
+          <li><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Light/dark button. JavaScript switches the theme, remembers the
+           choice, and keeps the label (aria-label) accurate. The sun and
+           moon are small drawings written in code ("inline SVG icons");
+           CSS shows one at a time. aria-hidden="true" hides the drawings
+           from screen readers, because the label already says it all. -->
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">
+        <svg class="icon icon-sun" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon icon-moon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7.2 7.2 0 0 0 10 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- =================================================================
+       MAIN CONTENT (everything unique to this page)
+       WHAT: The <main> tag wraps this page's own content.
+       DOES: id="main" is where the "Skip to main content" link lands.
+       EDIT: Edit the sections inside. Keep the <main> tag itself.
+       ================================================================= -->
+  <main id="main" tabindex="-1">
+
+    <!-- ===============================================================
+         PAGE HEADER
+         WHAT: A breadcrumb trail, the page title, and a short intro.
+         DOES: Tells visitors where they are (Home / Contact).
+         EDIT: Change the <h1> and the intro <p>.
+         =============================================================== -->
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb reveal" aria-label="Breadcrumb">
+          <ol role="list">
+            <li><a href="index.html">Home</a></li>
+            <li><span aria-current="page">Contact</span></li>
+          </ol>
+        </nav>
+        <!-- EDIT ME: Page title and intro. -->
+        <h1 class="reveal">Contact Me</h1>
+        <p class="lead reveal">Have a question or an opportunity to discuss? Send me a message and I'll get back to you soon.</p>
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         CONTACT FORM AND DETAILS
+         WHAT: Two panels: the form on the left and your contact details
+               on the right (stacked on phones).
+         DOES: Gives visitors two ways to reach you.
+         EDIT: See the notes inside each panel.
+         =============================================================== -->
+    <section class="section">
+      <div class="container contact-layout">
+
+        <div class="panel reveal">
+          <h2>Send a Message</h2>
+          <p class="form-hint">Fields marked "required" must be filled in.</p>
+
+          <!-- =========================================================
+               CONTACT FORM (looks real, sends nothing yet)
+               WHAT: Name, email, topic, and message fields, plus a button.
+               DOES: Nothing is sent yet. Static hosts (GitHub Pages,
+                     Netlify Drop, or a file you double-click) only hand
+                     out files. No program runs on them that could
+                     receive a message and email it to you. So, for now,
+                     js/main.js shows a friendly "demo" note instead of
+                     reloading the page.
+               EDIT: Connect a free form service later; README.md has
+                     step-by-step help. In short:
+                     Option 1, Formspree: make a free form on their site,
+                       then add its address to the <form> tag, like
+                       action="https://formspree.io/f/your-form-id"
+                     Option 2, Netlify Forms (only when hosting on
+                       Netlify): turn on form detection in Netlify,
+                       then add name="contact" and data-netlify="true"
+                       to the <form> tag.
+                     Either way, DELETE data-demo-form from the <form>
+                     tag so the demo note stops blocking real messages.
+                     Every field needs a name="..." so the service knows
+                     what each answer is.
+               ========================================================= -->
+          <form class="form" method="post" data-demo-form>
+
+            <div class="form-row">
+              <!-- EDIT ME: "for" on a <label> must match the "id" on its
+                   field. That link lets screen readers read the label,
+                   and clicking the label puts the cursor in the field.
+                   "autocomplete" lets browsers fill in saved details. -->
+              <div class="form-field">
+                <label class="form-label" for="name">Name <span class="form-label-note">(required)</span></label>
+                <input class="form-input" id="name" name="name" type="text" autocomplete="name" required>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="email">Email <span class="form-label-note">(required)</span></label>
+                <input class="form-input" id="email" name="email" type="email" autocomplete="email" required>
+              </div>
+            </div>
+
+            <!-- EDIT ME: The topic choices. Each <option> is one choice;
+                 "value" is what the form service receives. -->
+            <div class="form-field">
+              <label class="form-label" for="topic">Topic</label>
+              <select class="form-input" id="topic" name="topic">
+                <option value="general">General question</option>
+                <option value="opportunity">Job opportunity</option>
+                <option value="collaboration">Collaboration</option>
+                <option value="other">Something else</option>
+              </select>
+            </div>
+
+            <!-- aria-describedby connects the hint below to this field,
+                 so screen readers read the hint too. -->
+            <div class="form-field">
+              <label class="form-label" for="message">Message <span class="form-label-note">(required)</span></label>
+              <textarea class="form-input" id="message" name="message" rows="6" aria-describedby="message-hint" required></textarea>
+              <p class="form-hint" id="message-hint">A sentence or two about what you need is plenty.</p>
+            </div>
+
+            <!-- EDIT ME: Button words. -->
+            <div>
+              <button class="btn btn--primary" type="submit">Send Message</button>
+            </div>
+
+            <!-- Status message. role="status" makes screen readers read new
+                 text here out loud. Keep it empty; JavaScript fills it. -->
+            <p class="form-status" role="status" data-form-status></p>
+          </form>
+        </div>
+
+        <!-- ===========================================================
+             CONTACT DETAILS
+             WHAT: Email, phone, LinkedIn, and address, each with an icon.
+             DOES: Lets visitors reach you without the form. On phones,
+                   tapping the email or phone opens the right app.
+             EDIT: Replace each detail with your own. Keep "mailto:" and
+                   "tel:" at the start of those links.
+             =========================================================== -->
+        <div class="panel reveal">
+          <h2>Contact Details</h2>
+          <ul class="contact-list" role="list">
+
+            <!-- EDIT ME: Email. -->
+            <li class="contact-item">
+              <span class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></g></svg>
+              </span>
+              <span>
+                <span class="contact-label">Email</span>
+                <a href="mailto:me@kennethheisler.com">me@kennethheisler.com</a>
+              </span>
+            </li>
+
+            <!-- EDIT ME: Phone. -->
+            <li class="contact-item">
+              <span class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M6.5 3h3l1.5 4.5-2 1.5a12 12 0 0 0 6 6l1.5-2 4.5 1.5v3a2 2 0 0 1-2 2C10.5 19.5 4.5 13.5 4.5 5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+              </span>
+              <span>
+                <span class="contact-label">Phone</span>
+                <a href="tel:+14138880213">(413) 888-0213</a>
+              </span>
+            </li>
+
+            <!-- EDIT ME: LinkedIn. -->
+            <li class="contact-item">
+              <span class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></g></svg>
+              </span>
+              <span>
+                <span class="contact-label">LinkedIn</span>
+                <a href="https://www.linkedin.com/in/kennethcheisler">linkedin.com/in/kennethcheisler</a>
+              </span>
+            </li>
+
+            <!-- EDIT ME: Address. <br> starts a new line. -->
+            <li class="contact-item">
+              <span class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11.5a7 7 0 1 0-14 0C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></g></svg>
+              </span>
+              <span>
+                <span class="contact-label">Address</span>
+                N/A
+              </span>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================================
+       SHARED FOOTER (the bottom of every page)
+       WHAT: Your brand, quick links, contact details, and copyright.
+       DOES: Gives visitors a second way to get around and to reach you.
+             The year in the copyright line updates by itself.
+       EDIT: Same rule as the header: this block is copied on EVERY
+             page, so paste any change into all the other pages too.
+       ================================================================= -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+
+      <div class="footer-about">
+        <!-- EDIT ME: Your brand name. -->
+        <a class="brand" href="index.html">
+          <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+          <span class="brand-name">Kenneth Heisler</span>
+        </a>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer">
+        <h2 class="footer-heading">Explore</h2>
+        <!-- EDIT ME: Keep these links matching the main menu. -->
+        <ul class="footer-links" role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="showcase.html">Experience</a></li>
+          <li><a href="features.html">Skills</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2 class="footer-heading">Contact</h2>
+        <!-- EDIT ME: Your contact details. "mailto:" opens the visitor's
+             email app. "tel:" lets phones dial the number when tapped;
+             write it as + and the country code, then the digits, with
+             no spaces or dots (for example +14138880213). -->
+        <ul class="footer-links" role="list">
+          <li><a href="mailto:me@kennethheisler.com">me@kennethheisler.com</a></li>
+          <li><a href="tel:+14138880213">(413) 888-0213</a></li>
+          <li><a href="https://www.linkedin.com/in/kennethcheisler">LinkedIn</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <!-- EDIT ME: Your name in the copyright line. JavaScript fills in
+           the current year where you see data-current-year. -->
+      <p>&copy; <span data-current-year>2026</span> Kenneth Heisler. All rights reserved.</p>
+      <a class="back-to-top" href="#top">Back to top</a>
+    </div>
+  </footer>
+
+</body>
+</html>
