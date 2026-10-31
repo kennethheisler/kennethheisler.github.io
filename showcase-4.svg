@@ -1,0 +1,40 @@
+<!--
+  PLACEHOLDER IMAGE: images/showcase-4.svg (800 x 600)
+  WHAT: A stand-in picture drawn with code: a grid of tiles.
+  HOW TO SWAP IT: Save your real image (JPG, PNG, WebP, or SVG) in this
+        images folder. Open showcase.html, find src="images/showcase-4.svg",
+        and change it to your file name, such as src="images/project-four.jpg".
+        Then rewrite that image's alt="..." text to describe your picture.
+        Tip: a 4:3 shape (such as 800 x 600 pixels) fits the cards best.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1d35"/>
+      <stop offset="1" stop-color="#0a1628"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#36cfff" stroke-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <rect width="800" height="600" fill="url(#grid)"/>
+  <g fill="#0f2038" stroke="#36cfff" stroke-opacity="0.4" stroke-width="2">
+    <rect x="190" y="120" width="90" height="90" rx="14"/>
+    <rect x="300" y="120" width="90" height="90" rx="14"/>
+    <rect x="410" y="120" width="90" height="90" rx="14"/>
+    <rect x="520" y="120" width="90" height="90" rx="14"/>
+    <rect x="190" y="230" width="90" height="90" rx="14"/>
+    <rect x="300" y="230" width="90" height="90" rx="14"/>
+    <rect x="410" y="230" width="90" height="90" rx="14"/>
+    <rect x="520" y="230" width="90" height="90" rx="14"/>
+    <rect x="190" y="340" width="90" height="90" rx="14"/>
+    <rect x="300" y="340" width="90" height="90" rx="14"/>
+    <rect x="410" y="340" width="90" height="90" rx="14"/>
+    <rect x="520" y="340" width="90" height="90" rx="14"/>
+  </g>
+  <rect x="300" y="230" width="90" height="90" rx="14" fill="#36cfff" fill-opacity="0.85"/>
+  <rect x="520" y="120" width="90" height="90" rx="14" fill="#ffb547"/>
+  <rect x="410" y="340" width="90" height="90" rx="14" fill="#36cfff" fill-opacity="0.35"/>
+  <text x="40" y="560" fill="#a3b4cb" font-family="Arial, Helvetica, sans-serif" font-size="26">Image 4 (800 x 600)</text>
+</svg>

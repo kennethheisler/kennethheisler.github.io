@@ -1,0 +1,29 @@
+<!--
+  PLACEHOLDER IMAGE: images/feature-1.svg (800 x 600)
+  WHAT: A stand-in picture drawn with code: a speed gauge.
+  HOW TO SWAP IT: Save your real image (JPG, PNG, WebP, or SVG) in this
+        images folder. Open features.html, find src="images/feature-1.svg",
+        and change it to your file name, such as src="images/feature-one.jpg".
+        Then rewrite that image's alt="..." text to describe your picture.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1d35"/>
+      <stop offset="1" stop-color="#0a1628"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#36cfff" stroke-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <rect width="800" height="600" fill="url(#grid)"/>
+  <path d="M220 400A180 180 0 0 1 580 400" fill="none" stroke="#22385a" stroke-width="28" stroke-linecap="round"/>
+  <path d="M220 400A180 180 0 0 1 506 254" fill="none" stroke="#36cfff" stroke-width="28" stroke-linecap="round"/>
+  <path d="M195 400H178M222.5 297.5 207.7 289M297.5 222.5 289 207.7M400 195V178M502.5 222.5 511 207.7M577.5 297.5 592.3 289M605 400H622" fill="none" stroke="#5d7598" stroke-width="4" stroke-linecap="round"/>
+  <path d="M400 400 482 287" stroke="#dce6f3" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="400" cy="400" r="18" fill="#0f2038" stroke="#dce6f3" stroke-width="4"/>
+  <circle cx="400" cy="400" r="6" fill="#ffb547"/>
+  <rect x="330" y="450" width="140" height="18" rx="9" fill="#2c4870"/>
+  <text x="40" y="560" fill="#a3b4cb" font-family="Arial, Helvetica, sans-serif" font-size="26">Image (800 x 600)</text>
+</svg>
