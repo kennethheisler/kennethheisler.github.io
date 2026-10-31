@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<!-- =====================================================================
+     PAGE: showcase.html (the Showcase page)
+     WHAT: A gallery of your work: projects, products, or events.
+     DOES: Shows a page header and a grid of picture cards: one column on
+           phones, two on tablets, and three on wide screens.
+     EDIT: Look for "EDIT ME:" notes. Swap each picture, then change the
+           category, title, and description on each card.
+     ===================================================================== -->
+<html lang="en" class="no-js">
+<head>
+  <!-- ===================================================================
+       PAGE SETTINGS (the "head": information for the browser)
+       WHAT: Settings that don't appear on the page itself.
+       DOES: Sets the text encoding, phone-friendly scaling, the browser
+             tab title, the search summary, and the tab icon. It also
+             loads the stylesheet (the look) and the script (the behavior).
+       EDIT: Change the <title> and the description on each page.
+             Paths such as css/style.css are "relative": they start from
+             this file's own folder. That's why the site works on any
+             host and when you double-click a file. Never start a path
+             with a slash ("/").
+       =================================================================== -->
+  <meta charset="UTF-8">
+  <!-- Makes the page fit phone screens instead of showing a tiny desktop page. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- EDIT ME: The title on the browser tab and in search results. -->
+  <title>Experience | Kenneth Heisler</title>
+
+  <!-- EDIT ME: A one-sentence summary of this page for search results. -->
+  <meta name="description" content="Work experience of Kenneth Heisler across technology integration, special education, IT, and municipal data roles.">
+
+  <!-- The small icon on the browser tab (a "favicon").
+       EDIT ME: point href at your own logo file. -->
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+
+  <!-- The look of the site. -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- The behavior of the site. It loads here in the head (not at the
+       bottom) so it can apply the saved light/dark theme BEFORE the page
+       is drawn. That prevents a flash of the wrong colors. -->
+  <script src="js/main.js"></script>
+</head>
+<body>
+
+  <!-- =================================================================
+       SHARED HEADER (the bar at the top of every page)
+       WHAT: Your brand name, the main menu, and the light/dark button.
+             It sticks to the top of the screen as you scroll.
+       DOES: Links to every page. On small screens the menu folds into
+             a "hamburger" button (three lines). JavaScript highlights
+             the page you are on, so you never mark it by hand.
+       EDIT: This exact block is copied on EVERY page. When you change
+             it here, paste the same change into all the other pages.
+       ================================================================= -->
+  <header class="site-header" id="top">
+
+    <!-- Skip link: invisible until someone presses the Tab key. It lets
+         keyboard and screen reader users jump past the menu, straight
+         to the page content. Keep it as the first thing in the header. -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="container header-inner">
+
+      <!-- EDIT ME: Your brand. Change "Brand Name" to your own name.
+           Logo: replace images/logo.svg with your logo file (keep the
+           name logo.svg, or change src="..." to your file's name).
+           alt="" is empty on purpose: the brand name beside the logo
+           already says what it is, so screen readers skip the picture. -->
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+        <span class="brand-name">Kenneth Heisler</span>
+      </a>
+
+      <!-- MAIN MENU. A <nav> marks a group of navigation links.
+           aria-label="Main" names it for screen readers. -->
+      <nav class="site-nav" aria-label="Main">
+
+        <!-- Hamburger button (small screens only). aria-expanded tells
+             screen readers whether the menu is open ("true") or closed
+             ("false"); JavaScript keeps it updated. aria-controls holds
+             the id of the list this button opens. -->
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="sr-only">Menu</span>
+        </button>
+
+        <!-- EDIT ME: Menu links. Change the words to rename a link.
+             href="..." is the file the link opens. To add a page, copy
+             one <li> line (see README.md, "Add a new page").
+             role="list" keeps this announced as a list in Safari. -->
+        <ul class="nav-list" id="site-menu" role="list">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li><a class="nav-link" href="about.html">About</a></li>
+          <li><a class="nav-link" href="showcase.html">Experience</a></li>
+          <li><a class="nav-link" href="features.html">Skills</a></li>
+          <li><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Light/dark button. JavaScript switches the theme, remembers the
+           choice, and keeps the label (aria-label) accurate. The sun and
+           moon are small drawings written in code ("inline SVG icons");
+           CSS shows one at a time. aria-hidden="true" hides the drawings
+           from screen readers, because the label already says it all. -->
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">
+        <svg class="icon icon-sun" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon icon-moon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7.2 7.2 0 0 0 10 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- =================================================================
+       MAIN CONTENT (everything unique to this page)
+       WHAT: The <main> tag wraps this page's own content.
+       DOES: id="main" is where the "Skip to main content" link lands.
+       EDIT: Edit the sections inside. Keep the <main> tag itself.
+       ================================================================= -->
+  <main id="main" tabindex="-1">
+
+    <!-- ===============================================================
+         PAGE HEADER
+         WHAT: A breadcrumb trail, the page title, and a short intro.
+         DOES: Tells visitors where they are (Home / Showcase).
+         EDIT: Change the <h1> and the intro <p>.
+         =============================================================== -->
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb reveal" aria-label="Breadcrumb">
+          <ol role="list">
+            <li><a href="index.html">Home</a></li>
+            <li><span aria-current="page">Experience</span></li>
+          </ol>
+        </nav>
+        <!-- EDIT ME: Page title and intro. -->
+        <h1 class="reveal">Experience</h1>
+        <p class="lead reveal">My work history across technology integration, special education, IT, and municipal data roles.</p>
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         SHOWCASE GRID
+         WHAT: Six picture cards.
+         DOES: Each card shows a picture, a category tag, a title, and a
+               sentence. Pictures zoom slightly on hover when animations
+               are on.
+         EDIT: Each <article class="media-card"> ... </article> block is
+               one card. Copy a whole block to add a card; delete one to
+               remove it. For every picture: save your image in "images",
+               change its src="..." to your file name, and rewrite the
+               alt="..." text to describe what the picture shows.
+               Pictures look best in a 4:3 shape (for example 800 x 600).
+         =============================================================== -->
+    <section class="section">
+      <div class="container">
+        <!-- A heading for this section. class="sr-only" hides it on screen,
+             but screen readers still hear it. That keeps the headings in
+             order: h1 (page title), h2 (this), h3 (each card title).
+             EDIT ME: rename it to fit your work. -->
+        <h2 class="sr-only">Work Experience</h2>
+        <div class="grid grid--showcase">
+
+          <!-- EDIT ME: Card 1. Swap the image (src and alt) and the text. -->
+          <article class="media-card reveal">
+            <div class="media-card-image">
+              <img src="images/showcase-1.svg" alt="" width="800" height="600" loading="lazy">
+            </div>
+            <div class="media-card-body">
+              <p class="tag">Technology</p>
+              <h3>Technology Integration Specialist 2</h3>
+              <p>Viability, 2026 &ndash; Present. Leads the (VR)<sup>2</sup> initiative, builds and manages interactive dashboards and Excel data analysis, and administers ArborXR, Apple Business Manager, and Jamf along with the software behind data reports and user and admin management.</p>
+            </div>
+          </article>
+
+          <!-- EDIT ME: Card 2. Swap the image (src and alt) and the text. -->
+          <article class="media-card reveal">
+            <div class="media-card-image">
+              <img src="images/showcase-2.svg" alt="" width="800" height="600" loading="lazy">
+            </div>
+            <div class="media-card-body">
+              <p class="tag">Special Education</p>
+              <h3>Special Education Autism Specialist</h3>
+              <p>City of Chicopee, Aug 2024 &ndash; Jun 2025. Designed data-driven behavioral interventions, monitored measurable student goals, and advised educators on classroom accommodations.</p>
+            </div>
+          </article>
+
+          <!-- EDIT ME: Card 3. Swap the image (src and alt) and the text. -->
+          <article class="media-card reveal">
+            <div class="media-card-image">
+              <img src="images/showcase-3.svg" alt="" width="800" height="600" loading="lazy">
+            </div>
+            <div class="media-card-body">
+              <p class="tag">Special Education</p>
+              <h3>Special Education Interventionist</h3>
+              <p>City of Chicopee, Sep 2023 &ndash; Jun 2024. Designed and implemented data-driven accommodations and instructional supports to improve student outcomes.</p>
+            </div>
+          </article>
+
+          <!-- EDIT ME: Card 4. Swap the image (src and alt) and the text. -->
+          <article class="media-card reveal">
+            <div class="media-card-image">
+              <img src="images/showcase-4.svg" alt="" width="800" height="600" loading="lazy">
+            </div>
+            <div class="media-card-body">
+              <p class="tag">IT</p>
+              <h3>IT Network Technician</h3>
+              <p>City of Chicopee, Jan 2019 &ndash; Sep 2019. Hardware and software troubleshooting, routing and switching, computer imaging, and support ticket management.</p>
+            </div>
+          </article>
+
+          <!-- EDIT ME: Card 5. Swap the image (src and alt) and the text. -->
+          <article class="media-card reveal">
+            <div class="media-card-image">
+              <img src="images/showcase-5.svg" alt="" width="800" height="600" loading="lazy">
+            </div>
+            <div class="media-card-body">
+              <p class="tag">Data</p>
+              <h3>Data Entry Associate</h3>
+              <p>Town of South Hadley, Jun 2015 &ndash; May 2019. Reconciled 500+ entries in Excel, validated permit applications, and updated contact lists in a SQL-based system.</p>
+            </div>
+          </article>
+
+          <!-- EDIT ME: Card 6. Swap the image (src and alt) and the text. -->
+          <article class="media-card reveal">
+            <div class="media-card-image">
+              <img src="images/showcase-6.svg" alt="" width="800" height="600" loading="lazy">
+            </div>
+            <div class="media-card-body">
+              <p class="tag">Community</p>
+              <h3>Community Programs &amp; Events</h3>
+              <p>City of Holyoke. As Event Associate (2016 &ndash; 2019), helped run holiday, elderly, and faculty events. In Parks and Recreation (summer 2022), supported recreational programs, public events, and outreach.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================================
+       SHARED FOOTER (the bottom of every page)
+       WHAT: Your brand, quick links, contact details, and copyright.
+       DOES: Gives visitors a second way to get around and to reach you.
+             The year in the copyright line updates by itself.
+       EDIT: Same rule as the header: this block is copied on EVERY
+             page, so paste any change into all the other pages too.
+       ================================================================= -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+
+      <div class="footer-about">
+        <!-- EDIT ME: Your brand name. -->
+        <a class="brand" href="index.html">
+          <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+          <span class="brand-name">Kenneth Heisler</span>
+        </a>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer">
+        <h2 class="footer-heading">Explore</h2>
+        <!-- EDIT ME: Keep these links matching the main menu. -->
+        <ul class="footer-links" role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="showcase.html">Experience</a></li>
+          <li><a href="features.html">Skills</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2 class="footer-heading">Contact</h2>
+        <!-- EDIT ME: Your contact details. "mailto:" opens the visitor's
+             email app. "tel:" lets phones dial the number when tapped;
+             write it as + and the country code, then the digits, with
+             no spaces or dots (for example +14138880213). -->
+        <ul class="footer-links" role="list">
+          <li><a href="mailto:me@kennethheisler.com">me@kennethheisler.com</a></li>
+          <li><a href="tel:+14138880213">(413) 888-0213</a></li>
+          <li><a href="https://www.linkedin.com/in/kennethcheisler">LinkedIn</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <!-- EDIT ME: Your name in the copyright line. JavaScript fills in
+           the current year where you see data-current-year. -->
+      <p>&copy; <span data-current-year>2026</span> Kenneth Heisler. All rights reserved.</p>
+      <a class="back-to-top" href="#top">Back to top</a>
+    </div>
+  </footer>
+
+</body>
+</html>

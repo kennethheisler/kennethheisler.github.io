@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!-- =====================================================================
+     PAGE: about.html (the About page)
+     WHAT: The page that introduces who you are.
+     DOES: Shows a page header, your story with a picture, your mission,
+           vision, and values, a row of impact numbers, and a timeline.
+     EDIT: Look for "EDIT ME:" notes. Change the words BETWEEN the tags
+           and leave the tags themselves alone.
+     ===================================================================== -->
+<html lang="en" class="no-js">
+<head>
+  <!-- ===================================================================
+       PAGE SETTINGS (the "head": information for the browser)
+       WHAT: Settings that don't appear on the page itself.
+       DOES: Sets the text encoding, phone-friendly scaling, the browser
+             tab title, the search summary, and the tab icon. It also
+             loads the stylesheet (the look) and the script (the behavior).
+       EDIT: Change the <title> and the description on each page.
+             Paths such as css/style.css are "relative": they start from
+             this file's own folder. That's why the site works on any
+             host and when you double-click a file. Never start a path
+             with a slash ("/").
+       =================================================================== -->
+  <meta charset="UTF-8">
+  <!-- Makes the page fit phone screens instead of showing a tiny desktop page. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- EDIT ME: The title on the browser tab and in search results. -->
+  <title>About | Kenneth Heisler</title>
+
+  <!-- EDIT ME: A one-sentence summary of this page for search results. -->
+  <meta name="description" content="Learn about Kenneth Heisler: his background in informatics, technology integration, and special education.">
+
+  <!-- The small icon on the browser tab (a "favicon").
+       EDIT ME: point href at your own logo file. -->
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+
+  <!-- The look of the site. -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- The behavior of the site. It loads here in the head (not at the
+       bottom) so it can apply the saved light/dark theme BEFORE the page
+       is drawn. That prevents a flash of the wrong colors. -->
+  <script src="js/main.js"></script>
+</head>
+<body>
+
+  <!-- =================================================================
+       SHARED HEADER (the bar at the top of every page)
+       WHAT: Your brand name, the main menu, and the light/dark button.
+             It sticks to the top of the screen as you scroll.
+       DOES: Links to every page. On small screens the menu folds into
+             a "hamburger" button (three lines). JavaScript highlights
+             the page you are on, so you never mark it by hand.
+       EDIT: This exact block is copied on EVERY page. When you change
+             it here, paste the same change into all the other pages.
+       ================================================================= -->
+  <header class="site-header" id="top">
+
+    <!-- Skip link: invisible until someone presses the Tab key. It lets
+         keyboard and screen reader users jump past the menu, straight
+         to the page content. Keep it as the first thing in the header. -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="container header-inner">
+
+      <!-- EDIT ME: Your brand. Change "Brand Name" to your own name.
+           Logo: replace images/logo.svg with your logo file (keep the
+           name logo.svg, or change src="..." to your file's name).
+           alt="" is empty on purpose: the brand name beside the logo
+           already says what it is, so screen readers skip the picture. -->
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+        <span class="brand-name">Kenneth Heisler</span>
+      </a>
+
+      <!-- MAIN MENU. A <nav> marks a group of navigation links.
+           aria-label="Main" names it for screen readers. -->
+      <nav class="site-nav" aria-label="Main">
+
+        <!-- Hamburger button (small screens only). aria-expanded tells
+             screen readers whether the menu is open ("true") or closed
+             ("false"); JavaScript keeps it updated. aria-controls holds
+             the id of the list this button opens. -->
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="sr-only">Menu</span>
+        </button>
+
+        <!-- EDIT ME: Menu links. Change the words to rename a link.
+             href="..." is the file the link opens. To add a page, copy
+             one <li> line (see README.md, "Add a new page").
+             role="list" keeps this announced as a list in Safari. -->
+        <ul class="nav-list" id="site-menu" role="list">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li><a class="nav-link" href="about.html">About</a></li>
+          <li><a class="nav-link" href="showcase.html">Experience</a></li>
+          <li><a class="nav-link" href="features.html">Skills</a></li>
+          <li><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Light/dark button. JavaScript switches the theme, remembers the
+           choice, and keeps the label (aria-label) accurate. The sun and
+           moon are small drawings written in code ("inline SVG icons");
+           CSS shows one at a time. aria-hidden="true" hides the drawings
+           from screen readers, because the label already says it all. -->
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">
+        <svg class="icon icon-sun" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon icon-moon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7.2 7.2 0 0 0 10 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- =================================================================
+       MAIN CONTENT (everything unique to this page)
+       WHAT: The <main> tag wraps this page's own content.
+       DOES: id="main" is where the "Skip to main content" link lands.
+       EDIT: Edit the sections inside. Keep the <main> tag itself.
+       ================================================================= -->
+  <main id="main" tabindex="-1">
+
+    <!-- ===============================================================
+         PAGE HEADER
+         WHAT: A breadcrumb trail, the page title, and a short intro.
+         DOES: Tells visitors where they are. A "breadcrumb" shows the
+               path back to the home page: Home / About.
+         EDIT: Change the <h1> and the intro <p>. The last breadcrumb
+               item is this page's name.
+         =============================================================== -->
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb reveal" aria-label="Breadcrumb">
+          <ol role="list">
+            <li><a href="index.html">Home</a></li>
+            <li><span aria-current="page">About</span></li>
+          </ol>
+        </nav>
+        <!-- EDIT ME: Page title and intro. -->
+        <h1 class="reveal">About Me</h1>
+        <p class="lead reveal">An informaticist applying a data science background to technology integration and special education.</p>
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         OUR STORY
+         WHAT: A picture beside a few paragraphs of text.
+         DOES: Tells how you started and what you do today. The picture
+               sits on the left on wide screens and on top on phones.
+         EDIT: Change the heading and paragraphs. Add more <p> blocks if
+               you need them. Swap the picture using the note below.
+         =============================================================== -->
+    <section class="section">
+      <div class="container split">
+        <div class="split-media reveal">
+          <!-- EDIT ME: Story picture. Save your image in "images", change
+               src="images/about.svg" to your file name, and describe the
+               picture in alt="...". loading="lazy" means the browser
+               waits to download it until it is close to the screen. -->
+          <div class="frame">
+            <img src="images/about.svg" alt="Illustration of connected circles representing people and ideas" width="800" height="600" loading="lazy">
+          </div>
+        </div>
+        <div class="split-content reveal">
+          <!-- EDIT ME: Your story. -->
+          <h2>My Story</h2>
+          <p>I earned a BS in Informatics from the University of Massachusetts Amherst in 2023, with a minor in Natural Resource Economics. Before and during college I worked in municipal roles, from data entry in Excel and SQL-based systems to IT network support.</p>
+          <p>From 2023 to 2025 I worked in special education with the City of Chicopee, designing data-driven interventions, tracking measurable student goals, and advising educators on classroom accommodations for students with autism. In 2026 I joined Viability as a Technology Integration Specialist 2, where I lead the (VR)<sup>2</sup> initiative, build interactive dashboards, and manage the platforms and devices the team relies on.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         WHAT GUIDES US (mission, vision, values)
+         WHAT: Three short statements side by side.
+         DOES: Each column has an accent line on top, a heading, and a
+               short paragraph. They stack on phones.
+         EDIT: Replace the text with your own mission, vision, and values.
+               Copy a whole <article class="pillar"> block to add one.
+         =============================================================== -->
+    <section class="section section--alt">
+      <div class="container">
+
+        <!-- EDIT ME: Section heading and intro sentence. -->
+        <div class="section-header reveal">
+          <h2>What I Bring</h2>
+          <p>Three strengths I rely on in every role.</p>
+        </div>
+
+        <div class="pillars">
+          <!-- EDIT ME: Mission. -->
+          <article class="pillar reveal">
+            <h3>Analytical Approach</h3>
+            <p>I use data to set measurable goals, shape interventions, and track real-world outcomes.</p>
+          </article>
+          <!-- EDIT ME: Vision. -->
+          <article class="pillar reveal">
+            <h3>Technical Toolkit</h3>
+            <p>I work in RStudio, STATA, SQL, Python, and pandas, build interactive dashboards, and administer ArborXR, Jamf, and Apple Business Manager.</p>
+          </article>
+          <!-- EDIT ME: Values. -->
+          <article class="pillar reveal">
+            <h3>Collaboration</h3>
+            <p>I communicate clearly, work well with teachers, colleagues, and clients, and stay organized across competing priorities.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         OUR IMPACT (stats block)
+         WHAT: Four big numbers, each with a short label.
+         DOES: Shows results at a glance in a ruled grid: two columns on
+               phones, four on wide screens.
+         EDIT: Change each number (stat-number) and label (stat-label).
+               Only publish figures you can back up, and keep them
+               current. Copy a whole <li class="stat"> line to add one.
+         =============================================================== -->
+    <section class="section">
+      <div class="container">
+
+        <!-- EDIT ME: Section heading and intro sentence. -->
+        <div class="section-header reveal">
+          <h2>By the Numbers</h2>
+          <p>A few facts from my background.</p>
+        </div>
+
+        <!-- EDIT ME: Your numbers and labels. -->
+        <ul class="stats reveal" role="list">
+          <li class="stat"><span class="stat-number">3+</span><span class="stat-label">Years applying data science to special education</span></li>
+          <li class="stat"><span class="stat-number">500+</span><span class="stat-label">Municipal records reconciled in Excel</span></li>
+          <li class="stat"><span class="stat-number">BS</span><span class="stat-label">Informatics, UMass Amherst (2023)</span></li>
+          <li class="stat"><span class="stat-number">CCNA</span><span class="stat-label">Cisco Networking Academy credential</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         OUR JOURNEY (timeline)
+         WHAT: A list of milestones in order, joined by a vertical line.
+         DOES: Each milestone has a date label, a title, and a sentence.
+               The newest one has a signal-color dot.
+         EDIT: Change the dates, titles, and text. Copy a whole
+               <li class="timeline-item"> block to add a milestone. Put
+               the class "timeline-item--now" on the newest one only.
+         =============================================================== -->
+    <section class="section section--alt">
+      <div class="container container--narrow">
+
+        <!-- EDIT ME: Section heading and intro sentence. -->
+        <div class="section-header section-header--stacked reveal">
+          <h2>My Journey</h2>
+          <p>Key steps from municipal data work to informatics, special education, and technology integration.</p>
+        </div>
+
+        <ol class="timeline" role="list">
+          <!-- EDIT ME: Milestone 1. -->
+          <li class="timeline-item reveal">
+            <p class="timeline-date">2015</p>
+            <h3>Data Entry Associate</h3>
+            <p>Started processing municipal records for the Town of South Hadley in Excel, reconciling 500+ entries against source documents.</p>
+          </li>
+          <!-- EDIT ME: Milestone 2. -->
+          <li class="timeline-item reveal">
+            <p class="timeline-date">2019</p>
+            <h3>IT Network Technician</h3>
+            <p>Handled troubleshooting, routing and switching, and support tickets for the City of Chicopee, then began my BS in Informatics at UMass Amherst.</p>
+          </li>
+          <!-- EDIT ME: Milestone 3. -->
+          <li class="timeline-item reveal">
+            <p class="timeline-date">2023</p>
+            <h3>Graduation and Special Education</h3>
+            <p>Graduated from UMass Amherst and began designing data-driven accommodations as a Special Education Interventionist.</p>
+          </li>
+          <!-- EDIT ME: Milestone 4. -->
+          <li class="timeline-item reveal">
+            <p class="timeline-date">2024</p>
+            <h3>Autism Specialist</h3>
+            <p>Designed data-driven behavioral interventions, monitored measurable student goals, and advised educators on accommodations.</p>
+          </li>
+          <!-- EDIT ME: The newest milestone (keeps the signal-color dot). -->
+          <li class="timeline-item timeline-item--now reveal">
+            <p class="timeline-date">Today</p>
+            <h3>Technology Integration Specialist 2</h3>
+            <p>At Viability, I lead the (VR)<sup>2</sup> initiative, build interactive dashboards and Excel analyses, and manage ArborXR, Jamf, and Apple Business Manager.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================================
+       SHARED FOOTER (the bottom of every page)
+       WHAT: Your brand, quick links, contact details, and copyright.
+       DOES: Gives visitors a second way to get around and to reach you.
+             The year in the copyright line updates by itself.
+       EDIT: Same rule as the header: this block is copied on EVERY
+             page, so paste any change into all the other pages too.
+       ================================================================= -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+
+      <div class="footer-about">
+        <!-- EDIT ME: Your brand name. -->
+        <a class="brand" href="index.html">
+          <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+          <span class="brand-name">Kenneth Heisler</span>
+        </a>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer">
+        <h2 class="footer-heading">Explore</h2>
+        <!-- EDIT ME: Keep these links matching the main menu. -->
+        <ul class="footer-links" role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="showcase.html">Experience</a></li>
+          <li><a href="features.html">Skills</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2 class="footer-heading">Contact</h2>
+        <!-- EDIT ME: Your contact details. "mailto:" opens the visitor's
+             email app. "tel:" lets phones dial the number when tapped;
+             write it as + and the country code, then the digits, with
+             no spaces or dots (for example +14138880213). -->
+        <ul class="footer-links" role="list">
+          <li><a href="mailto:me@kennethheisler.com">me@kennethheisler.com</a></li>
+          <li><a href="tel:+14138880213">(413) 888-0213</a></li>
+          <li><a href="https://www.linkedin.com/in/kennethcheisler">LinkedIn</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <!-- EDIT ME: Your name in the copyright line. JavaScript fills in
+           the current year where you see data-current-year. -->
+      <p>&copy; <span data-current-year>2026</span> Kenneth Heisler. All rights reserved.</p>
+      <a class="back-to-top" href="#top">Back to top</a>
+    </div>
+  </footer>
+
+</body>
+</html>

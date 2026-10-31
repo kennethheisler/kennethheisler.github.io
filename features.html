@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<!-- =====================================================================
+     PAGE: features.html (the Features page)
+     WHAT: A closer look at what you offer.
+     DOES: Shows a page header, three rows that alternate picture-left
+           and picture-right, and a closing call to action.
+     EDIT: Look for "EDIT ME:" notes. To flip a row, add or remove the
+           class "split--reverse" on its <section class="split"> tag.
+     ===================================================================== -->
+<html lang="en" class="no-js">
+<head>
+  <!-- ===================================================================
+       PAGE SETTINGS (the "head": information for the browser)
+       WHAT: Settings that don't appear on the page itself.
+       DOES: Sets the text encoding, phone-friendly scaling, the browser
+             tab title, the search summary, and the tab icon. It also
+             loads the stylesheet (the look) and the script (the behavior).
+       EDIT: Change the <title> and the description on each page.
+             Paths such as css/style.css are "relative": they start from
+             this file's own folder. That's why the site works on any
+             host and when you double-click a file. Never start a path
+             with a slash ("/").
+       =================================================================== -->
+  <meta charset="UTF-8">
+  <!-- Makes the page fit phone screens instead of showing a tiny desktop page. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- EDIT ME: The title on the browser tab and in search results. -->
+  <title>Skills | Kenneth Heisler</title>
+
+  <!-- EDIT ME: A one-sentence summary of this page for search results. -->
+  <meta name="description" content="Skills, tools, and credentials of Kenneth Heisler: data analysis, technology integration, and communication.">
+
+  <!-- The small icon on the browser tab (a "favicon").
+       EDIT ME: point href at your own logo file. -->
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+
+  <!-- The look of the site. -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- The behavior of the site. It loads here in the head (not at the
+       bottom) so it can apply the saved light/dark theme BEFORE the page
+       is drawn. That prevents a flash of the wrong colors. -->
+  <script src="js/main.js"></script>
+</head>
+<body>
+
+  <!-- =================================================================
+       SHARED HEADER (the bar at the top of every page)
+       WHAT: Your brand name, the main menu, and the light/dark button.
+             It sticks to the top of the screen as you scroll.
+       DOES: Links to every page. On small screens the menu folds into
+             a "hamburger" button (three lines). JavaScript highlights
+             the page you are on, so you never mark it by hand.
+       EDIT: This exact block is copied on EVERY page. When you change
+             it here, paste the same change into all the other pages.
+       ================================================================= -->
+  <header class="site-header" id="top">
+
+    <!-- Skip link: invisible until someone presses the Tab key. It lets
+         keyboard and screen reader users jump past the menu, straight
+         to the page content. Keep it as the first thing in the header. -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="container header-inner">
+
+      <!-- EDIT ME: Your brand. Change "Brand Name" to your own name.
+           Logo: replace images/logo.svg with your logo file (keep the
+           name logo.svg, or change src="..." to your file's name).
+           alt="" is empty on purpose: the brand name beside the logo
+           already says what it is, so screen readers skip the picture. -->
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+        <span class="brand-name">Kenneth Heisler</span>
+      </a>
+
+      <!-- MAIN MENU. A <nav> marks a group of navigation links.
+           aria-label="Main" names it for screen readers. -->
+      <nav class="site-nav" aria-label="Main">
+
+        <!-- Hamburger button (small screens only). aria-expanded tells
+             screen readers whether the menu is open ("true") or closed
+             ("false"); JavaScript keeps it updated. aria-controls holds
+             the id of the list this button opens. -->
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="sr-only">Menu</span>
+        </button>
+
+        <!-- EDIT ME: Menu links. Change the words to rename a link.
+             href="..." is the file the link opens. To add a page, copy
+             one <li> line (see README.md, "Add a new page").
+             role="list" keeps this announced as a list in Safari. -->
+        <ul class="nav-list" id="site-menu" role="list">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li><a class="nav-link" href="about.html">About</a></li>
+          <li><a class="nav-link" href="showcase.html">Experience</a></li>
+          <li><a class="nav-link" href="features.html">Skills</a></li>
+          <li><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Light/dark button. JavaScript switches the theme, remembers the
+           choice, and keeps the label (aria-label) accurate. The sun and
+           moon are small drawings written in code ("inline SVG icons");
+           CSS shows one at a time. aria-hidden="true" hides the drawings
+           from screen readers, because the label already says it all. -->
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">
+        <svg class="icon icon-sun" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon icon-moon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7.2 7.2 0 0 0 10 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- =================================================================
+       MAIN CONTENT (everything unique to this page)
+       WHAT: The <main> tag wraps this page's own content.
+       DOES: id="main" is where the "Skip to main content" link lands.
+       EDIT: Edit the sections inside. Keep the <main> tag itself.
+       ================================================================= -->
+  <main id="main" tabindex="-1">
+
+    <!-- ===============================================================
+         PAGE HEADER
+         WHAT: A breadcrumb trail, the page title, and a short intro.
+         DOES: Tells visitors where they are (Home / Features).
+         EDIT: Change the <h1> and the intro <p>.
+         =============================================================== -->
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb reveal" aria-label="Breadcrumb">
+          <ol role="list">
+            <li><a href="index.html">Home</a></li>
+            <li><span aria-current="page">Skills</span></li>
+          </ol>
+        </nav>
+        <!-- EDIT ME: Page title and intro. -->
+        <h1 class="reveal">Skills</h1>
+        <p class="lead reveal">A closer look at the tools, credentials, and strengths I bring.</p>
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         FEATURE ROWS (alternating picture and text)
+         WHAT: Three rows. Each is a picture beside a heading, a
+               paragraph, a check-mark list, and a link.
+         DOES: Rows stack on phones. On wide screens the picture sits on
+               the left, then the right, then the left again.
+         EDIT: Each <section class="split"> ... </section> block is one
+               row. Copy a whole block to add a row. Add the class
+               "split--reverse" to put that row's picture on the right.
+               Swap each picture using the note at its <img>.
+         =============================================================== -->
+    <div class="section">
+      <div class="container">
+
+        <!-- EDIT ME: Row 1 (picture on the left). -->
+        <section class="split">
+          <div class="split-media reveal">
+            <!-- EDIT ME: Save your image in "images", change src to your
+                 file name, and describe the picture in alt="...". -->
+            <div class="frame">
+              <img src="images/feature-1.svg" alt="Illustration of a speed gauge" width="800" height="600" loading="lazy">
+            </div>
+          </div>
+          <div class="split-content reveal">
+            <h2>Data &amp; Analytics</h2>
+            <p>I turn data into decisions, from cleaning and mining to analysis and clear, interactive dashboards.</p>
+            <ul class="checklist" role="list">
+              <li>Interactive dashboards and Excel data analysis</li>
+              <li>Programming and statistics: RStudio, STATA, SQL, Python, pandas</li>
+              <li>Visualization with Tableau and Power BI</li>
+              <li>Statistical analysis and data mining</li>
+            </ul>
+            <a class="text-link" href="contact.html">Ask About My Analytics Work</a>
+          </div>
+        </section>
+
+        <!-- EDIT ME: Row 2 (picture on the right, thanks to split--reverse). -->
+        <section class="split split--reverse">
+          <div class="split-media reveal">
+            <!-- EDIT ME: Save your image in "images", change src to your
+                 file name, and describe the picture in alt="...". -->
+            <div class="frame">
+              <img src="images/feature-2.svg" alt="Illustration of a shield with a check mark" width="800" height="600" loading="lazy">
+            </div>
+          </div>
+          <div class="split-content reveal">
+            <h2>Technology Integration &amp; IT</h2>
+            <p>I manage the systems and devices that keep technology programs running smoothly, backed by a networking foundation.</p>
+            <ul class="checklist" role="list">
+              <li>ArborXR management and the (VR)<sup>2</sup> initiative</li>
+              <li>Apple Business Manager and Jamf Apple device management</li>
+              <li>Software administration, user and admin management, and data reporting</li>
+              <li>Cisco Networking Academy (Routing &amp; Switching Admin, CCNA), OSHA 10-Hr, MS Office Suite Specialist</li>
+            </ul>
+            <a class="text-link" href="contact.html">Ask About My Technology Work</a>
+          </div>
+        </section>
+
+        <!-- EDIT ME: Row 3 (picture on the left). -->
+        <section class="split">
+          <div class="split-media reveal">
+            <!-- EDIT ME: Save your image in "images", change src to your
+                 file name, and describe the picture in alt="...". -->
+            <div class="frame">
+              <img src="images/feature-3.svg" alt="Illustration of connected building blocks" width="800" height="600" loading="lazy">
+            </div>
+          </div>
+          <div class="split-content reveal">
+            <h2>People &amp; Communication</h2>
+            <p>Years of working directly with students, educators, residents, and clients.</p>
+            <ul class="checklist" role="list">
+              <li>Strong communicator and collaborator</li>
+              <li>Highly organized, efficient multitasker</li>
+              <li>Developing and presenting product materials</li>
+            </ul>
+            <a class="text-link" href="contact.html">Ask About Working Together</a>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ===============================================================
+         CALL TO ACTION (reused from the home page)
+         WHAT: The same closing panel as on index.html.
+         DOES: Gives visitors a clear next step after reading.
+         EDIT: Change the heading, sentence, button words, and links.
+         =============================================================== -->
+    <section class="section section--alt">
+      <div class="container">
+        <div class="cta reveal">
+          <div class="cta-content">
+            <!-- EDIT ME: Heading and sentence. -->
+            <h2>Let's Talk</h2>
+            <p>Interested in working together or have a question about my background? Send me a message.</p>
+          </div>
+          <!-- EDIT ME: Button words and links. -->
+          <div class="button-row cta-actions">
+            <a class="btn btn--primary" href="contact.html">Contact Me</a>
+            <a class="btn btn--secondary" href="showcase.html">See My Experience</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================================
+       SHARED FOOTER (the bottom of every page)
+       WHAT: Your brand, quick links, contact details, and copyright.
+       DOES: Gives visitors a second way to get around and to reach you.
+             The year in the copyright line updates by itself.
+       EDIT: Same rule as the header: this block is copied on EVERY
+             page, so paste any change into all the other pages too.
+       ================================================================= -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+
+      <div class="footer-about">
+        <!-- EDIT ME: Your brand name. -->
+        <a class="brand" href="index.html">
+          <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+          <span class="brand-name">Kenneth Heisler</span>
+        </a>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer">
+        <h2 class="footer-heading">Explore</h2>
+        <!-- EDIT ME: Keep these links matching the main menu. -->
+        <ul class="footer-links" role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="showcase.html">Experience</a></li>
+          <li><a href="features.html">Skills</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2 class="footer-heading">Contact</h2>
+        <!-- EDIT ME: Your contact details. "mailto:" opens the visitor's
+             email app. "tel:" lets phones dial the number when tapped;
+             write it as + and the country code, then the digits, with
+             no spaces or dots (for example +14138880213). -->
+        <ul class="footer-links" role="list">
+          <li><a href="mailto:me@kennethheisler.com">me@kennethheisler.com</a></li>
+          <li><a href="tel:+14138880213">(413) 888-0213</a></li>
+          <li><a href="https://www.linkedin.com/in/kennethcheisler">LinkedIn</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <!-- EDIT ME: Your name in the copyright line. JavaScript fills in
+           the current year where you see data-current-year. -->
+      <p>&copy; <span data-current-year>2026</span> Kenneth Heisler. All rights reserved.</p>
+      <a class="back-to-top" href="#top">Back to top</a>
+    </div>
+  </footer>
+
+</body>
+</html>
