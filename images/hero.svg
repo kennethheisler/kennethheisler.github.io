@@ -63,5 +63,5 @@
 
   <!-- Measurement line and label -->
   <path d="M48 438V462M400 438V462M48 450H400" fill="none" stroke="#5d7598" stroke-width="1.5"/>
-  <text x="48" y="496" fill="#a3b4cb" font-family="Arial, Helvetica, sans-serif" font-size="18">Replace with your image (640 x 520)</text>
+  <text x="48" y="496" fill="#a3b4cb" font-family="Arial, Helvetica, sans-serif" font-size="18">(640 x 520)</text>
 </svg>
