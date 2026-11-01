@@ -8,7 +8,7 @@
         Update the width and height numbers next to it to your image's
         size, and rewrite the alt="..." text to describe your picture.
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" width="640" height="520">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0d1d35"/>
@@ -60,8 +60,4 @@
   <circle cx="520" cy="372" r="40" fill="none" stroke="#22385a" stroke-width="10"/>
   <circle cx="520" cy="372" r="40" fill="none" stroke="#36cfff" stroke-width="10" stroke-linecap="round" stroke-dasharray="188 252" transform="rotate(-90 520 372)"/>
   <rect x="480" y="432" width="80" height="10" rx="5" fill="#5d7598"/>
-
-  <!-- Measurement line and label -->
-  <path d="M48 438V462M400 438V462M48 450H400" fill="none" stroke="#5d7598" stroke-width="1.5"/>
-  <text x="48" y="496" fill="#a3b4cb" font-family="Arial, Helvetica, sans-serif" font-size="18">(640 x 520)</text>
 </svg>
