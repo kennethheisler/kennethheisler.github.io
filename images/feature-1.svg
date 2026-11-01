@@ -1,29 +1,24 @@
-<!--
-  PLACEHOLDER IMAGE: images/feature-1.svg (800 x 600)
-  WHAT: A stand-in picture drawn with code: a speed gauge.
-  HOW TO SWAP IT: Save your real image (JPG, PNG, WebP, or SVG) in this
-        images folder. Open features.html, find src="images/feature-1.svg",
-        and change it to your file name, such as src="images/feature-one.jpg".
-        Then rewrite that image's alt="..." text to describe your picture.
--->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0d1d35"/>
-      <stop offset="1" stop-color="#0a1628"/>
-    </linearGradient>
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M40 0H0V40" fill="none" stroke="#36cfff" stroke-opacity="0.08"/>
-    </pattern>
-  </defs>
-  <rect width="800" height="600" fill="url(#bg)"/>
-  <rect width="800" height="600" fill="url(#grid)"/>
-  <path d="M220 400A180 180 0 0 1 580 400" fill="none" stroke="#22385a" stroke-width="28" stroke-linecap="round"/>
-  <path d="M220 400A180 180 0 0 1 506 254" fill="none" stroke="#36cfff" stroke-width="28" stroke-linecap="round"/>
-  <path d="M195 400H178M222.5 297.5 207.7 289M297.5 222.5 289 207.7M400 195V178M502.5 222.5 511 207.7M577.5 297.5 592.3 289M605 400H622" fill="none" stroke="#5d7598" stroke-width="4" stroke-linecap="round"/>
-  <path d="M400 400 482 287" stroke="#dce6f3" stroke-width="6" stroke-linecap="round"/>
-  <circle cx="400" cy="400" r="18" fill="#0f2038" stroke="#dce6f3" stroke-width="4"/>
-  <circle cx="400" cy="400" r="6" fill="#ffb547"/>
-  <rect x="330" y="450" width="140" height="18" rx="9" fill="#2c4870"/>
-  <text x="40" y="560" fill="#a3b4cb" font-family="Arial, Helvetica, sans-serif" font-size="26">Image (800 x 600)</text>
+<defs><linearGradient id="b" x2="1" y2="1"><stop stop-color="#0d1d35"/><stop offset="1" stop-color="#0a1628"/></linearGradient><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0v40" fill="none" stroke="#36cfff" stroke-opacity=".08"/></pattern></defs>
+<rect width="800" height="600" fill="url(#b)"/><rect width="800" height="600" fill="url(#g)"/>
+<g stroke="#22385a"><g fill="#0f2038"><rect id="t" x="80" y="80" width="200" height="92" rx="12"/><use href="#t" x="220"/><use href="#t" x="440"/></g><g fill="#0c1b31"><rect x="80" y="192" width="400" height="328" rx="14"/><rect x="500" y="192" width="220" height="208" rx="14"/><rect x="500" y="420" width="220" height="100" rx="14"/></g><path stroke-dasharray="4 6" d="M120 260h336m-336 55h336m-336 55h336m-336 55h336"/><path d="M516 458h188m-188 24h188"/><path stroke="#5d7598" stroke-width="2" d="M120 480h336"/></g>
+<rect x="104" y="214" width="10" height="10" rx="2" fill="#36cfff"/><rect x="180" y="214" width="10" height="10" rx="2" fill="#5d7598"/>
+<g fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+<path color="#5d7598" stroke-width="8" d="M104 104h56m164 0h64m156 0h48"/>
+<path color="#dce6f3" stroke-width="8" opacity=".85" d="M104 126h76v12h-76zm220 0h62v12h-62zm220 0h84v12h-84zm46 150h40v6h-40z"/>
+<path color="#36cfff" stroke-width="3" fill="none" d="M200 150l14-8 14 4 14-16 14 4 8-20"/>
+<path color="#36cfff" stroke-width="4" opacity=".6" d="M412 138h6V150h-6zm16-8h6V150h-6zm16 4h6V150h-6zm16-12h6V150h-6zm16-8h6V150h-6z"/>
+<path color="#22385a" stroke-width="6" d="M543 157h154"/>
+<path color="#ffb547" stroke-width="6" d="M543 157h106"/>
+<path color="#2c4870" stroke-width="8" d="M124 219h36m40 0h36m300 153h26m42 0h26m42 0h26m-160 74h88m-88 24h70m-70 24h100"/>
+<path color="#2c4870" stroke-width="6" d="M99 260h8m-8 55h8m-8 55h8m-8 55h8m39 72h18m36 0h18m36 0h18m36 0h18m36 0h18m36 0h18"/>
+<path color="#5d7598" stroke-width="6" opacity=".55" d="M140 373h10V477h-10zm54-30h10V477h-10zm54 40h10V477h-10zm54-70h10V477h-10zm54 20h10V477h-10zm54-40h10V477h-10z"/>
+<path color="#36cfff" stroke-width="6" d="M160 343h10V477h-10zm54-40h10V477h-10zm54 20h10V477h-10zm54-60h10V477h-10zm54 20h10V477h-10zm54-50h10V477h-10z"/>
+<path color="#5d7598" stroke-width="6" d="M599 295h22"/>
+<path color="#36cfff" stroke-width="10" d="M522 372h0m0 74h0m0 48h0"/>
+<path color="#dce6f3" stroke-width="10" opacity=".75" d="M590 372h0"/>
+<path color="#ffb547" stroke-width="10" d="M658 372h0m-136 98h0"/>
+<path color="#dce6f3" stroke-width="8" opacity=".7" d="M668 446h32m-26 24h26m-36 24h36"/>
+</g>
+<g fill="none" stroke-width="18" transform="rotate(-90 610 284)"><g stroke="#22385a"><circle id="c" cx="610" cy="284" r="56"/></g><use href="#c" stroke="#36cfff" stroke-dasharray="189.5 352"/><use href="#c" stroke="#dce6f3" stroke-opacity=".75" stroke-dasharray="84 352" stroke-dashoffset="-193.5"/><use href="#c" stroke="#ffb547" stroke-dasharray="66.4 352" stroke-dashoffset="-281.5"/></g>
 </svg>
