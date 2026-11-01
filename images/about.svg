@@ -1,12 +1,4 @@
-<!--
-  PLACEHOLDER IMAGE: images/about.svg (800 x 600)
-  WHAT: A stand-in picture drawn with code: connected circles that hint
-        at people and ideas working together.
-  HOW TO SWAP IT: Save your real image (JPG, PNG, WebP, or SVG) in this
-        images folder. Open about.html, find src="images/about.svg", and
-        change it to your file name, such as src="images/our-team.jpg".
-        Then rewrite that image's alt="..." text to describe your picture.
--->
+<!-- About image: data, technology, and people -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -19,20 +11,44 @@
   </defs>
   <rect width="800" height="600" fill="url(#bg)"/>
   <rect width="800" height="600" fill="url(#grid)"/>
-  <path d="M400 290 230 170M400 290 590 160M400 290 610 400M400 290 220 420M230 170 590 160M220 420 610 400M230 170 220 420M590 160 610 400" fill="none" stroke="#36cfff" stroke-opacity="0.45" stroke-width="2"/>
-  <circle cx="400" cy="290" r="64" fill="#0f2038" stroke="#36cfff" stroke-width="3"/>
-  <circle cx="400" cy="290" r="22" fill="#36cfff"/>
-  <g fill="#0f2038" stroke="#dce6f3" stroke-opacity="0.7" stroke-width="2">
-    <circle cx="230" cy="170" r="40"/>
-    <circle cx="590" cy="160" r="46"/>
-    <circle cx="610" cy="400" r="38"/>
-    <circle cx="220" cy="420" r="44"/>
+
+  <!-- connection lines from the central person to the data network and the people -->
+  <g fill="none" stroke="#36cfff" stroke-opacity="0.45" stroke-width="2.5" stroke-linecap="round">
+    <path d="M330 270L220 190"/><path d="M330 300L190 300"/><path d="M330 330L220 420"/>
+    <path d="M470 280L580 200"/><path d="M470 320L580 400"/>
   </g>
-  <g fill="#dce6f3" fill-opacity="0.8">
-    <circle cx="230" cy="170" r="10"/>
-    <circle cx="610" cy="400" r="9"/>
-    <circle cx="220" cy="420" r="11"/>
+
+  <!-- data network (left) -->
+  <g stroke="#36cfff" stroke-opacity="0.35" stroke-width="2" fill="none">
+    <path d="M220 190L150 150M220 190L150 250M190 300L110 300M190 300L150 250M220 420L150 460M220 420L130 380M150 250L110 300"/>
   </g>
-  <circle cx="590" cy="160" r="12" fill="#ffb547"/>
-  <text x="40" y="560" fill="#a3b4cb" font-family="Arial, Helvetica, sans-serif" font-size="26">Image (800 x 600)</text>
+  <g fill="#0f2038" stroke="#36cfff" stroke-width="3">
+    <circle cx="220" cy="190" r="15"/><circle cx="190" cy="300" r="17"/><circle cx="220" cy="420" r="15"/>
+  </g>
+  <g fill="#36cfff" fill-opacity="0.8">
+    <circle cx="150" cy="150" r="8"/><circle cx="150" cy="250" r="8"/><circle cx="110" cy="300" r="8"/><circle cx="150" cy="460" r="8"/><circle cx="130" cy="380" r="8"/>
+  </g>
+  <circle cx="190" cy="300" r="7" fill="#ffb547"/>
+
+  <!-- central person with graduation cap -->
+  <path d="M310 470V420A90 90 0 0 1 490 420V470Z" fill="#0f2038" stroke="#36cfff" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M365 340L400 365L435 340" fill="none" stroke="#36cfff" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="400" cy="270" r="58" fill="#142a47" stroke="#36cfff" stroke-width="3"/>
+  <path d="M310 215L400 175L490 215L400 255Z" fill="#0f2038" stroke="#ffb547" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M350 238V268Q400 292 450 268V238" fill="#0f2038" stroke="#ffb547" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M470 223V270" stroke="#ffb547" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="470" cy="276" r="7" fill="#ffb547"/>
+
+  <!-- two people (right) -->
+  <g transform="translate(600 190)">
+    <circle cx="0" cy="0" r="24" fill="#142a47" stroke="#36cfff" stroke-width="3"/>
+    <path d="M-40 70V52A40 40 0 0 1 40 52V70Z" fill="#0f2038" stroke="#36cfff" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(600 390)">
+    <circle cx="0" cy="0" r="24" fill="#142a47" stroke="#ffb547" stroke-width="3"/>
+    <path d="M-40 70V52A40 40 0 0 1 40 52V70Z" fill="#0f2038" stroke="#ffb547" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+  <path d="M690 225Q725 300 690 375" fill="none" stroke="#dce6f3" stroke-opacity="0.4" stroke-width="2.5" stroke-dasharray="6 6" stroke-linecap="round"/>
+
+  <g fill="#dce6f3" fill-opacity="0.6"><circle cx="90" cy="100" r="2.5"/><circle cx="700" cy="90" r="2"/><circle cx="720" cy="520" r="2.5"/><circle cx="80" cy="520" r="2"/><circle cx="400" cy="70" r="2"/></g>
 </svg>
