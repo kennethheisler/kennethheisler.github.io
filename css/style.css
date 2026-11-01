@@ -1,103 +1,33 @@
-/* =====================================================================
-   STYLE.CSS: THE LOOK OF THE WHOLE WEBSITE
-   ---------------------------------------------------------------------
-   WHAT: The one stylesheet shared by every page. CSS ("Cascading Style
-         Sheets") controls colors, fonts, spacing, and layout.
-   DOES: Styles every page from one place, so one change here updates
-         the whole site at once.
-   EDIT: Start with section 1 (SETTINGS). Most changes only need a new
-         value there. Every spot meant for you is marked "EDIT ME:".
-
-   HOW TO READ A CSS RULE
-     .card { color: red; }
-     .card  = the selector: WHICH elements. A dot means "class", so
-              .card styles every HTML tag that has class="card".
-     color  = the property: WHAT to change.
-     red    = the value: what to change it TO.
-
-   UNITS YOU WILL SEE
-     px      = screen pixels.
-     rem     = a multiple of the base text size (1rem = 16px in most
-               browsers). Text set in rem grows when a visitor zooms in
-               or picks a bigger default font, which helps accessibility.
-     vw      = 1% of the screen's width.
-     clamp(MIN, PREFERRED, MAX) = a size that grows with the screen but
-               never goes below MIN or above MAX.
-
-   TABLE OF CONTENTS
-     1.  Settings (design variables)   <- start here
-     2.  Light theme colors
-     3.  Base styles
-     4.  Accessibility helpers
-     5.  Layout helpers
-     6.  Buttons and links
-     7.  Site header and navigation
-     8.  Home page hero
-     9.  Inner page headers and breadcrumbs
-     10. Feature cards
-     11. Image frame (corner marks)
-     12. Split sections (image + text)
-     13. About page: pillars, stats, timeline
-     14. Showcase cards
-     15. Call-to-action panel
-     16. Contact page and form
-     17. Site footer
-     18. Motion: fade-ins and hover effects
-     19. Reduced motion, high contrast, and printing
-   ===================================================================== */
+/* STYLE.CSS: THE LOOK OF THE WHOLE WEBSITE */
 
 
-/* =====================================================================
-   1. SETTINGS (DESIGN VARIABLES)
-   ---------------------------------------------------------------------
-   WHAT: A list of named values called "CSS variables" (also known as
-         custom properties). Each name starts with two dashes.
-   DOES: The rest of this file uses these names instead of repeating
-         the same color or size everywhere. For example,
-         color: var(--accent) means "use the accent color".
-   EDIT: Change a value here and every place that uses it updates.
-         These are the DARK theme values (the default look). The light
-         theme replaces some of them in section 2.
-   ===================================================================== */
+/* 1. SETTINGS (DESIGN VARIABLES) */
 :root {
-  /* -------------------------------------------------------------------
-     ACCENT COLOR   (EDIT ME: the single most important value)
-     Used for main buttons, links, the current page in the menu, the
-     keyboard focus outline, and the blueprint grid in the page headers.
-     Tip: in dark mode, a bright and light color works best. Light mode
-     automatically makes a deeper shade of it so text stays readable.
-     After changing it, check your colors with a free contrast checker
-     (search for "WebAIM contrast checker").
-     ------------------------------------------------------------------- */
+  /* Accent color: the main color of the site */
   --accent: #36cfff;
 
-  /* EDIT ME: The text color that sits ON the accent color (the words on
-     the main button). Keep it very dark for a bright accent. If you
-     choose a dark accent, change this to #ffffff. */
+  /* The text color that sits ON the accent color (the words on the main button). */
   --color-on-accent: #04121f;
 
-  /* EDIT ME: A second "signal" color for tiny details only: the dot in
-     the home page badge and the "Today" dot on the About timeline. */
+  /* Second color for small details (badge dot, "Today" timeline dot). */
   --accent-2: #ffb547;
 
   /* --- Backgrounds --- */
-  --color-bg: #0a1628;             /* EDIT ME: main page background */
-  --color-bg-alt: #0c1b31;         /* EDIT ME: every other section */
-  --color-surface: #0f2038;        /* EDIT ME: cards and panels */
-  --color-surface-raised: #142a47; /* EDIT ME: drop-down menu and form fields */
+  --color-bg: #0a1628;             /* main page background */
+  --color-bg-alt: #0c1b31;         /* every other section */
+  --color-surface: #0f2038;        /* cards and panels */
+  --color-surface-raised: #142a47; /* drop-down menu and form fields */
 
   /* --- Lines --- */
-  --color-border: #22385a;         /* EDIT ME: thin dividing lines */
-  --color-border-strong: #5d7598;  /* EDIT ME: form fields and outline buttons */
+  --color-border: #22385a;         /* thin dividing lines */
+  --color-border-strong: #5d7598;  /* form fields and outline buttons */
 
   /* --- Text --- */
-  --color-heading: #f3f7fc;        /* EDIT ME: headings */
-  --color-text: #dce6f3;           /* EDIT ME: normal paragraphs */
-  --color-text-muted: #a3b4cb;     /* EDIT ME: softer supporting text */
+  --color-heading: #f3f7fc;        /* headings */
+  --color-text: #dce6f3;           /* normal paragraphs */
+  --color-text-muted: #a3b4cb;     /* softer supporting text */
 
-  /* --- Colors made FROM the accent (you can usually leave these) ---
-     color-mix() blends two colors. "14% accent, the rest transparent"
-     gives a soft, see-through tint of the accent. */
+  /* --- Colors made from the accent --- */
   --color-link: var(--accent);
   --color-button: var(--accent);
   --color-focus: var(--accent);
@@ -108,20 +38,11 @@
   --color-header-bg: color-mix(in srgb, var(--color-bg) 85%, transparent);
   --shadow-raised: 0 24px 48px -32px rgba(0, 0, 0, 0.9);
 
-  /* -------------------------------------------------------------------
-     FONTS   (EDIT ME)
-     A "font stack" is a wish list: the browser uses the first font in
-     the list that is installed on the visitor's device. Lato and Gill
-     Sans are clear, highly readable fonts, and nothing has to be
-     downloaded. README.md shows how to bundle Lato with your site so
-     every visitor sees exactly the same font.
-     ------------------------------------------------------------------- */
+  /* Fonts */
   --font-body: "Lato", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
   --font-heading: "Lato", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
 
-  /* TEXT SIZES (EDIT ME)
-     Accessibility rule in this template: no text smaller than 16px
-     (1rem), the screen match for the common 12pt print minimum. */
+  /* Text sizes (keep 16px / 1rem or larger) */
   --text-sm: 1rem;                                          /* 16px: smallest text */
   --text-base: 1.125rem;                                    /* 18px: paragraphs */
   --text-lg: 1.3125rem;                                     /* 21px: intro text */
@@ -130,7 +51,7 @@
   --text-3xl: clamp(2.25rem, 1.6rem + 2.6vw, 3rem);         /* 36-48px: page titles */
   --text-hero: clamp(2.75rem, 1.6rem + 4.8vw, 4.5rem);      /* 44-72px: home headline */
 
-  /* SPACING SCALE (EDIT ME). Gaps, padding, and margins use these. */
+  /* Spacing scale */
   --space-2xs: 0.25rem;  /* 4px */
   --space-xs: 0.5rem;    /* 8px */
   --space-sm: 0.75rem;   /* 12px */
@@ -140,20 +61,19 @@
   --space-2xl: 3rem;     /* 48px */
   --space-section: clamp(4rem, 2.5rem + 5vw, 7rem); /* top and bottom of each section */
 
-  /* ROUNDED CORNERS (EDIT ME). Use 0 for square corners. */
+  /* Rounded corners */
   --radius-sm: 8px;      /* buttons and form fields */
   --radius-md: 12px;     /* cards */
   --radius-lg: 16px;     /* large panels and pictures */
   --radius-pill: 999px;  /* fully rounded badges and tags */
 
-  /* PAGE WIDTH (EDIT ME) */
+  /* Page width */
   --container-width: 1180px;                     /* widest the content gets */
   --container-narrow: 780px;                     /* narrow column (timeline) */
   --container-padding: clamp(1rem, 4vw, 2rem);   /* space at the screen edges */
   --header-height: 4.5rem;                       /* height of the top bar */
 
-  /* MOTION (EDIT ME). The ON/OFF switch lives in js/main.js
-     (ANIMATIONS_ON). These values only set speed and distance. */
+  /* Animation speed and distance */
   --speed-fast: 150ms;
   --speed: 250ms;
   --speed-slow: 650ms;
@@ -166,29 +86,19 @@
 }
 
 
-/* =====================================================================
-   2. LIGHT THEME COLORS
-   ---------------------------------------------------------------------
-   WHAT: Replacement colors for light mode.
-   DOES: When someone presses the sun/moon button, JavaScript adds
-         data-theme="light" to the <html> tag. These values then
-         replace the dark ones from section 1.
-   EDIT: Change these to restyle light mode only. The accent itself
-         still comes from section 1, so you never set it twice.
-   ===================================================================== */
+/* 2. LIGHT THEME COLORS */
 :root[data-theme="light"] {
-  --color-bg: #f4f7fb;             /* EDIT ME: main page background */
-  --color-bg-alt: #eaf0f7;         /* EDIT ME: every other section */
-  --color-surface: #ffffff;        /* EDIT ME: cards and panels */
-  --color-surface-raised: #ffffff; /* EDIT ME: drop-down menu and form fields */
-  --color-border: #d3dce8;         /* EDIT ME: thin dividing lines */
-  --color-border-strong: #6c7d95;  /* EDIT ME: form fields and outline buttons */
-  --color-heading: #0a1628;        /* EDIT ME: headings */
-  --color-text: #1a2638;           /* EDIT ME: normal paragraphs */
-  --color-text-muted: #4a5a72;     /* EDIT ME: softer supporting text */
+  --color-bg: #f4f7fb;             /* main page background */
+  --color-bg-alt: #eaf0f7;         /* every other section */
+  --color-surface: #ffffff;        /* cards and panels */
+  --color-surface-raised: #ffffff; /* drop-down menu and form fields */
+  --color-border: #d3dce8;         /* thin dividing lines */
+  --color-border-strong: #6c7d95;  /* form fields and outline buttons */
+  --color-heading: #0a1628;        /* headings */
+  --color-text: #1a2638;           /* normal paragraphs */
+  --color-text-muted: #4a5a72;     /* softer supporting text */
 
-  /* The accent mixed with 45% black: a deeper shade that is easy to
-     read on white. White words then sit on the main button. */
+  /* The accent mixed with 45% black: a deeper shade that is easy to read on white. */
   --color-link: color-mix(in srgb, var(--accent) 55%, #000000);
   --color-button: var(--color-link);
   --color-focus: var(--color-link);
@@ -203,13 +113,7 @@
 }
 
 
-/* =====================================================================
-   3. BASE STYLES
-   ---------------------------------------------------------------------
-   WHAT: Ground rules for plain HTML tags (body, headings, links...).
-   DOES: Clears odd browser defaults and sets the basic look of text.
-   EDIT: Rarely needed. Fonts, colors, and sizes come from section 1.
-   ===================================================================== */
+/* 3. BASE STYLES */
 *,
 *::before,
 *::after {
@@ -226,8 +130,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  /* "Flexbox" in a column: with main { flex: 1 } below, this keeps the
-     footer at the bottom of the screen on short pages. */
+  /* "Flexbox" in a column: with main { flex: 1 } below, this keeps the footer at the bottom of the screen on short pages. */
   display: flex;
   flex-direction: column;
   font-family: var(--font-body);
@@ -242,8 +145,7 @@ main {
   flex: 1;
 }
 
-/* The skip link sends keyboard focus to <main>. It isn't a button or
-   link, so it doesn't need a focus outline. */
+/* The skip link sends keyboard focus to <main>. */
 main:focus {
   outline: none;
 }
@@ -295,9 +197,7 @@ a:hover {
   text-decoration-thickness: 2px;
 }
 
-/* The outline people see when they move around with the Tab key.
-   ":focus-visible" shows it for keyboards but not for mouse clicks.
-   Never remove it: keyboard users need it to see where they are. */
+/* The outline people see when they move around with the Tab key. */
 :focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 3px;
@@ -309,11 +209,7 @@ a:hover {
   color: var(--color-heading);
 }
 
-/* Lists marked role="list" in the HTML lose their bullets and indent.
-   Why the role? Safari stops announcing a list as a list once CSS
-   removes the bullets; role="list" keeps it announced.
-   :where() gives this rule zero "specificity" (priority), so any class
-   rule, such as .timeline or .checklist, can still add its own spacing. */
+/* Lists marked role="list" in the HTML lose their bullets and indent. */
 :where(ul[role="list"], ol[role="list"]) {
   list-style: none;
   margin: 0;
@@ -330,17 +226,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   4. ACCESSIBILITY HELPERS
-   ---------------------------------------------------------------------
-   WHAT: Two small tools: .sr-only and the skip link.
-   DOES: .sr-only hides text on screen but keeps it for screen readers
-         (software that reads the page aloud for people who are blind
-         or have low vision). The skip link appears when someone
-         presses Tab and jumps them past the menu.
-   EDIT: Leave these in place. Add class="sr-only" to any text that
-         should be heard but not seen.
-   ===================================================================== */
+/* 4. ACCESSIBILITY HELPERS */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -372,18 +258,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   5. LAYOUT HELPERS
-   ---------------------------------------------------------------------
-   WHAT: Reusable classes for page structure.
-   DOES: .container      centers content and limits its width.
-         .section        adds space above and below a page section.
-         .section--alt   gives a section the alternate background.
-         .section-header heading + intro, side by side on wide screens.
-         .grid           lines things up in columns.
-   EDIT: Change widths and spacing in section 1. Add or remove
-         "section--alt" in the HTML to change section backgrounds.
-   ===================================================================== */
+/* 5. LAYOUT HELPERS */
 .container {
   width: 100%;
   max-width: var(--container-width);
@@ -403,8 +278,7 @@ textarea {
   background-color: var(--color-bg-alt);
 }
 
-/* A thin top line with a short accent "tick" at the left, like a
-   measurement on a technical drawing. */
+/* A thin top line with a short accent "tick" at the left, like a measurement on a technical drawing. */
 .section-header {
   display: grid;
   gap: var(--space-md);
@@ -439,8 +313,7 @@ textarea {
   }
 }
 
-/* "Grid" is a CSS layout tool for rows and columns. One column on
-   phones; the modifier classes below add columns on wider screens. */
+/* "Grid" is a CSS layout tool for rows and columns. */
 .grid {
   display: grid;
   gap: var(--space-lg);
@@ -453,18 +326,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   6. BUTTONS AND LINKS
-   ---------------------------------------------------------------------
-   WHAT: Button styles and a bold text link.
-   DOES: .btn             the basic button shape.
-         .btn--primary    solid accent button (the main action).
-         .btn--secondary  outlined button (the second choice).
-         .button-row      lines buttons up with space between.
-         .text-link       a bold link with a comfortable tap area.
-   EDIT: Colors come from section 1. Use class="btn btn--primary" on
-         any link (<a>) or <button> to make it look like a button.
-   ===================================================================== */
+/* 6. BUTTONS AND LINKS */
 .button-row {
   display: flex;
   flex-wrap: wrap; /* buttons drop to a new line on narrow screens */
@@ -514,16 +376,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   7. SITE HEADER AND NAVIGATION
-   ---------------------------------------------------------------------
-   WHAT: The sticky top bar: brand, menu, theme button, hamburger.
-   DOES: Stays at the top while you scroll. Below 768px wide the menu
-         folds into a drop-down opened by the hamburger button. The
-         current page gets a tinted background and an underline.
-   EDIT: Brand and link text are in the HTML. The 767px and 768px
-         below must match DESKTOP_MENU_WIDTH in js/main.js.
-   ===================================================================== */
+/* 7. SITE HEADER AND NAVIGATION */
 .site-header {
   position: sticky; /* sticks to the top of the screen while scrolling */
   top: 0;
@@ -599,8 +452,7 @@ textarea {
   background-color: var(--color-accent-soft);
 }
 
-/* The page you are on. JavaScript adds aria-current="page" to its link,
-   which also tells screen readers "current page". */
+/* The page you are on. */
 .nav-link[aria-current="page"] {
   color: var(--color-link);
   background-color: var(--color-accent-soft);
@@ -687,8 +539,7 @@ textarea {
   display: none;
 }
 
-/* SMALL SCREENS ONLY (767px wide and narrower). A "media query" is a
-   rule that only applies at certain screen sizes. */
+/* SMALL SCREENS ONLY (767px wide and narrower). */
 @media (max-width: 767px) {
   /* With JavaScript: show the hamburger; fold the links away. */
   .js .nav-toggle {
@@ -727,8 +578,7 @@ textarea {
     width: 2rem;
   }
 
-  /* Without JavaScript: show the links on their own row instead, so
-     nobody is ever locked out of the menu. */
+  /* Without JavaScript: show the links on their own row instead, so nobody is ever locked out of the menu. */
   .no-js .header-inner {
     flex-wrap: wrap;
   }
@@ -741,16 +591,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   8. HOME PAGE HERO
-   ---------------------------------------------------------------------
-   WHAT: The big welcome area at the top of index.html.
-   DOES: Text on the left, picture on the right (stacked on phones),
-         over a faint blueprint grid that fades out toward the bottom.
-   EDIT: Text and picture are in index.html. Grid colors come from
-         --grid-minor and --grid-major (section 1). To remove the grid,
-         delete the ".hero::before, .page-hero::before" rule below.
-   ===================================================================== */
+/* 8. HOME PAGE HERO */
 .hero {
   position: relative;
   isolation: isolate; /* keeps the grid layer behind the hero content */
@@ -759,9 +600,7 @@ textarea {
   border-bottom: 1px solid var(--color-border);
 }
 
-/* The blueprint grid: small squares every 32px and stronger lines
-   every 128px, drawn with stacked "linear-gradient" stripes.
-   ::before adds a decorative layer without extra HTML. */
+/* The blueprint grid: small squares every 32px and stronger lines every 128px, drawn with stacked "linear-gradient" stripes. */
 .hero::before,
 .page-hero::before {
   content: "";
@@ -834,16 +673,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   9. INNER PAGE HEADERS AND BREADCRUMBS
-   ---------------------------------------------------------------------
-   WHAT: The title area at the top of About, Showcase, Features, and
-         Contact, with a "breadcrumb" trail (Home / This page).
-   DOES: Shows where the visitor is, the page title, and a short intro,
-         over the same blueprint grid as the home hero.
-   EDIT: Text is in each page's HTML. The breadcrumb's last item is the
-         current page: change its words when you copy a page.
-   ===================================================================== */
+/* 9. INNER PAGE HEADERS AND BREADCRUMBS */
 .page-hero {
   position: relative;
   isolation: isolate;
@@ -902,14 +732,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   10. FEATURE CARDS
-   ---------------------------------------------------------------------
-   WHAT: The boxes in the "What We Offer" row on the home page.
-   DOES: Each card shows an icon, a title, and a short description.
-   EDIT: Copy a whole <article class="card"> block in index.html to
-         add a card. Change padding and corners in section 1.
-   ===================================================================== */
+/* 10. FEATURE CARDS */
 .card {
   padding: var(--space-xl);
   background-color: var(--color-surface);
@@ -926,7 +749,7 @@ textarea {
   margin-bottom: 0;
 }
 
-/* The small square that holds an icon. Also used on the Contact page. */
+/* The small square that holds an icon. */
 .card-icon {
   display: grid;
   place-items: center;
@@ -946,15 +769,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   11. IMAGE FRAME (CORNER MARKS)
-   ---------------------------------------------------------------------
-   WHAT: A wrapper that draws four corner brackets around a picture,
-         like the crop marks on a technical drawing.
-   DOES: Wrap any <img> in <div class="frame"> to get the marks.
-   EDIT: --mark-length and --mark-width set the size of the brackets.
-         Remove class="frame" from the HTML to drop the marks.
-   ===================================================================== */
+/* 11. IMAGE FRAME (CORNER MARKS) */
 .frame {
   position: relative;
   padding: var(--space-sm);
@@ -989,16 +804,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   12. SPLIT SECTIONS (IMAGE + TEXT)
-   ---------------------------------------------------------------------
-   WHAT: Two columns: a picture beside text. Used on About and Features.
-   DOES: Stacks on phones. On wide screens the picture sits on the left;
-         add "split--reverse" to put it on the right. Rows of splits
-         alternate that way on the Features page.
-   EDIT: In the HTML, add or remove "split--reverse" to flip a row.
-         .checklist gives a list check marks instead of bullets.
-   ===================================================================== */
+/* 12. SPLIT SECTIONS (IMAGE + TEXT) */
 .split {
   display: grid;
   gap: var(--space-xl);
@@ -1054,18 +860,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   13. ABOUT PAGE: PILLARS, STATS, TIMELINE
-   ---------------------------------------------------------------------
-   WHAT: Mission/vision/values columns, a row of numbers, and a
-         timeline of milestones.
-   DOES: .pillars   three columns, each topped with an accent line.
-         .stats     numbers in a ruled grid, like a spec sheet.
-         .timeline  a vertical line with a dot for each milestone.
-   EDIT: Text and numbers are in about.html. Add the class
-         "timeline-item--now" to the newest milestone to give it the
-         signal-color dot (--accent-2).
-   ===================================================================== */
+/* 13. ABOUT PAGE: PILLARS, STATS, TIMELINE */
 .pillars {
   display: grid;
   gap: var(--space-xl);
@@ -1180,15 +975,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   14. SHOWCASE CARDS
-   ---------------------------------------------------------------------
-   WHAT: Picture cards in the Showcase page grid.
-   DOES: 1 column on phones, 2 on tablets, 3 on wide screens. Every
-         picture is cropped to the same 4:3 shape so rows line up.
-   EDIT: Copy a whole <article class="media-card"> block to add a card.
-         Change "aspect-ratio" below for a different picture shape.
-   ===================================================================== */
+/* 14. SHOWCASE CARDS */
 @media (min-width: 600px) {
   .grid--showcase {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1249,15 +1036,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   15. CALL-TO-ACTION PANEL
-   ---------------------------------------------------------------------
-   WHAT: The closing panel that invites visitors to take the next step.
-   DOES: Text on the left and buttons on the right (stacked on phones),
-         with a short accent tick and a faint grid that echoes the hero.
-   EDIT: Text and buttons are in the HTML. Reuse it on any page by
-         copying the whole <div class="cta"> block.
-   ===================================================================== */
+/* 15. CALL-TO-ACTION PANEL */
 .cta {
   position: relative;
   isolation: isolate;
@@ -1305,16 +1084,7 @@ textarea {
 }
 
 
-/* =====================================================================
-   16. CONTACT PAGE AND FORM
-   ---------------------------------------------------------------------
-   WHAT: The two-panel contact layout, the form fields, and the
-         contact details list.
-   DOES: Form on the left, details on the right (stacked on phones).
-         Fields get a thick accent outline when selected.
-   EDIT: Fields and text are in contact.html. Field colors come from
-         --color-surface-raised and --color-border-strong.
-   ===================================================================== */
+/* 16. CONTACT PAGE AND FORM */
 .contact-layout {
   display: grid;
   gap: var(--space-xl);
@@ -1407,8 +1177,7 @@ textarea.form-input {
   margin-bottom: var(--space-lg);
 }
 
-/* The message box that appears after pressing the button (demo). It
-   takes no space until JavaScript puts words in it. */
+/* The message box that appears after pressing the button (demo). */
 .form-status {
   margin: 0;
 }
@@ -1445,14 +1214,7 @@ textarea.form-input {
 }
 
 
-/* =====================================================================
-   17. SITE FOOTER
-   ---------------------------------------------------------------------
-   WHAT: The bottom area of every page.
-   DOES: Three columns on wide screens (brand, links, contact), then a
-         bottom bar with the copyright and a "Back to top" link.
-   EDIT: Text is in the HTML. Colors come from section 1.
-   ===================================================================== */
+/* 17. SITE FOOTER */
 .site-footer {
   padding-top: var(--space-2xl);
   background-color: var(--color-bg-alt);
@@ -1525,23 +1287,7 @@ textarea.form-input {
 }
 
 
-/* =====================================================================
-   18. MOTION: FADE-INS AND HOVER EFFECTS
-   ---------------------------------------------------------------------
-   WHAT: Every animation in the site, gathered in one place.
-   DOES: Each rule starts with ".motion", a class js/main.js puts on the
-         <html> tag only when animations are switched ON and the visitor
-         hasn't asked their device to reduce motion. No .motion class
-         means no movement at all.
-         .reveal      = fades in and rises slightly when scrolled into
-                        view (js/main.js adds "is-visible" at that moment).
-         hover effects = cards lift, pictures zoom, buttons nudge.
-         Simple color changes on hover (sections 6 and 7) always stay
-         on, because they show people what is clickable.
-   EDIT: Turn everything off with ANIMATIONS_ON = false in js/main.js.
-         Change speed and distance in section 1 (MOTION).
-         Add class="reveal" to any element in the HTML to fade it in.
-   ===================================================================== */
+/* 18. MOTION: FADE-INS AND HOVER EFFECTS */
 
 /* Smooth scrolling for links that jump within the page. */
 html.motion {
@@ -1553,15 +1299,13 @@ html.motion {
   opacity: 0;
 }
 
-/* Revealed: plays the "reveal-up" animation once. --reveal-delay is set
-   by js/main.js so items that appear together arrive one by one. */
+/* Revealed: plays the "reveal-up" animation once. */
 .motion .reveal.is-visible {
   opacity: 1;
   animation: reveal-up var(--speed-slow) var(--ease) var(--reveal-delay, 0ms) backwards;
 }
 
-/* "@keyframes" describes an animation. With only a "from" step, the
-   browser animates from these values to the element's normal look. */
+/* "@keyframes" describes an animation. */
 @keyframes reveal-up {
   from {
     opacity: 0;
@@ -1614,8 +1358,7 @@ html.motion {
   }
 }
 
-/* Hover movement only for devices with a real pointer (mouse or
-   trackpad). On touch screens a "hover" can get stuck after a tap. */
+/* Hover movement only for devices with a real pointer (mouse or trackpad). */
 @media (hover: hover) {
   .motion .btn:hover {
     transform: translateY(-1px);
@@ -1634,17 +1377,7 @@ html.motion {
 }
 
 
-/* =====================================================================
-   19. REDUCED MOTION, HIGH CONTRAST, AND PRINTING
-   ---------------------------------------------------------------------
-   WHAT: Safety rules for special settings and situations.
-   DOES: Reduced motion: if a visitor's device asks for less movement,
-         everything stays still, even if something above slips through.
-         High contrast ("forced colors" mode in Windows): keeps the
-         current-page marker visible.
-         Print: makes sure fade-in content appears on paper.
-   EDIT: Leave these in place. They protect visitors who rely on them.
-   ===================================================================== */
+/* 19. REDUCED MOTION, HIGH CONTRAST, AND PRINTING */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto !important;
