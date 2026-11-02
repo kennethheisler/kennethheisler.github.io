@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!-- PAGE: 404.html (shown when someone visits a page that does not exist) -->
+<html lang="en" class="no-js">
+<head>
+  <!-- PAGE SETTINGS (the "head": information for the browser) -->
+  <meta charset="UTF-8">
+  <!-- Makes the page fit phone screens instead of showing a tiny desktop page. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- This page can appear at any web address, so every link below starts from the site's main folder. -->
+  <base href="/">
+
+  <!-- The title on the browser tab. -->
+  <title>Page Not Found | Kenneth Heisler</title>
+
+  <!-- Keeps this page out of search results. -->
+  <meta name="robots" content="noindex">
+
+  <!-- The small icon on the browser tab (a "favicon"). -->
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+  <!-- The look of the site. -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- The behavior of the site. -->
+  <script src="js/main.js"></script>
+</head>
+<body>
+
+  <!-- SHARED HEADER (the bar at the top of every page) -->
+  <header class="site-header" id="top">
+
+    <!-- Skip link: invisible until someone presses the Tab key. -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="container header-inner">
+
+      <!-- Your brand. -->
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+        <span class="brand-name">Kenneth Heisler</span>
+      </a>
+
+      <!-- MAIN MENU. -->
+      <nav class="site-nav" aria-label="Main">
+
+        <!-- Hamburger button (small screens only). -->
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="sr-only">Menu</span>
+        </button>
+
+        <!-- Menu links. -->
+        <ul class="nav-list" id="site-menu" role="list">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li><a class="nav-link" href="about.html">About</a></li>
+          <li><a class="nav-link" href="showcase.html">Experience</a></li>
+          <li><a class="nav-link" href="portfolio.html">Projects</a></li>
+          <li><a class="nav-link" href="features.html">Skills</a></li>
+          <li><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Light/dark button. -->
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">
+        <svg class="icon icon-sun" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon icon-moon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7.2 7.2 0 0 0 10 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT (everything unique to this page) -->
+  <main id="main" tabindex="-1">
+
+    <!-- PAGE HEADER -->
+    <section class="page-hero">
+      <div class="container">
+        <!-- EDIT ME: the message people see on a broken or mistyped link. -->
+        <h1 class="reveal">Page Not Found</h1>
+        <p class="lead reveal">That page doesn't exist or has moved. Try one of these instead.</p>
+        <div class="button-row reveal">
+          <a class="btn btn--primary" href="index.html">Go to the Home Page</a>
+          <a class="btn btn--secondary" href="portfolio.html">See My Projects</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SHARED FOOTER (the bottom of every page) -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+
+      <div class="footer-about">
+        <!-- Your brand name. -->
+        <a class="brand" href="index.html">
+          <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+          <span class="brand-name">Kenneth Heisler</span>
+        </a>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer">
+        <h2 class="footer-heading">Explore</h2>
+        <!-- Keep these links matching the main menu. -->
+        <ul class="footer-links" role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="showcase.html">Experience</a></li>
+          <li><a href="portfolio.html">Projects</a></li>
+          <li><a href="features.html">Skills</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2 class="footer-heading">Contact</h2>
+        <!-- Your contact details. -->
+        <ul class="footer-links" role="list">
+          <li><a href="mailto:me@kennethheisler.com">me@kennethheisler.com</a></li>
+          <li><a href="tel:+14138880213">(413) 888-0213</a></li>
+          <li><a href="https://www.linkedin.com/in/kennethcheisler">LinkedIn</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <!-- Your name in the copyright line. -->
+      <p>&copy; <span data-current-year>2026</span> Kenneth Heisler. All rights reserved.</p>
+      <a class="back-to-top" href="#top">Back to top</a>
+    </div>
+  </footer>
+
+</body>
+</html>
