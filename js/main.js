@@ -10,7 +10,8 @@ const ANIMATIONS_ON = true;
 const DEFAULT_THEME = "dark";
 
 // The screen width in pixels where the full menu appears.
-const DESKTOP_MENU_WIDTH = 768;
+// Keep this matching the "max-width" small-screen rule in css/style.css.
+const DESKTOP_MENU_WIDTH = 880;
 
 // The name used to save the theme choice in the browser.
 const THEME_STORAGE_KEY = "site-theme";

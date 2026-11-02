@@ -543,8 +543,9 @@ textarea {
   display: none;
 }
 
-/* SMALL SCREENS ONLY (767px wide and narrower). */
-@media (max-width: 767px) {
+/* SMALL SCREENS ONLY (879px wide and narrower, so the menu links fit on one row above that).
+   Keep this matching DESKTOP_MENU_WIDTH in js/main.js. */
+@media (max-width: 879px) {
   /* With JavaScript: show the hamburger; fold the links away. */
   .js .nav-toggle {
     display: inline-flex;
@@ -692,6 +693,11 @@ textarea {
 
 .page-hero .lead {
   margin-bottom: 0;
+}
+
+/* Space between the intro and any buttons under it (same as the home page). */
+.page-hero .lead + .button-row {
+  margin-top: var(--space-xl);
 }
 
 .breadcrumb ol {
