@@ -88,7 +88,7 @@
         </nav>
         <!-- EDIT ME: page title and intro. -->
         <h1 class="reveal">Projects</h1>
-        <p class="lead reveal">Data analysis, signal processing, and dashboard projects in Python, R, SQL, and Tableau. Each one links to the code so you can see how it was built.</p>
+        <p class="lead reveal">Data analysis, signal processing, and dashboard projects in Python, R, SQL, and Tableau. Each one covers the question, the methods, and what I found.</p>
       </div>
     </section>
 
@@ -109,7 +109,7 @@
           <div class="split-content reveal">
             <p class="tag">Python &middot; Signal Processing</p>
             <h2>Heart Rate and Step Counting from Phone Sensors</h2>
-            <p>Estimated heart rate and breathing rate from a fingertip held over a phone camera, and counted steps from raw accelerometer data. Group project for a mobile health sensing course at UMass Amherst, 2023.</p>
+            <p>Estimated heart rate and breathing rate from a fingertip held over a phone camera, and counted steps from raw accelerometer data. Group project, 2023.</p>
             <ul class="checklist" role="list">
               <li>Built a high-pass Butterworth filter to separate the heartbeat from breathing and baseline drift</li>
               <li>Detected peaks to count beats and convert them to beats per minute</li>
@@ -117,8 +117,6 @@
               <li>Turned three-axis accelerometer readings into one orientation-independent signal for step counting</li>
             </ul>
             <p><strong>Tools:</strong> Python, NumPy, SciPy, Matplotlib, Jupyter</p>
-            <!-- EDIT ME: these links work once the projects folder is pushed to GitHub. -->
-            <a class="text-link" href="https://github.com/kennethheisler/kennethheisler.github.io/blob/main/projects/heart-rate/PPG-Assignment.ipynb">View the Notebook</a>
           </div>
         </section>
 
@@ -139,7 +137,6 @@
               <li>Set up the calculation to repeat for every year from 2009 to 2020 and export a tidy dataset</li>
             </ul>
             <p><strong>Tools:</strong> R, sf, raster, exactextractr, USDA Cropland Data Layer</p>
-            <a class="text-link" href="https://github.com/kennethheisler/kennethheisler.github.io/blob/main/projects/crop-mapping/huc8.Rmd">View the Code</a>
           </div>
         </section>
 
@@ -160,7 +157,6 @@
               <li>Found a weak positive relationship (R² = 0.19), with Nantucket and Dukes as clear outliers</li>
             </ul>
             <p><strong>Tools:</strong> Python, pandas, scikit-learn, statsmodels, seaborn</p>
-            <a class="text-link" href="https://github.com/kennethheisler/kennethheisler.github.io/blob/main/projects/civic-engagement/KHProject.ipynb">View the Notebook</a>
           </div>
         </section>
 
@@ -181,7 +177,6 @@
               <li>Tracked yearly profit for each country from 2011 to 2014</li>
             </ul>
             <p><strong>Tools:</strong> Tableau Desktop, calculated fields, dashboards</p>
-            <a class="text-link" href="https://github.com/kennethheisler/kennethheisler.github.io/tree/main/projects/tableau-dashboards">View the Workbook</a>
           </div>
         </section>
 
@@ -195,37 +190,33 @@
           <div class="split-content reveal">
             <p class="tag">R &middot; Regression</p>
             <h2>What Predicts a Developer's Salary?</h2>
-            <p>Used the 2021 Stack Overflow Developer Survey (83,439 responses) to test which background factors predict yearly pay. Team project with Eli Nottonson, 2022.</p>
+            <p>Used the 2021 Stack Overflow Developer Survey (83,439 responses) to test which background factors predict yearly pay. Team project, 2022.</p>
             <ul class="checklist" role="list">
               <li>Cleaned self-reported salary data and removed extreme outliers</li>
               <li>Compared linear models with stepwise regression to select predictors</li>
               <li>Stepwise regression kept age as the one significant predictor, but both models had high prediction error, a useful lesson about noisy survey data</li>
             </ul>
             <p><strong>Tools:</strong> R, ggplot2, linear and stepwise regression</p>
-            <a class="text-link" href="https://github.com/kennethheisler/kennethheisler.github.io/blob/main/projects/salary-prediction/Final_Report.pdf">Read the Report</a>
+            <a class="text-link" href="projects/salary-prediction/developer_salary_report.pdf">Read the Report</a>
           </div>
         </section>
 
       </div>
     </div>
 
-    <!-- SMALLER PROJECTS: cards without pictures -->
+    <!-- MORE WORK: cards without pictures (2 per row on wide screens) -->
     <section class="section section--alt">
       <div class="container">
         <div class="section-header reveal">
           <h2>More Work</h2>
-          <p>Smaller pieces that show specific skills.</p>
+          <p>Research writing and work in progress.</p>
         </div>
-        <div class="grid grid--3">
+        <div class="grid grid--2">
+          <!-- EDIT ME: the paper and report open on this site (files in the projects folder). -->
           <article class="card reveal">
-            <h3>Interactive Shiny App</h3>
-            <p>An R Shiny app that loads two exam score files and plots each score distribution, with adjustable histogram bins and an optional density curve.</p>
-            <a class="text-link" href="https://github.com/kennethheisler/kennethheisler.github.io/tree/main/projects/r-shiny-sql/shiny_exam_scores_app">View the Code</a>
-          </article>
-          <article class="card reveal">
-            <h3>R and SQL Reporting</h3>
-            <p>Queried SQLite databases from R, turned the results into formatted tables, and charted them with ggplot2.</p>
-            <a class="text-link" href="https://github.com/kennethheisler/kennethheisler.github.io/blob/main/projects/r-shiny-sql/R_and_SQL_report.pdf">Read the Report</a>
+            <h3>Research Paper: Online Drug Markets</h3>
+            <p>A 15-page group research paper on how darknet drug markets use cryptocurrency and escrow systems, and how blockchain analytics help law enforcement trace them. Group project, 2023.</p>
+            <a class="text-link" href="projects/research-paper/online_drug_markets_paper.pdf">Read the Paper</a>
           </article>
           <!-- EDIT ME: replace this card with a (VR)2 dashboard once a version without client data is ready. -->
           <article class="card reveal">
