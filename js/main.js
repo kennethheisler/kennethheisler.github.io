@@ -10,6 +10,10 @@ const ANIMATIONS_ON = true;
 // Keep this matching the "max-width" small-screen rule in css/style.css.
 const DESKTOP_MENU_WIDTH = 880;
 
+// Safety net, in milliseconds: if the animation libraries are still downloading after this long
+// (a slow or stuck connection), animations are skipped so the page never stays hidden.
+const MOTION_WAIT_LIMIT = 4000;
+
 
 /* 2. RUN RIGHT AWAY (before the page is drawn) */
 
@@ -24,6 +28,16 @@ const DESKTOP_MENU_WIDTH = 880;
   // Animation mode is on only when it is allowed (see section 6).
   if (animationsAllowed()) {
     root.classList.add("motion");
+
+    // The page waits for the animation libraries before it starts (see section 3).
+    // If they take too long, drop "motion" so the CSS shows everything right away.
+    // js/motion.js then sees there is no "motion" class and does nothing.
+    // ("motion-ready" is added the moment the page starts, so if it's missing, we're still waiting.)
+    window.setTimeout(function () {
+      if (!root.classList.contains("motion-ready")) {
+        root.classList.remove("motion");
+      }
+    }, MOTION_WAIT_LIMIT);
   }
 })();
 
@@ -34,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // big headings into lines, so it is safe to show them (see CSS section 17).
   document.documentElement.classList.add("motion-ready");
 
+  fixInPageLinks();
   setupMobileMenu();
   highlightCurrentPage();
   setupRevealOnScroll();
@@ -41,6 +56,21 @@ document.addEventListener("DOMContentLoaded", function () {
   fillCurrentYear();
   setupDemoForm();
 });
+
+
+/* 3b. IN-PAGE LINKS ON THE 404 PAGE
+   404.html has <base href="/"> so its pictures and styles load from any address.
+   That also makes links like "#main" point to the home page, so the skip link and
+   "Back to top" would leave the page. This points them back at the current page. */
+function fixInPageLinks() {
+  if (!document.querySelector("base")) {
+    return; // only pages with a <base> tag need this
+  }
+  const here = window.location.pathname + window.location.search;
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.setAttribute("href", here + link.getAttribute("href"));
+  });
+}
 
 
 /* 4. MOBILE MENU (the hamburger button) */

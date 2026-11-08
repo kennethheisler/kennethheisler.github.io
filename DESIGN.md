@@ -29,7 +29,7 @@ and seamless page changes. Everything stays readable, fast, and accessible first
 | `--color-surface` | `#0e1726` | Cards and panels |
 | `--color-surface-raised` | `#142034` | Mobile menu, form fields |
 | `--color-border` | `#1f2c42` | Thin dividers |
-| `--color-border-strong` | `#4f6280` | Field and outline-button borders |
+| `--color-border-strong` | `#5f7393` | Field and outline-button borders (at least 3:1 on every background) |
 | `--color-heading` | `#f5f8fc` | Headings |
 | `--color-text` | `#dfe7f2` | Body text |
 | `--color-text-muted` | `#93a3b8` | Supporting text |
@@ -55,5 +55,17 @@ All text pairs meet at least 4.5:1 contrast on the backgrounds above.
 
 ## 6. Motion
 
-- Easing: `--ease: cubic-bezier(0.16, 1, 0.3, 1)`, a fast start that glides to a soft stop.
-- Everything respects "reduce motion": `js/main.js` adds the class `motion` to `<html>` only when animations are allowed, and every effect checks for it.
+- Easing: `--ease: cubic-bezier(0.16, 1, 0.3, 1)` in CSS and `expo.out` in GSAP, a fast start that glides to a soft stop.
+- Everything respects "reduce motion": `js/main.js` adds the class `motion` to `<html>` only when animations are allowed, and every effect checks for it. Turning "reduce motion" on mid-visit switches everything off.
+- All motion settings live in the SETTINGS block at the top of `js/motion.js`.
+
+| Effect | What it does | Where |
+|---|---|---|
+| Smooth scroll | Weighted, gliding scroll (Lenis, `SCROLL_SMOOTHNESS`). "Back to top" glides up and focuses the name link. | `js/motion.js` section 4 |
+| Headline reveals | Page headings (`main h1, main h2`) rise into place line by line from behind a mask. Headings in cards and panels move with their box instead. | `js/motion.js` section 5 |
+| Fade-ins | Anything with `class="reveal"` fades up 24px as it scrolls into view, staggered. | `js/motion.js` section 6 |
+| Magnetic buttons | Buttons lean toward the mouse (`MAGNETIC_STRENGTH`) and settle back. Mouse and trackpad only. | `js/motion.js` section 7 |
+| Cursor ring | A 36px cyan ring trails the mouse (`CURSOR_LAG`) and grows over links and buttons. The normal arrow stays visible. Mouse and trackpad only; hidden in print and high-contrast mode. | `js/motion.js` section 8, CSS section 17 |
+| Page transitions | The old page fades out and rises 12px (300ms); the new one fades in from 16px below (600ms). The header stays still. Uses View Transitions; other browsers switch pages normally. | CSS section 17 |
+
+**Fallbacks.** If the animation libraries (GSAP, Lenis) fail to load, or take longer than `MOTION_WAIT_LIMIT` in `js/main.js`, the site uses the simple CSS fade-ins in `js/main.js` or shows everything at once. All text is always in the HTML.

@@ -21,7 +21,7 @@
 
   /* --- Lines --- */
   --color-border: #1f2c42;         /* thin dividing lines */
-  --color-border-strong: #4f6280;  /* form fields and outline buttons */
+  --color-border-strong: #5f7393;  /* form fields and outline buttons (3:1 or more against every background, so field edges stay visible) */
 
   /* --- Text --- */
   --color-heading: #f5f8fc;        /* headings */
@@ -90,7 +90,7 @@
   --speed: 250ms;
   --speed-slow: 650ms;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);   /* starts fast, glides to a soft stop */
-  --reveal-distance: 18px;                 /* how far items rise as they fade in */
+  --reveal-distance: 24px;                 /* how far items rise as they fade in (backup fade-ins only; keep it matching REVEAL_DISTANCE in js/motion.js) */
   --hover-lift: -4px;                      /* how far cards rise on hover */
 
   /* Tells the browser to draw scrollbars and form controls dark. */
@@ -1269,11 +1269,77 @@ textarea.form-input {
 }
 
 
-/* 17. MOTION: FADE-INS AND HOVER EFFECTS */
+/* 17. MOTION: SMOOTH SCROLL, HEADLINES, FADE-INS, CURSOR, PAGE CHANGES AND HOVER EFFECTS
+   Most of the movement is done by js/motion.js (its SETTINGS are at the top of that file).
+   Everything here only applies when <html> has the class "motion" (animations allowed). */
 
-/* Smooth scrolling for links that jump within the page. */
+/* Smooth scrolling for links that jump within the page (used when js/motion.js can't run). */
 html.motion {
   scroll-behavior: smooth;
+}
+
+/* When Lenis (the smooth scroller in js/motion.js) is running, it does the smoothing itself,
+   so the browser's own smooth scrolling is turned off to stop the two fighting. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis {
+  scroll-behavior: auto;
+}
+
+/* Lenis adds this when scrolling is paused. */
+.lenis-stopped {
+  overflow: clip;
+}
+
+/* Big headings stay hidden for the split second before js/motion.js splits them into lines,
+   so they don't flash in and then jump. js/main.js adds "motion-ready" right after. */
+.motion:not(.motion-ready) main h1,
+.motion:not(.motion-ready) main h2 {
+  visibility: hidden;
+}
+
+/* Each headline line sits in a "mask" (a window that hides what's outside it).
+   A little extra room at the bottom keeps the tails of g, y and p from being cut off. */
+.split-line-mask {
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+/* The cursor ring (built by js/motion.js, mouse and trackpad only).
+   It never blocks clicks ("pointer-events: none"), and the normal arrow stays visible. */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;           /* above everything, including the header */
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px; /* half its size, so its center sits on the mouse */
+  pointer-events: none;
+  transition: opacity var(--speed) ease;
+}
+
+.cursor-ring {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--color-accent-line);
+  border-radius: 50%;
+  transition:
+    transform var(--speed) var(--ease),
+    background-color var(--speed) ease;
+}
+
+/* Over a link or button: the ring grows and fills softly. */
+.cursor.is-active .cursor-ring {
+  transform: scale(1.6);
+  background-color: var(--color-accent-soft);
+}
+
+.cursor.is-hidden {
+  opacity: 0;
 }
 
 /* Waiting to be revealed: invisible but still in place. */
@@ -1295,7 +1361,9 @@ html.motion {
   }
 }
 
-/* Smooth changes ("transitions") for things that react to the mouse. */
+/* Smooth changes ("transitions") for things that react to the mouse.
+   "transform" is left out on purpose: js/motion.js moves the buttons (the magnetic effect),
+   and a CSS transform transition would fight it on every frame. */
 .motion .btn,
 .motion .nav-link,
 .motion .nav-toggle,
@@ -1303,8 +1371,7 @@ html.motion {
   transition:
     background-color var(--speed-fast) ease,
     border-color var(--speed-fast) ease,
-    color var(--speed-fast) ease,
-    transform var(--speed-fast) ease;
+    color var(--speed-fast) ease;
 }
 
 .motion .nav-toggle-bar {
@@ -1341,10 +1408,6 @@ html.motion {
 
 /* Hover movement only for devices with a real pointer (mouse or trackpad). */
 @media (hover: hover) {
-  .motion .btn:hover {
-    transform: translateY(-1px);
-  }
-
   .motion .card:hover,
   .motion .media-card:hover {
     transform: translateY(var(--hover-lift));
@@ -1354,6 +1417,48 @@ html.motion {
 
   .motion .media-card:hover .media-card-image img {
     transform: scale(1.04);
+  }
+}
+
+/* Page changes: when you click to another page, the old page fades out and rises a little
+   while the new one fades in from just below. The header stays still between pages.
+   (Uses "View Transitions"; browsers without it simply switch pages normally.) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  .site-header {
+    view-transition-name: site-header;
+  }
+
+  .motion::view-transition-old(root) {
+    animation: page-out 300ms var(--ease) both;
+  }
+
+  .motion::view-transition-new(root) {
+    animation: page-in 600ms var(--ease) both;
+  }
+
+  /* Animations switched off in js/main.js (ANIMATIONS_ON = false): switch pages instantly. */
+  html:not(.motion)::view-transition-group(*),
+  html:not(.motion)::view-transition-old(*),
+  html:not(.motion)::view-transition-new(*) {
+    animation: none;
+  }
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
   }
 }
 
@@ -1383,17 +1488,33 @@ html.motion {
   .nav-link[aria-current="page"] {
     text-decoration: underline;
   }
+
+  /* High-contrast mode: the system's own cursor is enough. */
+  .cursor {
+    display: none;
+  }
 }
 
 @media print {
   .skip-link,
   .site-nav,
-  .back-to-top {
+  .back-to-top,
+  .cursor {
     display: none;
   }
 
   .reveal {
     opacity: 1 !important;
+    transform: none !important;
     animation: none !important;
+  }
+
+  /* Headlines that haven't risen into place yet: print them in their normal spot. */
+  .split-line {
+    transform: none !important;
+  }
+
+  .split-line-mask {
+    overflow: visible !important;
   }
 }
