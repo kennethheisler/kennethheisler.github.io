@@ -3,10 +3,11 @@
    project right where it is: its chart drifts in out of a blur, large and glowing (js/project-glow.js
    draws the smoke), with a short note sitting in the chart's emptiest spot.
 
-   The note opens into the full write-up:
-   - hover it with the mouse (it closes again when you move away),
-   - click or tap it, or press "More" (it then stays open until you click again or press Escape).
-   As it opens, its see-through background turns into dark glass that covers the chart behind it.
+   The note has two steps:
+   - Hover it with the mouse and it "peeks": it lifts and glows a little, and shows the first lines
+     of the write-up, fading out. Moving away settles it back.
+   - Click or tap it, or press "More", and it opens fully: its see-through background turns into
+     dark glass that covers the chart behind it. Click again, press "Less" or Escape to fold it.
 
    Also:
    - Only one project is open at a time.
@@ -30,9 +31,11 @@ const ONE_PROJECT_AT_A_TIME = true;
 const NOTE_OPEN_TIME = 0.6;
 const NOTE_CLOSE_TIME = 0.35;
 
-// When the mouse leaves an open note, wait this long (seconds) before folding it, so a small
-// slip of the mouse doesn't snap it shut.
-const NOTE_CLOSE_DELAY = 0.35;
+// Hover "peek": how much of the write-up shows (pixels), how long it takes (seconds), and how long
+// to wait after the mouse leaves before settling back (seconds), so a small slip doesn't snap it.
+const NOTE_PEEK_HEIGHT = 84;
+const NOTE_PEEK_TIME = 0.45;
+const NOTE_PEEK_DELAY = 0.2;
 
 
 /* 2. START */
@@ -98,7 +101,7 @@ const NOTE_CLOSE_DELAY = 0.35;
       if (!project.classList.contains("is-open")) {
         open(project, false, true);
       }
-      openNote(project, false, true);
+      openNote(project, false);
     });
 
     setUpNote(project);
@@ -238,35 +241,33 @@ const NOTE_CLOSE_DELAY = 0.35;
   }
 
 
-  /* 5. THE NOTE: hover, click or "More" opens it into the full write-up */
+  /* 5. THE NOTE: hover peeks, click or "More" opens it fully */
   function setUpNote(project) {
     const parts = partsOf(project);
-    let closeTimer = null;
+    let settleTimer = null;
 
-    // Mouse: open while pointing at the note, fold shortly after leaving (unless it was clicked open).
+    // Mouse: peek while pointing at the note, settle back shortly after leaving.
     parts.note.addEventListener("pointerenter", function (event) {
       if (event.pointerType !== "mouse") {
         return;
       }
-      clearTimeout(closeTimer);
-      openNote(project, true, false);
+      clearTimeout(settleTimer);
+      peekNote(project);
     });
     parts.note.addEventListener("pointerleave", function (event) {
-      if (event.pointerType !== "mouse" || parts.note.classList.contains("is-pinned")) {
+      if (event.pointerType !== "mouse") {
         return;
       }
-      clearTimeout(closeTimer);
-      closeTimer = setTimeout(function () {
-        if (!parts.note.matches(":focus-within")) {
-          closeNote(project, true);
-        }
-      }, NOTE_CLOSE_DELAY * 1000);
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(function () {
+        unpeekNote(project);
+      }, NOTE_PEEK_DELAY * 1000);
     });
 
-    // Click or tap: on the "More" button, or anywhere on the note that isn't a link or button,
-    // pins it open (or folds it if it was already pinned).
+    // Click or tap: on "More", or anywhere on the note that isn't a link or button, opens it
+    // fully (or folds it if it's already open).
     parts.more.addEventListener("click", function () {
-      togglePinned(project);
+      toggleNote(project);
     });
     parts.note.addEventListener("click", function (event) {
       if (event.target.closest("a, button")) {
@@ -275,7 +276,7 @@ const NOTE_CLOSE_DELAY = 0.35;
       if (window.getSelection && String(window.getSelection()).length > 0) {
         return; // the visitor is selecting text to copy, not clicking
       }
-      togglePinned(project);
+      toggleNote(project);
     });
 
     // Escape folds an open note and puts keyboard focus back on "More".
@@ -287,39 +288,86 @@ const NOTE_CLOSE_DELAY = 0.35;
     });
   }
 
-  function togglePinned(project) {
-    const note = partsOf(project).note;
-    if (note.classList.contains("is-pinned")) {
+  function toggleNote(project) {
+    if (partsOf(project).note.classList.contains("is-expanded")) {
       closeNote(project, true);
     } else {
-      openNote(project, true, true);
+      openNote(project, true);
     }
   }
 
-  function openNote(project, animate, pin) {
+  // The peek: the note lifts, and the first lines of the write-up slide into view, fading out.
+  // (Mouse only, and only a preview: the write-up can't be tabbed into until the note opens.)
+  function peekNote(project) {
     const parts = partsOf(project);
-    if (pin) {
-      parts.note.classList.add("is-pinned");
+    if (parts.note.classList.contains("is-expanded") || parts.note.classList.contains("is-peeking")) {
+      return;
     }
+    parts.note.classList.add("is-peeking");
+    parts.details.inert = true;
+    parts.details.removeAttribute("hidden");
+    const peek = Math.min(NOTE_PEEK_HEIGHT, parts.details.scrollHeight);
+    if (animating()) {
+      const gsap = window.gsap;
+      gsap.killTweensOf(parts.details);
+      gsap.fromTo(parts.details, { height: 0, opacity: 0 }, { height: peek, opacity: 1, duration: NOTE_PEEK_TIME, ease: "expo.out" });
+    } else {
+      parts.details.style.height = peek + "px";
+    }
+  }
+
+  function unpeekNote(project) {
+    const parts = partsOf(project);
+    if (!parts.note.classList.contains("is-peeking")) {
+      return;
+    }
+    parts.note.classList.remove("is-peeking");
+    if (parts.note.classList.contains("is-expanded")) {
+      return; // it was clicked open meanwhile: leave it open
+    }
+    function fold() {
+      parts.details.setAttribute("hidden", "until-found");
+      parts.details.style.height = "";
+      parts.details.style.opacity = "";
+      parts.details.inert = false;
+    }
+    if (animating()) {
+      const gsap = window.gsap;
+      gsap.killTweensOf(parts.details);
+      gsap.to(parts.details, { height: 0, opacity: 0, duration: NOTE_CLOSE_TIME, ease: "power3.inOut", onComplete: fold });
+    } else {
+      fold();
+    }
+  }
+
+  // Fully open: the write-up grows to its full height on a dark glass card.
+  function openNote(project, animate) {
+    const parts = partsOf(project);
     if (parts.note.classList.contains("is-expanded")) {
       return;
     }
+    parts.note.classList.remove("is-peeking");
     parts.note.classList.add("is-expanded");
     parts.more.setAttribute("aria-expanded", "true");
     parts.more.querySelector(".project-more-label").textContent = "Less";
+    parts.details.inert = false;
     parts.details.removeAttribute("hidden");
     if (animate && animating()) {
       const gsap = window.gsap;
       gsap.killTweensOf(parts.details);
+      // Grow from wherever it is now (nothing, or the peek) to its full height.
       gsap.fromTo(parts.details,
-        { height: 0, opacity: 0 },
+        { height: parts.details.offsetHeight, opacity: Number(getComputedStyle(parts.details).opacity) || 0 },
         { height: "auto", opacity: 1, duration: NOTE_OPEN_TIME, ease: "expo.out", clearProps: "height,opacity" });
+    } else {
+      parts.details.style.height = "";
+      parts.details.style.opacity = "";
     }
   }
 
   function closeNote(project, animate) {
     const parts = partsOf(project);
-    parts.note.classList.remove("is-pinned");
+    parts.note.classList.remove("is-peeking");
     if (!parts.note.classList.contains("is-expanded")) {
       return;
     }
@@ -329,6 +377,8 @@ const NOTE_CLOSE_DELAY = 0.35;
 
     function fold() {
       parts.details.setAttribute("hidden", "until-found");
+      parts.details.style.height = "";
+      parts.details.style.opacity = "";
     }
     if (animate && animating()) {
       const gsap = window.gsap;
@@ -338,7 +388,6 @@ const NOTE_CLOSE_DELAY = 0.35;
         opacity: 0,
         duration: NOTE_CLOSE_TIME,
         ease: "power3.inOut",
-        clearProps: "height,opacity",
         onComplete: fold
       });
     } else {

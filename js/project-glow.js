@@ -28,8 +28,8 @@ const GLOW_ON = true;
 
 // How thick the smoke is (0 = none, 1 = normal, 1.5 = heavy), and how far it spreads from the
 // chart (as a share of the stage: 0.1 = hugs it closely, 0.4 = fills the stage).
-const SMOKE_AMOUNT = 1;
-const SMOKE_REACH = 0.16;
+const SMOKE_AMOUNT = 0.45;
+const SMOKE_REACH = 0.11;
 
 // How fast the smoke drifts (0 = still), and the size of its swirls (bigger number = smaller,
 // busier swirls).
@@ -43,8 +43,8 @@ const SMOKE_COLOR_DEEP = "#2a5bd7";
 // The chart: how solid it is (1 = fully solid), how far wisps of glow curl off the edges of its
 // shapes (0 = none, 1 = long wisps), and how bright the glow hugging its shapes is.
 const CHART_OPACITY = 0.92;
-const EDGE_WISPS = 1;
-const EDGE_GLOW = 0.75;
+const EDGE_WISPS = 0.8;
+const EDGE_GLOW = 0.5;
 
 // Seconds for the smoke to fade in when a project opens.
 const FADE_IN_TIME = 1.6;

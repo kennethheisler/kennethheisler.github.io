@@ -1,8 +1,9 @@
 /* PROJECTS-HOVER.JS: THE RIPPLING PICTURE ON THE PROJECTS PAGE
-   On a wide screen with a mouse, hovering a project title in the list shows that project's
-   chart in the empty strip to the right of the titles. It follows the mouse up and down with a
-   soft lag, ripples like water as it appears, bends a little when you move quickly, and wipes
-   over to the next chart when you move to another title. Keyboard users get the same chart
+   On a wide screen with a mouse, hovering a project title in the list reveals that project's
+   chart right under the cursor, like a magnifying glass, behind the title (which flips color over
+   it so it stays readable). It follows the mouse with a soft lag, ripples like water as it
+   appears, bends a little when you move quickly, and wipes over to the next chart when you move
+   to another title. Keyboard users get the same chart
    beside the title they Tab to. An open project already shows its chart, so it gets no preview.
 
    It's drawn with Three.js (a 3D drawing library) on one see-through layer over the page.
@@ -20,14 +21,14 @@
 
 /* 1. SETTINGS */
 
-// The largest the picture gets (pixels). Each picture keeps its own shape inside this box,
-// and it never gets wider than the empty strip beside the titles (set by --hover-room in style.css).
-const IMAGE_MAX_WIDTH = 520;
-const IMAGE_MAX_HEIGHT = 400;
+// The largest the picture gets (pixels). Each picture keeps its own shape inside this box.
+const IMAGE_MAX_WIDTH = 420;
+const IMAGE_MAX_HEIGHT = 320;
 
-// The picture stays in the empty strip on the right. Side to side it only drifts a little with
-// the mouse: 0 = stays centered in the strip, 1 = follows the mouse fully (as far as the strip allows).
-const SIDEWAYS_FOLLOW = 0.15;
+// Where the picture sits compared with the mouse (pixels). 0, 0 = centered on the mouse.
+// Positive X moves it right, positive Y moves it down.
+const IMAGE_OFFSET_X = 0;
+const IMAGE_OFFSET_Y = 0;
 
 // The dark card behind each chart (the charts themselves are see-through).
 const CARD_COLOR = 0x0e1726;
@@ -228,7 +229,7 @@ function startLayer(renderer, list) {
 
   // Fits a picture's shape inside the largest size allowed.
   function fitSize(aspect) {
-    let w = Math.min(IMAGE_MAX_WIDTH, strip().width - 32);
+    let w = IMAGE_MAX_WIDTH;
     let h = w / aspect;
     if (h > IMAGE_MAX_HEIGHT) {
       h = IMAGE_MAX_HEIGHT;
@@ -302,33 +303,16 @@ function startLayer(renderer, list) {
     play();
   }
 
-  // The empty strip on the right of the list, where the picture lives (in window pixels).
-  function strip() {
-    const box = list.getBoundingClientRect();
-    const share = parseFloat(getComputedStyle(root).getPropertyValue("--hover-room")) / 100 || 0.36;
-    const width = box.width * share;
-    return { left: box.right - width, width: width, center: box.right - width / 2 };
-  }
-
-  // Where the picture goes: in the strip, level with the mouse (or the keyboard-focused row),
-  // drifting only slightly sideways, and never past the edges of the strip or the window.
-  function aim(x, y) {
-    const room = strip();
-    const halfW = goalSize.w / 2;
-    const halfH = goalSize.h / 2;
-    const header = document.querySelector(".site-header");
-    const top = (header ? header.offsetHeight : 0) + 12 + halfH;
-    target.x = clamp(room.center + (x - room.center) * SIDEWAYS_FOLLOW, room.left + halfW, room.left + room.width - halfW + 16);
-    target.y = clamp(y, top, Math.max(top, height - 12 - halfH));
-  }
-
+  // Where the picture goes: centered on the mouse, or beside the keyboard-focused row.
   function aimAtMouse() {
-    aim(mouse.x, mouse.y);
+    target.x = mouse.x + IMAGE_OFFSET_X;
+    target.y = mouse.y + IMAGE_OFFSET_Y;
   }
 
   function aimAtRow(row) {
     const box = row.getBoundingClientRect();
-    aim(strip().center, box.top + box.height / 2);
+    target.x = box.left + box.width * 0.5;
+    target.y = box.top + box.height / 2;
   }
 
   // Mouse events.

@@ -112,7 +112,7 @@
   --scene-wait: 5s;
 
   /* PROJECTS PAGE SETTINGS (sections 21-22)
-     How much of each project line stays empty on the right, so the hover chart has room to show. */
+     How much of each project line stays empty on the right (breathing room beside the titles). */
   --hover-room: 36%;
   /* An open project's note: its width as a short summary, and once opened into the full write-up
      (it widens and, near the right edge, shifts left to fit). And how strongly the chart shows (1 = solid). */
@@ -2148,6 +2148,9 @@ html.lenis {
     font-size: clamp(2.25rem, 0.75rem + 3.2vw, 4.5rem); /* 36-72px */
     line-height: 1;
     letter-spacing: -0.035em;
+    /* "difference" flips the title's color wherever the hover chart is behind it:
+       light over the dark page, dark over a bright bar, so it's always readable. */
+    mix-blend-mode: difference;
   }
 
   .project-row-icon {
@@ -2281,7 +2284,29 @@ html.js .project-index:not(.is-ready) .project-panel {
   transition:
     background-color var(--speed-slow) var(--ease),
     border-color var(--speed-slow) var(--ease),
-    box-shadow var(--speed-slow) var(--ease);
+    box-shadow var(--speed-slow) var(--ease),
+    transform var(--speed-slow) var(--ease);
+}
+
+/* Peeking (mouse over it): the note lifts a little and glows, on faint glass, and the first lines
+   of the write-up show, fading out. */
+.project-note.is-peeking {
+  background-color: color-mix(in srgb, var(--color-bg) 55%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow:
+    0 28px 56px -28px rgba(0, 0, 0, 0.9),
+    0 0 48px -12px color-mix(in srgb, var(--accent) 35%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.motion .project-note.is-peeking {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.project-note.is-peeking .project-details {
+  -webkit-mask-image: linear-gradient(#000 30%, transparent);
+  mask-image: linear-gradient(#000 30%, transparent);
 }
 
 /* Open: the note's background turns into dark frosted glass that covers the chart behind it. */
@@ -2461,6 +2486,7 @@ html:not(.js) .project-close {
     transition: opacity var(--speed-slow) var(--ease);
   }
 
+  .project-index.is-ready .project-note.is-peeking::before,
   .project-index.is-ready .project-note.is-expanded::before {
     opacity: 0;
   }
@@ -2477,7 +2503,8 @@ html:not(.js) .project-close {
       border-color var(--speed-slow) var(--ease),
       box-shadow var(--speed-slow) var(--ease),
       left var(--speed-slow) var(--ease),
-      width var(--speed-slow) var(--ease);
+      width var(--speed-slow) var(--ease),
+      transform var(--speed-slow) var(--ease);
   }
 }
 
