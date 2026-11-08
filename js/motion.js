@@ -18,15 +18,15 @@ const SMOOTH_SCROLL_ON = true;
 // (0.1 means the page moves 10% of the remaining distance each frame.)
 const SCROLL_SMOOTHNESS = 0.1;
 
-// Links that glide down the page (like the project list): the space left above the spot
-// they land on, under the top bar (pixels).
+// When the page glides to something (like a project opening on the Projects page): the space
+// left above it, under the top bar (pixels).
 const GLIDE_GAP = 24;
 
 // Which headings rise into place line by line. (".story-title" = the big step headings on the new home page.)
 const HEADLINES = "main h1, main h2, .story-title";
 
 // Headings inside these boxes are skipped: they move together with their box instead.
-const HEADLINES_SKIP = ".card, .panel";
+const HEADLINES_SKIP = ".card, .panel, .project-heading";
 
 // Headline lines: how long each line takes to rise (seconds), and the gap between lines.
 const LINE_DURATION = 1.1;
@@ -168,38 +168,32 @@ function motionLibrariesLoaded() {
       });
     });
 
-    // "Glide links": a link to a spot on the same page, marked data-glide (like the project list),
-    // glides there instead of jumping. Keyboard focus moves to that spot's heading, so screen
-    // readers and the Tab key carry on from there, and the address bar shows the spot (#vr2) so
-    // it can be shared.
-    document.querySelectorAll("a[data-glide]").forEach(function (link) {
-      function onClick(event) {
-        const id = decodeURIComponent((link.getAttribute("href") || "").replace(/^.*#/, ""));
-        const target = id && document.getElementById(id);
-        if (!lenis || !target) {
-          return; // let the link work normally
-        }
-        event.preventDefault();
-        // Focus first (without an instant jump), then glide; see "Back to top" above for why.
-        const focusSpot = target.querySelector("h2[tabindex], h3[tabindex]") || target;
-        if (!focusSpot.hasAttribute("tabindex")) {
-          focusSpot.setAttribute("tabindex", "-1");
-        }
-        focusSpot.focus({ preventScroll: true });
-        // Where to stop: the spot's place on the page, minus the top bar and a small gap.
-        // (Measured from the browser's own scroll position, which is always up to date.)
-        const header = document.querySelector(".site-header");
-        const headerHeight = header ? header.offsetHeight : 0;
-        const spot = target.getBoundingClientRect().top + window.scrollY - headerHeight - GLIDE_GAP;
-        lenis.scrollTo(Math.max(0, spot));
-        if (window.history && history.pushState) {
-          history.pushState(null, "", "#" + id);
-        }
+    // Glide helpers for other scripts (js/projects.js uses them when a project opens):
+    // siteGlideTo(element) glides until the element sits just under the top bar;
+    // siteJumpBy(pixels) moves the page instantly without upsetting the smooth scroller.
+    // Both answer false when smooth scrolling is off, so the caller can scroll the normal way.
+    window.siteGlideTo = function (element) {
+      if (!lenis || !element) {
+        return false;
       }
-      link.addEventListener("click", onClick);
-      cleanups.push(function () {
-        link.removeEventListener("click", onClick);
-      });
+      // Where to stop: the element's place on the page, minus the top bar and a small gap.
+      // (Measured from the browser's own scroll position, which is always up to date.)
+      const header = document.querySelector(".site-header");
+      const headerHeight = header ? header.offsetHeight : 0;
+      const spot = element.getBoundingClientRect().top + window.scrollY - headerHeight - GLIDE_GAP;
+      lenis.scrollTo(Math.max(0, spot));
+      return true;
+    };
+    window.siteJumpBy = function (pixels) {
+      if (!lenis) {
+        return false;
+      }
+      lenis.scrollTo(window.scrollY + pixels, { immediate: true, force: true });
+      return true;
+    };
+    cleanups.push(function () {
+      window.siteGlideTo = null;
+      window.siteJumpBy = null;
     });
   }
 

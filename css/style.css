@@ -111,6 +111,12 @@
   /* How long to wait for the particle scene before showing the backup picture anyway. */
   --scene-wait: 5s;
 
+  /* PROJECTS PAGE SETTINGS (sections 21-22)
+     How much of each project line stays empty on the right, so the hover chart has room to show. */
+  --hover-room: 36%;
+  /* The width of the words in an open project (one width for every line, label and list). */
+  --project-column: 38rem;
+
   /* Tells the browser to draw scrollbars and form controls dark. */
   color-scheme: dark;
 }
@@ -1955,19 +1961,18 @@ html.lenis {
 }
 
 
-/* 21. PROJECTS PAGE: THE BIG PROJECT LIST AND THE WRITE-UPS
-   21a. The list: one big title per line (wide screens) or one card per project (phones)
-   21b. Hover and focus on wide screens: the other titles dim, the active one slides right
-   21c. The floating picture that follows the mouse (drawn by js/projects-hover.js)
-   21d. The write-ups below the list
-   21e. Printing */
+/* 21. PROJECTS PAGE: THE BIG PROJECT LIST
+   Each project is one line (a button). Clicking it opens the project right there (section 22).
+   21a. Phones and tablets: one card per project, with its chart on top
+   21b. Wide screens: big titles on the left, an empty strip on the right for the hover chart
+   21c. Hover and focus on wide screens: the other titles dim, the active one slides right
+   21d. The floating hover chart (drawn by js/projects-hover.js) */
 
-/* 21a. THE LIST */
 .project-index-section {
   padding-top: var(--space-2xl);
 }
 
-/* Phones: a stack of cards. Tablets: two cards side by side. */
+/* 21a. PHONES AND TABLETS */
 .project-index {
   display: grid;
   gap: var(--space-lg);
@@ -1977,40 +1982,64 @@ html.lenis {
   .project-index {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  /* An open project spreads across both columns. */
+  .project.is-open {
+    grid-column: 1 / -1;
+  }
 }
 
-.project-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas:
-    "thumb thumb"
-    "num   meta"
-    "title title";
-  gap: var(--space-xs) var(--space-md);
-  align-items: baseline;
-  align-content: start;
-  height: 100%;
-  min-height: 44px;
-  padding: var(--space-lg);
-  color: var(--color-heading);
-  text-decoration: none;
+.project {
+  overflow: hidden;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 }
 
-/* The small picture on top of each phone card (hidden on wide screens, so it never downloads there). */
+/* The heading only wraps the button, so screen readers hear each project as a heading. */
+.project-heading {
+  margin: 0;
+  font: inherit;
+  letter-spacing: normal;
+}
+
+.project-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "thumb thumb thumb"
+    "num   meta  icon"
+    "title title title";
+  gap: var(--space-xs) var(--space-md);
+  align-items: baseline;
+  align-content: start;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: var(--space-lg);
+  color: var(--color-heading);
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+/* The small chart on top of each phone card (hidden on wide screens, so it never downloads there). */
 .project-row-thumb {
   grid-area: thumb;
   width: calc(100% + 2 * var(--space-lg));
   max-width: none;
   margin: calc(-1 * var(--space-lg)) calc(-1 * var(--space-lg)) var(--space-sm);
   aspect-ratio: 16 / 10;
-  object-fit: cover;
-  object-position: center top; /* charts keep their titles in view */
-  background-color: #fff;
+  padding: var(--space-sm);
+  object-fit: contain;
+  background-color: var(--color-bg-alt);
   border-bottom: 1px solid var(--color-border);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+/* Once a project is open, its full chart is in the panel, so the small one steps aside. */
+.project.is-open .project-row-thumb {
+  display: none;
 }
 
 /* The number ("01") and the year and type: small mono labels. */
@@ -2040,59 +2069,88 @@ html.lenis {
   letter-spacing: var(--heading-tracking);
 }
 
-.project-row-arrow {
-  display: none;
+/* A plus sign that turns into an "x" when the project is open. */
+.project-row-icon {
+  grid-area: icon;
+  position: relative;
+  align-self: center;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
-/* Wide screens: one big line per project, divided by thin rules. */
+.project-row-icon::before,
+.project-row-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  margin-top: -1px;
+  background-color: var(--color-link);
+}
+
+.project-row-icon::after {
+  transform: rotate(90deg);
+}
+
+.project-row[aria-expanded="true"] .project-row-icon {
+  transform: rotate(45deg);
+}
+
+.motion .project-row-icon {
+  transition: transform var(--speed-slow) var(--ease);
+}
+
+@media (max-width: 899px) {
+  .project:hover {
+    border-color: var(--color-accent-line);
+  }
+}
+
+/* 21b. WIDE SCREENS: big titles on the left; the right part stays empty so the hover chart has room. */
 @media (min-width: 900px) {
   .project-index {
     gap: 0;
     border-top: 1px solid var(--color-border);
   }
 
-  .project-index > li {
+  .project {
+    overflow: visible;
+    background: none;
+    border: 0;
     border-bottom: 1px solid var(--color-border);
+    border-radius: 0;
   }
 
   .project-row {
-    grid-template-columns: 4rem minmax(0, 1fr) minmax(12rem, auto) 2.5rem;
-    grid-template-areas: "num title meta arrow";
-    gap: var(--space-xl);
-    padding: clamp(1.25rem, 0.5rem + 1.5vw, 2.25rem) 0;
-    background: none;
-    border: 0;
-    border-radius: 0;
+    grid-template-columns: 4rem minmax(0, 1fr) var(--hover-room) 2.5rem;
+    grid-template-areas:
+      "num title . icon"
+      "num meta  . icon";
+    gap: var(--space-sm) var(--space-xl);
+    padding: clamp(1.5rem, 0.75rem + 1.5vw, 2.5rem) 0;
   }
 
   .project-row-thumb {
     display: none;
   }
 
+  .project-row-num {
+    align-self: start;
+    padding-top: 0.6em;
+  }
+
   .project-row-title {
-    font-size: clamp(2.25rem, 0.9rem + 3.4vw, 5rem); /* 36-80px */
+    font-size: clamp(2.25rem, 0.75rem + 3.2vw, 4.5rem); /* 36-72px */
     line-height: 1;
     letter-spacing: -0.035em;
-    /* "difference" flips the title's color wherever the floating picture is behind it:
-       white over the dark page, dark over a white chart, so it's always readable. */
-    mix-blend-mode: difference;
   }
 
-  .project-row-meta {
-    text-align: right;
-  }
-
-  /* A small arrow pointing down to the write-up. */
-  .project-row-arrow {
-    grid-area: arrow;
-    display: block;
+  .project-row-icon {
     justify-self: end;
-    width: 1.25rem;
-    height: 1.25rem;
-    border-right: 2px solid var(--color-link);
-    border-bottom: 2px solid var(--color-link);
-    transform: rotate(45deg) scale(0.6);
-    opacity: 0;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   .project-row:focus-visible {
@@ -2101,18 +2159,17 @@ html.lenis {
   }
 }
 
-/* 21b. HOVER AND FOCUS (wide screens with a mouse or trackpad) */
+/* 21c. HOVER AND FOCUS (wide screens) */
 @media (min-width: 900px) {
   .project-row-title,
   .project-row-num,
-  .project-row-meta,
-  .project-row-arrow {
+  .project-row-meta {
     transition: opacity var(--speed) ease, color var(--speed) ease;
   }
 
-  /* While one project is hovered or focused, the other titles fade back.
+  /* While one project line is hovered or focused, the other titles fade back.
      (Titles are big, so even faded they stay readable: at least 3:1 contrast.) */
-  .project-index:hover .project-row-title,
+  .project-index:has(.project-row:hover) .project-row-title,
   .project-index:has(.project-row:focus-visible) .project-row-title {
     opacity: 0.4;
   }
@@ -2129,14 +2186,8 @@ html.lenis {
     color: var(--color-link);
   }
 
-  .project-row:hover .project-row-arrow,
-  .project-row:focus-visible .project-row-arrow {
-    opacity: 1;
-  }
-
-  /* With motion on, the active title slides right and the arrow drops into place. */
-  .motion .project-row-title,
-  .motion .project-row-arrow {
+  /* With motion on, the active title slides right. */
+  .motion .project-row-title {
     transition:
       opacity var(--speed) ease,
       transform var(--speed-slow) var(--ease);
@@ -2146,21 +2197,9 @@ html.lenis {
   .motion .project-row:focus-visible .project-row-title {
     transform: translateX(12px);
   }
-
-  .motion .project-row:hover .project-row-arrow,
-  .motion .project-row:focus-visible .project-row-arrow {
-    transform: rotate(45deg) scale(1);
-  }
 }
 
-/* Phones and tablets: the card border lights up when hovered. */
-@media (max-width: 899px) {
-  .project-row:hover {
-    border-color: var(--color-accent-line);
-  }
-}
-
-/* 21c. THE FLOATING PICTURE (decoration only: it never catches clicks and screen readers skip it) */
+/* 21d. THE FLOATING HOVER CHART (decoration only: it never catches clicks and screen readers skip it) */
 .project-hover {
   position: fixed;
   inset: 0;
@@ -2170,80 +2209,200 @@ html.lenis {
   pointer-events: none;
 }
 
-/* 21d. THE WRITE-UPS */
-.cases {
-  border-top: 1px solid var(--color-border);
+
+/* 22. PROJECTS PAGE: AN OPEN PROJECT
+   The chart becomes a soft, glowing background on one side, and the words wrap around its
+   outline (CSS "shape-outside" uses a blurred outline picture, images/projects/themed/*-shape.svg).
+   Each project sets its own look in the HTML: which side (project-chart--left or --right),
+   --chart-width (how much of the row it takes) and --chart-opacity (how strongly it shows).
+   Pointing at the chart brings it to full strength so it's easy to read. */
+
+/* Before js/projects.js is ready, the projects stay closed (no flash of open sections). */
+html.js .project-index:not(.is-ready) .project-panel {
+  display: none;
 }
 
-.case + .case {
-  margin-top: var(--space-section);
+.project-panel {
+  overflow: hidden; /* trims the panel while it grows open */
 }
 
-/* "01 / 2026 · Technology Integration": a mono line with a thin rule under it. */
-.case-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2xs) var(--space-md);
-  margin: 0 0 var(--space-xl);
-  padding-bottom: var(--space-md);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  letter-spacing: 0.02em;
+.project-panel-inner {
+  position: relative;
+  display: flow-root; /* the panel grows to fit the floating chart */
+  padding: 0 var(--space-lg) var(--space-lg);
+}
+
+/* Phones: the chart sits on top at full strength, then the words. */
+.project-chart {
+  margin: 0 0 var(--space-lg);
+}
+
+.project-chart img {
+  width: 100%;
+  height: auto;
+}
+
+.project-text {
+  max-width: 68ch;
+}
+
+.project-full-title {
+  margin-bottom: var(--space-sm);
+  font-size: var(--text-2xl);
+}
+
+.project-lead {
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  color: var(--color-heading);
+}
+
+.project-source {
   color: var(--color-text-muted);
-  border-bottom: 1px solid var(--color-border);
 }
 
-.case-num {
-  color: var(--color-link);
+.project-text .chips {
+  margin-bottom: var(--space-lg);
 }
 
-/* The heading gets keyboard focus when you arrive from the list; only show the ring for keyboard users. */
-.case h2:focus:not(:focus-visible) {
-  outline: none;
+.project-links {
+  margin-bottom: var(--space-sm);
 }
 
-/* A write-up without a picture (the research paper). */
-.case-text {
-  max-width: 62ch;
-}
-
-.case-text > .text-link {
-  display: inline-block;
-}
-
-/* "All projects": back up to the list. */
-.case-back {
+/* "Close": folds the project back up. */
+.project-close {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  width: fit-content;
   min-height: 44px;
-  margin-top: var(--space-md);
+  margin-top: var(--space-sm);
+  padding: 0;
   font-family: var(--font-mono);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+  cursor: pointer;
+  background: none;
+  border: 0;
 }
 
-.case-back::before {
+.project-close::before {
   content: "";
-  width: 0.5rem;
-  height: 0.5rem;
-  margin-top: 0.25rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-top: 0.3rem;
   border-top: 2px solid currentColor;
   border-left: 2px solid currentColor;
   transform: rotate(45deg);
 }
 
-.case-back:hover {
+.project-close:hover {
   color: var(--color-link);
 }
 
-/* 21e. PRINTING: the list is just a contents page; no floating picture. */
+/* The research paper has no chart: a huge faint number fills the space instead. */
+.project-panel--text .project-panel-inner {
+  isolation: isolate; /* keeps the big number behind the words */
+}
+
+.project-ghost-number {
+  position: absolute;
+  right: 0;
+  bottom: -0.1em;
+  z-index: -1;
+  font-family: var(--font-mono);
+  font-size: clamp(8rem, 4rem + 18vw, 22rem);
+  font-weight: 500;
+  line-height: 1;
+  color: color-mix(in srgb, var(--accent) 8%, transparent);
+  pointer-events: none;
+}
+
+/* Wide screens: the chart floats to one side as a soft background, and the words wrap around it. */
+@media (min-width: 900px) {
+  .project-panel-inner {
+    padding: var(--space-md) 0 var(--space-section);
+  }
+
+  .project-chart {
+    position: relative;
+    width: var(--chart-width, 55%);
+    margin: 0;
+    shape-margin: 1.75rem;          /* the gap kept between the chart's outline and the words */
+    shape-image-threshold: 0.5;
+  }
+
+  .project-chart--left {
+    float: left;
+  }
+
+  .project-chart--right {
+    float: right;
+  }
+
+  /* The soft look: see-through, a gentle cyan glow, and edges that melt into the page. */
+  .project-chart img {
+    opacity: var(--chart-opacity, 0.7);
+    filter: drop-shadow(0 0 32px color-mix(in srgb, var(--accent) 22%, transparent));
+    -webkit-mask-image: radial-gradient(ellipse 80% 85% at 50% 50%, #000 70%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 85% at 50% 50%, #000 70%, transparent 100%);
+  }
+
+  .motion .project-chart img {
+    transition: opacity var(--speed-slow) var(--ease);
+  }
+
+  /* Point at the chart to read it at full strength. */
+  .project-chart:hover img {
+    opacity: 1;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  /* The words keep to a comfortable reading column on the side away from the chart.
+     Where the chart's outline leaves room, the lines reach in toward it. */
+  .project-text {
+    max-width: none;
+  }
+
+  .project-text > * {
+    max-width: var(--project-column);
+  }
+
+  .project-chart--left ~ .project-text > * {
+    margin-left: auto;
+  }
+
+  .project-chart--right ~ .project-text > * {
+    margin-right: auto;
+  }
+
+  .project-full-title {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* Printing: every project prints open, with its chart at full strength. */
 @media print {
+  .project-panel,
+  .project-panel[hidden] {
+    display: block !important;
+    content-visibility: visible !important;
+    height: auto !important;
+  }
+
   .project-hover,
   .project-row-thumb,
-  .case-back {
+  .project-row-icon,
+  .project-close,
+  .project-ghost-number {
     display: none !important;
+  }
+
+  .project-chart img {
+    opacity: 1 !important;
+    filter: none !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
   }
 
   .project-row-title {

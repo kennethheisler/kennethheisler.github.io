@@ -1,13 +1,14 @@
 /* PROJECTS-HOVER.JS: THE RIPPLING PICTURE ON THE PROJECTS PAGE
    On a wide screen with a mouse, hovering a project title in the list shows that project's
-   picture. It follows the mouse with a soft lag, ripples like water as it appears, bends a
-   little when you drag it quickly, and wipes over to the next picture when you move to
-   another title. Keyboard users get the same picture beside the title they Tab to.
+   chart in the empty strip to the right of the titles. It follows the mouse up and down with a
+   soft lag, ripples like water as it appears, bends a little when you move quickly, and wipes
+   over to the next chart when you move to another title. Keyboard users get the same chart
+   beside the title they Tab to. An open project already shows its chart, so it gets no preview.
 
    It's drawn with Three.js (a 3D drawing library) on one see-through layer over the page.
    It is decoration only: it never catches clicks, and screen readers skip it.
    Phones, tablets, "reduce motion", or no WebGL: it simply doesn't start, so phones never even
-   download Three.js. The list and the write-ups work the same either way.
+   download Three.js. The list and the projects work the same either way.
 
    SECTIONS
    1. Settings
@@ -19,14 +20,17 @@
 
 /* 1. SETTINGS */
 
-// The largest the picture gets (pixels). Each picture keeps its own shape inside this box.
-const IMAGE_MAX_WIDTH = 420;
-const IMAGE_MAX_HEIGHT = 320;
+// The largest the picture gets (pixels). Each picture keeps its own shape inside this box,
+// and it never gets wider than the empty strip beside the titles (set by --hover-room in style.css).
+const IMAGE_MAX_WIDTH = 520;
+const IMAGE_MAX_HEIGHT = 400;
 
-// Where the picture sits compared with the mouse (pixels). 0, 0 = centered on the mouse.
-// Positive X moves it right, positive Y moves it down.
-const IMAGE_OFFSET_X = 0;
-const IMAGE_OFFSET_Y = 0;
+// The picture stays in the empty strip on the right. Side to side it only drifts a little with
+// the mouse: 0 = stays centered in the strip, 1 = follows the mouse fully (as far as the strip allows).
+const SIDEWAYS_FOLLOW = 0.15;
+
+// The dark card behind each chart (the charts themselves are see-through).
+const CARD_COLOR = 0x0e1726;
 
 // How quickly the picture catches up with the mouse. Smaller = lazier and floatier (0.05),
 // larger = snappier (0.3). This is the share of the gap it closes each frame.
@@ -174,7 +178,8 @@ function startLayer(renderer, list) {
       uRippleSpeed: { value: RIPPLE_SPEED },
       uBend: { value: BEND_STRENGTH },
       uColorSplit: { value: COLOR_SPLIT },
-      uRadius: { value: CORNER_RADIUS }
+      uRadius: { value: CORNER_RADIUS },
+      uCard: { value: new THREE.Color(CARD_COLOR) }
     }
   });
   const card = new THREE.Mesh(geometry, material);
@@ -223,7 +228,7 @@ function startLayer(renderer, list) {
 
   // Fits a picture's shape inside the largest size allowed.
   function fitSize(aspect) {
-    let w = IMAGE_MAX_WIDTH;
+    let w = Math.min(IMAGE_MAX_WIDTH, strip().width - 32);
     let h = w / aspect;
     if (h > IMAGE_MAX_HEIGHT) {
       h = IMAGE_MAX_HEIGHT;
@@ -271,17 +276,23 @@ function startLayer(renderer, list) {
   }
 
   function show(row) {
-    if (!row.dataset.image) {
-      hide(); // a project without a picture (the research paper)
+    if (!row.dataset.image || row.getAttribute("aria-expanded") === "true") {
+      hide(); // no picture (the research paper), or the project is open and already shows its chart
       return;
     }
-    // When the picture first appears, start it right where it should be (no flying in).
-    if (u.uShow.value < 0.02) {
+    const appearing = u.uShow.value < 0.02;
+    showGoal = 1;
+    choose(row.dataset.image);
+    // Aim with this picture's size, and when it first appears, start it right there (no flying in).
+    if (focusedRow) {
+      aimAtRow(focusedRow);
+    } else {
+      aimAtMouse();
+    }
+    if (appearing) {
       position.x = target.x;
       position.y = target.y;
     }
-    showGoal = 1;
-    choose(row.dataset.image);
     play();
   }
 
@@ -291,16 +302,33 @@ function startLayer(renderer, list) {
     play();
   }
 
-  // Where the picture goes: next to the mouse, or beside the keyboard-focused row.
+  // The empty strip on the right of the list, where the picture lives (in window pixels).
+  function strip() {
+    const box = list.getBoundingClientRect();
+    const share = parseFloat(getComputedStyle(root).getPropertyValue("--hover-room")) / 100 || 0.36;
+    const width = box.width * share;
+    return { left: box.right - width, width: width, center: box.right - width / 2 };
+  }
+
+  // Where the picture goes: in the strip, level with the mouse (or the keyboard-focused row),
+  // drifting only slightly sideways, and never past the edges of the strip or the window.
+  function aim(x, y) {
+    const room = strip();
+    const halfW = goalSize.w / 2;
+    const halfH = goalSize.h / 2;
+    const header = document.querySelector(".site-header");
+    const top = (header ? header.offsetHeight : 0) + 12 + halfH;
+    target.x = clamp(room.center + (x - room.center) * SIDEWAYS_FOLLOW, room.left + halfW, room.left + room.width - halfW + 16);
+    target.y = clamp(y, top, Math.max(top, height - 12 - halfH));
+  }
+
   function aimAtMouse() {
-    target.x = mouse.x + IMAGE_OFFSET_X;
-    target.y = mouse.y + IMAGE_OFFSET_Y;
+    aim(mouse.x, mouse.y);
   }
 
   function aimAtRow(row) {
     const box = row.getBoundingClientRect();
-    target.x = box.left + box.width * 0.5; // between the title and the year and type labels
-    target.y = box.top + box.height / 2;
+    aim(strip().center, box.top + box.height / 2);
   }
 
   // Mouse events.
@@ -328,7 +356,7 @@ function startLayer(renderer, list) {
       show(row);
     });
 
-    // Clicking glides down to the write-up, so the picture gets out of the way.
+    // Clicking opens the project (which shows its own chart), so the preview gets out of the way.
     listen(row, "click", hide);
 
     // Keyboard: the picture appears beside the row you Tab to.
@@ -346,12 +374,13 @@ function startLayer(renderer, list) {
         hide();
       }
     });
-  });
 
-  listen(list, "pointerleave", function () {
-    if (!focusedRow) {
-      hide();
-    }
+    // Leaving a line hides the picture (moving straight onto another line shows that one instead).
+    listen(row, "pointerleave", function () {
+      if (!focusedRow) {
+        hide();
+      }
+    });
   });
 
   // Hide the picture once the list scrolls off screen.
@@ -400,9 +429,11 @@ function startLayer(renderer, list) {
     lastTime = time;
     u.uTime.value = time;
 
-    // Keyboard mode: keep the picture beside the row, even while the page scrolls.
+    // Keep aiming: the page may scroll, and the picture's size changes when it switches.
     if (focusedRow) {
       aimAtRow(focusedRow);
+    } else if (mouse.known) {
+      aimAtMouse();
     }
 
     // Glide toward the target. (Adjusted so it feels the same at 60, 120 or 144 frames a second.)
@@ -553,6 +584,7 @@ const FRAGMENT_SHADER = /* glsl */ `
   uniform float uRippleSpeed;
   uniform float uColorSplit;
   uniform float uRadius;
+  uniform vec3 uCard;      // the dark card color behind the see-through chart
   varying vec2 vUv;
 
   // Fits a picture of one shape into a card of another shape without squashing it
@@ -567,11 +599,16 @@ const FRAGMENT_SHADER = /* glsl */ `
     return (uv - 0.5) * scale + 0.5;
   }
 
-  // Reads a picture with its red and blue pulled slightly apart in the direction of movement.
+  // Reads a see-through chart laid on the dark card, with its red and blue pulled slightly apart
+  // in the direction of movement.
+  vec3 onCard(vec4 texel) {
+    return mix(uCard, texel.rgb, texel.a);
+  }
+
   vec3 readSplit(sampler2D picture, vec2 uv, vec2 shift) {
-    float r = texture2D(picture, uv + shift).r;
-    float g = texture2D(picture, uv).g;
-    float b = texture2D(picture, uv - shift).b;
+    float r = onCard(texture2D(picture, uv + shift)).r;
+    float g = onCard(texture2D(picture, uv)).g;
+    float b = onCard(texture2D(picture, uv - shift)).b;
     return vec3(r, g, b);
   }
 
