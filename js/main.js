@@ -6,10 +6,6 @@
 // Animations: true = on, false = off. (Also switches off everything in js/motion.js.)
 const ANIMATIONS_ON = true;
 
-// The screen width in pixels where the full menu appears.
-// Keep this matching the "max-width" small-screen rule in css/style.css.
-const DESKTOP_MENU_WIDTH = 880;
-
 // Safety net, in milliseconds: if the animation libraries are still downloading after this long
 // (a slow or stuck connection), animations are skipped so the page never stays hidden.
 const MOTION_WAIT_LIMIT = 4000;
@@ -49,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.documentElement.classList.add("motion-ready");
 
   fixInPageLinks();
-  setupMobileMenu();
+  setupMenu();
   highlightCurrentPage();
   setupRevealOnScroll();
   setupHeaderLine();
@@ -73,8 +69,8 @@ function fixInPageLinks() {
 }
 
 
-/* 4. MOBILE MENU (the hamburger button) */
-function setupMobileMenu() {
+/* 4. THE MENU (the "Menu" button and its card) */
+function setupMenu() {
   const header = document.querySelector(".site-header");
   const toggle = document.querySelector(".nav-toggle");
   const menu = document.getElementById("site-menu");
@@ -96,7 +92,7 @@ function setupMobileMenu() {
     toggle.setAttribute("aria-expanded", "false");
   }
 
-  // The hamburger button opens a closed menu and closes an open one.
+  // The "Menu" button opens a closed menu card and closes an open one.
   toggle.addEventListener("click", function () {
     if (isOpen()) {
       closeMenu();
@@ -127,15 +123,6 @@ function setupMobileMenu() {
     }
   });
 
-  // Widening the window to desktop size closes the mobile menu.
-  const desktopScreen = window.matchMedia("(min-width: " + DESKTOP_MENU_WIDTH + "px)");
-  if (desktopScreen.addEventListener) {
-    desktopScreen.addEventListener("change", function () {
-      if (desktopScreen.matches) {
-        closeMenu();
-      }
-    });
-  }
 }
 
 

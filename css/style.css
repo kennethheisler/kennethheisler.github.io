@@ -440,150 +440,248 @@ textarea {
 }
 
 .site-nav {
-  margin-left: auto; /* pushes the menu to the right side */
+  position: relative; /* the menu card opens just under the button */
+  margin-left: auto;  /* pushes the button to the right side */
 }
 
+/* THE "MENU" BUTTON: a small pill with two dots that turn into an X when the card is open. */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 44px;
+  padding: 0 1.1rem 0 0.95rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-heading);
+  cursor: pointer;
+  background-color: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+}
+
+.nav-toggle:hover,
+.nav-toggle[aria-expanded="true"] {
+  border-color: var(--color-link);
+  background-color: var(--color-accent-soft);
+}
+
+.nav-toggle-dots {
+  position: relative;
+  display: inline-flex;
+  gap: 4px;
+  width: 14px;
+  height: 14px;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-toggle-dots span {
+  width: 5px;
+  height: 5px;
+  background-color: var(--color-link);
+  border-radius: 50%;
+}
+
+/* Open: the two dots stretch into the two strokes of an X. */
+.nav-toggle[aria-expanded="true"] .nav-toggle-dots span {
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-dots span:first-child {
+  transform: rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-dots span:last-child {
+  transform: rotate(-45deg);
+}
+
+/* THE MENU CARD: a small rounded card that floats under the button. */
+.menu-card {
+  position: absolute;
+  top: calc(100% + var(--space-sm));
+  right: 0;
+  width: min(20rem, calc(100vw - 2 * var(--container-padding)));
+  padding: var(--space-sm);
+  background-color: color-mix(in srgb, var(--color-surface-raised) 97%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  box-shadow:
+    0 30px 60px -20px rgba(0, 0, 0, 0.8),
+    0 0 0 1px color-mix(in srgb, var(--accent) 6%, transparent);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  backdrop-filter: blur(24px) saturate(1.3);
+  /* Closed: invisible and out of the Tab order ("visibility: hidden"), ready to grow from the button. */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.94);
+  transform-origin: top right;
+}
+
+/* js/main.js adds "is-open" to the header when the card is open. */
+.site-header.is-open .menu-card {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+}
+
+/* Motion on: the card grows out of the button, and the links float up one after another. */
+.motion .menu-card {
+  transition:
+    opacity var(--speed) ease,
+    transform var(--speed-slow) var(--ease),
+    visibility 0s linear var(--speed-slow);
+}
+
+.motion .site-header.is-open .menu-card {
+  transition:
+    opacity var(--speed) ease,
+    transform var(--speed-slow) var(--ease),
+    visibility 0s;
+}
+
+.motion .menu-card li {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--speed) ease, transform var(--speed-slow) var(--ease);
+}
+
+.motion .site-header.is-open .menu-card li {
+  opacity: 1;
+  transform: none;
+}
+
+.motion .site-header.is-open .menu-card li:nth-child(2) { transition-delay: 40ms; }
+.motion .site-header.is-open .menu-card li:nth-child(3) { transition-delay: 80ms; }
+.motion .site-header.is-open .menu-card li:nth-child(4) { transition-delay: 120ms; }
+.motion .site-header.is-open .menu-card-contact li { transition-delay: 160ms; }
+
+.motion .nav-toggle-dots span {
+  transition: width var(--speed) var(--ease), transform var(--speed-slow) var(--ease);
+}
+
+/* The pages: big, roomy links. */
 .nav-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2xs);
+  display: grid;
+  gap: 2px;
 }
 
 .nav-link {
-  position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0.5rem 0.85rem;
-  font-size: var(--text-sm);
-  font-weight: 700;
-  line-height: 1.5;
-  color: var(--color-text);
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 0 var(--space-md);
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: var(--heading-weight);
+  letter-spacing: var(--heading-tracking);
+  color: var(--color-heading);
   text-decoration: none;
-  border-radius: var(--radius-sm);
+  border-radius: 12px;
 }
 
-.nav-link:hover {
-  color: var(--color-heading);
-  background-color: var(--color-accent-soft);
-}
-
-/* The page you are on. */
-.nav-link[aria-current="page"] {
-  color: var(--color-link);
-  background-color: var(--color-accent-soft);
-}
-
-/* An underline as well, so color isn't the only clue. */
-.nav-link[aria-current="page"]::after {
+/* A small arrow slides in on hover. */
+.nav-link::after {
   content: "";
-  position: absolute;
-  right: 0.85rem;
-  bottom: 0.35rem;
-  left: 0.85rem;
-  height: 2px;
-  background-color: currentColor;
-  border-radius: 2px;
-}
-
-/* The hamburger: a round button with three bars that turn into an X when the menu opens. */
-.nav-toggle {
-  display: none; /* hidden on wide screens; shown on small screens below */
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  color: var(--color-heading);
-  background-color: transparent;
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-}
-
-.nav-toggle:hover {
-  background-color: var(--color-accent-soft);
-  border-color: var(--color-link);
-}
-
-.nav-toggle-bar {
-  display: block;
-  width: 20px;
-  height: 2px;
-  background-color: currentColor;
-  border-radius: 2px;
-}
-
-.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-
-.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-top: 2px solid var(--color-link);
+  border-right: 2px solid var(--color-link);
+  transform: rotate(45deg) translateX(-6px);
   opacity: 0;
 }
 
-.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
+.motion .nav-link::after {
+  transition: opacity var(--speed) ease, transform var(--speed-slow) var(--ease);
 }
 
-/* Without JavaScript the button can't work, so hide it. */
-.no-js .nav-toggle {
+.nav-link:hover {
+  background-color: var(--color-accent-soft);
+}
+
+.nav-link:hover::after {
+  opacity: 1;
+  transform: rotate(45deg) translateX(0);
+}
+
+/* The page you are on: a cyan dot in front, so color isn't the only clue. */
+.nav-link[aria-current="page"] {
+  color: var(--color-link);
+}
+
+.nav-link[aria-current="page"]::before {
+  content: "";
+  order: -1;
+  width: 6px;
+  height: 6px;
+  margin-right: var(--space-sm);
+  background-color: currentColor;
+  border-radius: 50%;
+}
+
+.nav-link[aria-current="page"] {
+  justify-content: flex-start;
+}
+
+.nav-link[aria-current="page"]::after {
+  margin-left: auto;
+}
+
+/* Email and LinkedIn: small mono links under a thin line. */
+.menu-card-contact {
+  display: grid;
+  gap: var(--space-2xs);
+  margin: var(--space-sm) var(--space-sm) var(--space-2xs);
+  padding: var(--space-sm) var(--space-2xs) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.menu-card-contact a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.menu-card-contact a:hover {
+  color: var(--color-link);
+}
+
+/* Without JavaScript the button can't work: hide it and show the pages as a plain row of links. */
+.no-js .nav-toggle,
+.no-js .menu-card-contact {
   display: none;
 }
 
-/* SMALL SCREENS ONLY (879px wide and narrower, so the menu links fit on one row above that).
-   Keep this matching DESKTOP_MENU_WIDTH in js/main.js. */
-@media (max-width: 879px) {
-  /* With JavaScript: show the hamburger; fold the links away. */
-  .js .nav-toggle {
-    display: inline-flex;
-  }
+.no-js .menu-card {
+  position: static;
+  width: auto;
+  padding: 0;
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
 
-  .js .nav-list {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    left: 0;
-    flex-direction: column;
-    gap: var(--space-2xs);
-    max-height: calc(100vh - var(--header-height));
-    overflow-y: auto;
-    padding: var(--space-md) var(--container-padding) var(--space-lg);
-    background-color: var(--color-surface-raised);
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: var(--shadow-raised);
-  }
+.no-js .nav-list {
+  display: flex;
+  flex-wrap: wrap;
+}
 
-  /* js/main.js adds "is-open" to the header when the menu is open. */
-  .js .site-header.is-open .nav-list {
-    display: flex;
-  }
-
-  .js .nav-link {
-    width: 100%;
-    padding-block: 0.75rem;
-    font-size: var(--text-base);
-  }
-
-  .js .nav-link[aria-current="page"]::after {
-    right: auto;
-    width: 2rem;
-  }
-
-  /* Without JavaScript: show the links on their own row instead, so nobody is ever locked out of the menu. */
-  .no-js .header-inner {
-    flex-wrap: wrap;
-  }
-
-  .no-js .site-nav {
-    flex-basis: 100%;
-    margin-left: 0;
-    padding-bottom: var(--space-sm);
-  }
+.no-js .nav-link {
+  min-height: 44px;
+  font-size: var(--text-sm);
 }
 
 
@@ -1326,10 +1424,6 @@ html.lenis {
     color var(--speed-fast) ease;
 }
 
-.motion .nav-toggle-bar {
-  transition: transform var(--speed) var(--ease), opacity var(--speed-fast) ease;
-}
-
 .motion .card {
   transition:
     transform var(--speed) var(--ease),
@@ -1339,18 +1433,6 @@ html.lenis {
 
 .motion .site-header {
   transition: border-color var(--speed) ease;
-}
-
-/* The mobile menu slides down a little as it opens. */
-.motion .site-header.is-open .nav-list {
-  animation: menu-in var(--speed) var(--ease);
-}
-
-@keyframes menu-in {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
 }
 
 /* Hover movement only for devices with a real pointer (mouse or trackpad). */
@@ -2160,8 +2242,12 @@ html.lenis {
     font-size: clamp(2.25rem, 0.75rem + 3.2vw, 4.5rem); /* 36-72px */
     line-height: 1;
     letter-spacing: -0.035em;
-    /* "difference" flips the title's color wherever the hover chart is behind it:
-       light over the dark page, dark over a bright bar, so it's always readable. */
+  }
+
+  /* The title you're on flips its color wherever the hover chart is behind it ("difference"):
+     light over the dark page, dark over a bright bar, so it's always readable. */
+  .project-row:hover .project-row-title,
+  .project-row:focus-visible .project-row-title {
     mix-blend-mode: difference;
   }
 
@@ -2576,5 +2662,226 @@ html:not(.js) .project-close {
   .project-row-title {
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+
+/* 23. ABOUT PAGE: THE SKILL CARDS
+   Four playing cards. The resting look (below) is the cards face up in a row, so they read fine
+   without motion. js/about-cards.js turns them face down and deals them in as you scroll.
+   23a. The row of cards
+   23b. Both faces of a card
+   23c. The front: name, list, and the upside-down name at the bottom like a real card
+   23d. Printing */
+
+/* 23a. THE ROW */
+.skill-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 20rem);
+  justify-content: center;
+  gap: var(--space-xl);
+  perspective: 1400px; /* depth for the 3D flips */
+}
+
+@media (min-width: 600px) {
+  .skill-cards {
+    grid-template-columns: repeat(2, minmax(0, 18rem));
+  }
+}
+
+@media (min-width: 1100px) {
+  .skill-cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 2rem);
+  }
+}
+
+.skill-card {
+  aspect-ratio: 5 / 7.6;
+  perspective: 1200px;
+}
+
+/* 23b. BOTH FACES: the card turns over around its middle; each face hides when it's turned away. */
+.skill-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: rotateY(180deg); /* face up by default */
+  transform-style: preserve-3d;
+}
+
+.skill-card-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.85);
+}
+
+.skill-card-back {
+  border: 3px solid #e6f6ff;
+}
+
+.skill-card-back svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 23c. THE FRONT: a bright card with dark ink. */
+.skill-card-front {
+  container-type: inline-size; /* lets the card's name size itself to the card's width */
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1rem, 0.6rem + 1vw, 1.5rem);
+  color: #0a1220;
+  background: linear-gradient(160deg, #ffffff, #e7eef8);
+  transform: rotateY(180deg);
+}
+
+.skill-card-top,
+.skill-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.skill-card-top h3,
+.skill-card-name {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: min(1.875rem, 10cqi); /* shrinks on narrow cards so long names like CREDENTIALS fit */
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: #0a1220;
+}
+
+/* The suit mark: a bold block letter, like a playing card's corner. */
+.skill-card-mark {
+  flex-shrink: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #0a1f57;
+  border-radius: 6px;
+}
+
+.skill-card-list {
+  display: grid;
+  margin: var(--space-md) 0 auto;
+}
+
+.skill-card-list li {
+  padding: 0.45rem 0;
+  font-size: var(--text-sm);
+  line-height: 1.3;
+  color: #1c2a3f;
+  /* a dotted line between lines, in the site's cyan */
+  background-image: radial-gradient(circle, #6fc8ea 1px, transparent 1.4px);
+  background-position: 0 100%;
+  background-size: 7px 3px;
+  background-repeat: repeat-x;
+}
+
+.skill-card-list li:last-child {
+  background: none;
+}
+
+/* The name again, upside down at the bottom, like a real card. */
+.skill-card-bottom {
+  margin-top: var(--space-sm);
+  transform: rotate(180deg);
+}
+
+/* With a mouse: a card leans toward the pointer (js/about-cards.js sets the lean). */
+.skill-card-inner {
+  will-change: transform;
+}
+
+/* 23d. PRINTING: plain fronts in a row. */
+@media print {
+  .skill-card-inner,
+  .skill-card {
+    transform: none !important;
+  }
+
+  .skill-card-back {
+    display: none;
+  }
+
+  .skill-card-front {
+    position: static;
+    transform: none;
+    box-shadow: none;
+    border: 1px solid #999;
+  }
+}
+
+
+/* 24. THE GIANT GLOWING WORD (js/glow-word.js draws it; see that file to tune the ribbon) */
+.glow-word {
+  position: relative;
+  margin-bottom: var(--space-xl);
+  user-select: none;
+}
+
+.glow-word canvas {
+  display: block;
+}
+
+/* Before it's drawn (or without JavaScript): the word as a plain thin outline. */
+.glow-word:not(.is-drawn)::before {
+  content: attr(data-word);
+  display: block;
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 12.5vw, 11.5rem);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-align: center;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--color-text) 25%, transparent);
+}
+
+@media print {
+  .glow-word {
+    display: none;
+  }
+}
+
+
+/* 25. THE SCROLL RIBBON (js/scroll-ribbon.js): a layer of light behind the whole page */
+.scroll-ribbon {
+  position: fixed;
+  inset: 0;
+  z-index: -1; /* behind everything: above the page background, below the text */
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* While the ribbon runs, the darker section backgrounds turn slightly see-through so it shows. */
+.has-ribbon .section--alt {
+  background-color: color-mix(in srgb, var(--color-bg-alt) 70%, transparent);
+}
+
+.has-ribbon .site-footer {
+  background-color: color-mix(in srgb, var(--color-bg-alt) 85%, transparent);
+}
+
+@media print {
+  .scroll-ribbon {
+    display: none;
   }
 }

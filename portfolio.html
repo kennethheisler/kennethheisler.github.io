@@ -52,6 +52,8 @@
   <script src="js/motion.js" defer></script>
   <!-- Glowing particles that follow the mouse and burst on clicks. Settings: top of js/cursor-particles.js. -->
   <script src="js/cursor-particles.js" defer></script>
+  <!-- The ribbon of light behind the page that follows your scroll. Settings: top of js/scroll-ribbon.js. -->
+  <script src="js/scroll-ribbon.js" defer></script>
 
   <!-- The rippling picture that follows the mouse over the project list (desktop only).
        It uses Three.js (a 3D drawing library); the "import map" tells the browser where to get it.
@@ -91,21 +93,26 @@
       <!-- MAIN MENU. -->
       <nav class="site-nav" aria-label="Main">
 
-        <!-- Hamburger button (small screens only). -->
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
-          <span class="nav-toggle-bar" aria-hidden="true"></span>
-          <span class="nav-toggle-bar" aria-hidden="true"></span>
-          <span class="nav-toggle-bar" aria-hidden="true"></span>
-          <span class="sr-only">Menu</span>
+        <!-- The "Menu" button: opens a small card with the pages (js/main.js). -->
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu-card">
+          <span class="nav-toggle-dots" aria-hidden="true"><span></span><span></span></span>
+          <span class="nav-toggle-label">Menu</span>
         </button>
 
-        <!-- Menu links. -->
-        <ul class="nav-list" id="site-menu" role="list">
-          <li><a class="nav-link" href="index.html">Home</a></li>
-          <li><a class="nav-link" href="about.html">About</a></li>
-          <li><a class="nav-link" href="portfolio.html">Projects</a></li>
-          <li><a class="nav-link" href="contact.html">Contact</a></li>
-        </ul>
+        <!-- THE MENU CARD: the pages, and ways to get in touch. -->
+        <div class="menu-card" id="site-menu-card">
+          <ul class="nav-list" id="site-menu" role="list">
+            <li><a class="nav-link" href="index.html">Home</a></li>
+            <li><a class="nav-link" href="about.html">About</a></li>
+            <li><a class="nav-link" href="portfolio.html">Projects</a></li>
+            <li><a class="nav-link" href="contact.html">Contact</a></li>
+          </ul>
+          <!-- EDIT ME: your email and LinkedIn (keep them matching the footer). -->
+          <ul class="menu-card-contact" role="list">
+            <li><a href="mailto:me@kennethheisler.com">me@kennethheisler.com</a></li>
+            <li><a href="https://www.linkedin.com/in/kennethcheisler">LinkedIn</a></li>
+          </ul>
+        </div>
       </nav>
 
     </div>
