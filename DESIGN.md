@@ -43,7 +43,7 @@ All text pairs meet at least 4.5:1 contrast on the backgrounds above.
 
 ## 4. Type
 
-- **Geist** (400-700) for headings and body. **Geist Mono** (400-500) for small uppercase labels (the `.badge`, and later the year/type labels on Projects). Both load from Google Fonts in each page's `<head>`.
+- **Geist** (400-700) for headings and body. **Geist Mono** (400-500) for small uppercase labels (the `.badge`, and the numbers and year/type labels on Projects). Both load from Google Fonts in each page's `<head>`.
 - Headings: weight 600, tight tracking (`--heading-tracking: -0.025em`).
 - Sizes: body 18px, smallest text 16px (never smaller). `--text-display` (48-120px) is reserved for the rebuilt home hero.
 
@@ -61,15 +61,16 @@ All text pairs meet at least 4.5:1 contrast on the backgrounds above.
 
 | Effect | What it does | Where |
 |---|---|---|
-| Smooth scroll | Weighted, gliding scroll (Lenis, `SCROLL_SMOOTHNESS`). "Back to top" glides up and focuses the name link. | `js/motion.js` section 4 |
+| Smooth scroll | Weighted, gliding scroll (Lenis, `SCROLL_SMOOTHNESS`). "Back to top" glides up and focuses the name link. Same-page links marked `data-glide` (the project list) glide to their spot, focus its heading and update the address (`GLIDE_GAP`). | `js/motion.js` section 4 |
 | Headline reveals | Page headings (`main h1, main h2`) rise into place line by line from behind a mask. Headings in cards and panels move with their box instead. | `js/motion.js` section 5 |
 | Fade-ins | Anything with `class="reveal"` fades up 24px as it scrolls into view, staggered. | `js/motion.js` section 6 |
 | Magnetic buttons | Buttons lean toward the mouse (`MAGNETIC_STRENGTH`) on a little spring. Buttons side by side bump each other aside instead of overlapping and bounce back (`BUTTON_BOUNCE`, `BUTTON_GAP`). Mouse and trackpad only. | `js/motion.js` section 7 |
 | Particle scene (home) | About 60k glowing particles (15k on phones) drift like ink; the mouse pushes them aside. Scrolling through "What I Do" forms a line chart, a puzzle piece with a graduation cap, and a network, each with one amber "insight". A "Pause motion" button freezes the drift. | `js/hero-scene.js`, CSS section 19 |
+| Project list (Projects) | Big project titles in a list with mono numbers and year/type labels. Hovering or focusing one fades the others back and slides it right. On a wide screen with a mouse, that project's picture follows the cursor behind the text, ripples in, bends when dragged, and wipes over to the next picture; the title flips color over it (`mix-blend-mode: difference`) so it stays readable. Phones get cards with a picture on top instead, and never download Three.js. | `js/projects-hover.js`, CSS section 21 |
 | Cursor ring | A 36px cyan ring trails the mouse (`CURSOR_LAG`) and grows over links and buttons. The normal arrow stays visible. Mouse and trackpad only; hidden in print and high-contrast mode. | `js/motion.js` section 8, CSS section 17 |
 | Page transitions | The old page fades out and rises 12px (300ms); the new one fades in from 16px below (600ms). The header stays still. Uses View Transitions; other browsers switch pages normally. | CSS section 17 |
 
-**Fallbacks.** If the animation libraries (GSAP, Lenis) fail to load, or take longer than `MOTION_WAIT_LIMIT` in `js/main.js`, the site uses the simple CSS fade-ins in `js/main.js` or shows everything at once. If WebGL or Three.js is unavailable, the home page shows its normal dashboard picture. All text is always in the HTML.
+**Fallbacks.** If the animation libraries (GSAP, Lenis) fail to load, or take longer than `MOTION_WAIT_LIMIT` in `js/main.js`, the site uses the simple CSS fade-ins in `js/main.js` or shows everything at once. If WebGL or Three.js is unavailable, the home page shows its normal dashboard picture and the Projects list simply has no floating picture. All text is always in the HTML.
 
 ## 7. Pages
 
@@ -79,7 +80,7 @@ Four pages, kept simple on purpose:
 |---|---|---|
 | Home | `index.html` | Particle hero, then "What I Do": three story steps, each with its tools and strengths as chips |
 | About & Experience | `about.html` | Story, strengths, numbers, the experience timeline (with the job graphics), certifications, resume download |
-| Projects | `portfolio.html` | Project write-ups |
+| Projects | `portfolio.html` | The big project list, then one write-up per project (picture, what I did, tools) |
 | Contact | `contact.html` | Form and contact details |
 
 `showcase.html` (old Experience) and `features.html` (old Skills) only forward visitors to their new places, so old links keep working. They are not in the menu or `sitemap.xml`.
