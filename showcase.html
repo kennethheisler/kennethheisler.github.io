@@ -1,247 +1,28 @@
 <!DOCTYPE html>
-<!-- PAGE: showcase.html (the Showcase page) -->
-<html lang="en" class="no-js">
+<!-- PAGE: showcase.html (MOVED). This page was merged into about.html.
+     It stays here only so old links (resumes, LinkedIn, search results) still work:
+     it sends visitors straight to the new place. -->
+<html lang="en">
 <head>
-  <!-- PAGE SETTINGS (the "head": information for the browser) -->
   <meta charset="UTF-8">
-  <!-- Makes the page fit phone screens instead of showing a tiny desktop page. -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- The title on the browser tab and in search results. -->
   <title>Experience | Kenneth Heisler</title>
 
-  <!-- A one-sentence summary of this page for search results. -->
-  <meta name="description" content="Work experience of Kenneth Heisler across technology integration, special education, IT, and municipal data roles.">
+  <!-- Tells search engines the real page is the new one. -->
+  <link rel="canonical" href="https://www.kennethheisler.com/about.html#experience">
 
-  <!-- The preview card shown when this page is shared (LinkedIn, texts, email). -->
-  <link rel="canonical" href="https://www.kennethheisler.com/showcase.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Kenneth Heisler">
-  <meta property="og:title" content="Experience | Kenneth Heisler">
-  <meta property="og:description" content="Work experience of Kenneth Heisler across technology integration, special education, IT, and municipal data roles.">
-  <meta property="og:url" content="https://www.kennethheisler.com/showcase.html">
-  <meta property="og:image" content="https://www.kennethheisler.com/images/share.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Kenneth Heisler, Data-Driven Informaticist">
-  <meta name="twitter:card" content="summary_large_image">
+  <!-- Sends the browser to the new page right away ("0" seconds). -->
+  <meta http-equiv="refresh" content="0; url=about.html#experience">
+  <script>window.location.replace("about.html#experience");</script>
 
-  <!-- The small icon on the browser tab (a "favicon"). -->
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
-
-  <!-- Fonts: Geist for headings and text, Geist Mono for small labels (from Google Fonts). -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400..500&display=swap">
-
-  <!-- The look of the site. -->
-  <link rel="stylesheet" href="css/style.css">
-
-  <!-- The behavior of the site. -->
-  <script src="js/main.js"></script>
-
-  <!-- Motion effects: smooth scrolling, headlines that rise line by line, magnetic buttons and a cursor ring.
-       The animation libraries (GSAP and Lenis) come from a free public file server (a "CDN").
-       "defer" downloads them without slowing the page down. If they can't load, the site still
-       works and js/main.js uses its own simple fade-ins instead. Settings: top of js/motion.js. -->
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js" crossorigin="anonymous" defer></script>
-  <script src="js/motion.js" defer></script>
+  <style>
+    body { margin: 0; padding: 2rem 1rem; font: 1.125rem/1.6 system-ui, sans-serif; color: #dfe7f2; background: #070d18; }
+    a { color: #36cfff; }
+  </style>
 </head>
 <body>
-
-  <!-- SHARED HEADER (the bar at the top of every page) -->
-  <header class="site-header" id="top">
-
-    <!-- Skip link: invisible until someone presses the Tab key. -->
-    <a class="skip-link" href="#main">Skip to main content</a>
-
-    <div class="container header-inner">
-
-      <!-- Your brand. -->
-      <a class="brand" href="index.html">
-        <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
-        <span class="brand-name">Kenneth Heisler</span>
-      </a>
-
-      <!-- MAIN MENU. -->
-      <nav class="site-nav" aria-label="Main">
-
-        <!-- Hamburger button (small screens only). -->
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
-          <span class="nav-toggle-bar" aria-hidden="true"></span>
-          <span class="nav-toggle-bar" aria-hidden="true"></span>
-          <span class="nav-toggle-bar" aria-hidden="true"></span>
-          <span class="sr-only">Menu</span>
-        </button>
-
-        <!-- Menu links. -->
-        <ul class="nav-list" id="site-menu" role="list">
-          <li><a class="nav-link" href="index.html">Home</a></li>
-          <li><a class="nav-link" href="about.html">About</a></li>
-          <li><a class="nav-link" href="showcase.html">Experience</a></li>
-          <li><a class="nav-link" href="portfolio.html">Projects</a></li>
-          <li><a class="nav-link" href="features.html">Skills</a></li>
-          <li><a class="nav-link" href="contact.html">Contact</a></li>
-        </ul>
-      </nav>
-
-    </div>
-  </header>
-
-  <!-- MAIN CONTENT (everything unique to this page) -->
-  <main id="main" tabindex="-1">
-
-    <!-- PAGE HEADER -->
-    <section class="page-hero">
-      <div class="container">
-        <nav class="breadcrumb reveal" aria-label="Breadcrumb">
-          <ol role="list">
-            <li><a href="index.html">Home</a></li>
-            <li><span aria-current="page">Experience</span></li>
-          </ol>
-        </nav>
-        <!-- Page title and intro. -->
-        <h1 class="reveal">Experience</h1>
-        <p class="lead reveal">My work history across technology integration, special education, IT, and municipal data roles.</p>
-        <!-- EDIT ME: replace resume/Kenneth_Heisler_Resume.pdf with your newest PDF (same name) to update this button. -->
-        <div class="button-row reveal">
-          <a class="btn btn--primary" href="resume/Kenneth_Heisler_Resume.pdf" download>Download My Resume (PDF)</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- SHOWCASE GRID -->
-    <section class="section">
-      <div class="container">
-        <!-- A heading for this section. -->
-        <h2 class="sr-only">Work Experience</h2>
-        <div class="grid grid--showcase">
-
-          <!-- Card 1. -->
-          <article class="media-card reveal">
-            <div class="media-card-image">
-              <img src="images/showcase-1.svg" alt="" loading="lazy">
-            </div>
-            <div class="media-card-body">
-              <p class="tag">Technology</p>
-              <h3>Technology Integration Specialist 2</h3>
-              <p>Viability, 2026 to Present. Leads the (VR)<sup>2</sup> initiative, builds and manages interactive dashboards and Excel data analysis, and administers ArborXR, Apple Business Manager, and Jamf along with the software behind data reports and user and admin management.</p>
-            </div>
-          </article>
-
-          <!-- Card 2. -->
-          <article class="media-card reveal">
-            <div class="media-card-image">
-              <img src="images/showcase-2.svg" alt="" loading="lazy">
-            </div>
-            <div class="media-card-body">
-              <p class="tag">Special Education</p>
-              <h3>Special Education Autism Specialist</h3>
-              <p>City of Chicopee, Aug 2024 to Jun 2025. Designed data-driven behavioral interventions, monitored measurable student goals, and advised educators on classroom accommodations.</p>
-            </div>
-          </article>
-
-          <!-- Card 3. -->
-          <article class="media-card reveal">
-            <div class="media-card-image">
-              <img src="images/showcase-3.svg" alt="" loading="lazy">
-            </div>
-            <div class="media-card-body">
-              <p class="tag">Special Education</p>
-              <h3>Special Education Interventionist</h3>
-              <p>City of Chicopee, Sep 2023 to Jun 2024. Designed and implemented data-driven accommodations and instructional supports to improve student outcomes.</p>
-            </div>
-          </article>
-
-          <!-- Card 4. -->
-          <article class="media-card reveal">
-            <div class="media-card-image">
-              <img src="images/showcase-4.svg" alt="" loading="lazy">
-            </div>
-            <div class="media-card-body">
-              <p class="tag">IT</p>
-              <h3>IT Network Technician</h3>
-              <p>City of Chicopee, Jan 2019 to Sep 2019. Hardware and software troubleshooting, routing and switching, computer imaging, and support ticket management.</p>
-            </div>
-          </article>
-
-          <!-- Card 5. -->
-          <article class="media-card reveal">
-            <div class="media-card-image">
-              <img src="images/showcase-5.svg" alt="" loading="lazy">
-            </div>
-            <div class="media-card-body">
-              <p class="tag">Data</p>
-              <h3>Data Entry Associate</h3>
-              <p>Town of South Hadley, Jun 2015 to May 2019. Reconciled 500+ entries in Excel, validated permit applications, and updated contact lists in a SQL-based system.</p>
-            </div>
-          </article>
-
-          <!-- Card 6. -->
-          <article class="media-card reveal">
-            <div class="media-card-image">
-              <img src="images/showcase-6.svg" alt="" loading="lazy">
-            </div>
-            <div class="media-card-body">
-              <p class="tag">Community</p>
-              <h3>Community Programs &amp; Events</h3>
-              <p>City of Holyoke. As Event Associate (2016 to 2019), helped run holiday, elderly, and faculty events. In Parks and Recreation (summer 2022), supported recreational programs, public events, and outreach.</p>
-            </div>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- SHARED FOOTER (the bottom of every page) -->
-  <footer class="site-footer">
-    <div class="container footer-grid">
-
-      <div class="footer-about">
-        <!-- Your brand name. -->
-        <a class="brand" href="index.html">
-          <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
-          <span class="brand-name">Kenneth Heisler</span>
-        </a>
-      </div>
-
-      <nav class="footer-nav" aria-label="Footer">
-        <h2 class="footer-heading">Explore</h2>
-        <!-- Keep these links matching the main menu. -->
-        <ul class="footer-links" role="list">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="showcase.html">Experience</a></li>
-          <li><a href="portfolio.html">Projects</a></li>
-          <li><a href="features.html">Skills</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </nav>
-
-      <div class="footer-contact">
-        <h2 class="footer-heading">Contact</h2>
-        <!-- Your contact details. -->
-        <ul class="footer-links" role="list">
-          <li><a href="mailto:me@kennethheisler.com">me@kennethheisler.com</a></li>
-          <li><a href="tel:+14138880213">(413) 888-0213</a></li>
-          <li><a href="https://www.linkedin.com/in/kennethcheisler">LinkedIn</a></li>
-        </ul>
-      </div>
-
-    </div>
-
-    <div class="container footer-bottom">
-      <!-- Your name in the copyright line. -->
-      <p>&copy; <span data-current-year>2026</span> Kenneth Heisler. All rights reserved.</p>
-      <a class="back-to-top" href="#top">Back to top</a>
-    </div>
-  </footer>
-
+  <!-- Only seen for a moment (or if the browser blocks the automatic move). -->
+  <p>This page has moved to <a href="about.html#experience">About &amp; Experience</a>.</p>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- PAGE: about.html (the About page) -->
+<!-- PAGE: about.html (About & Experience: my story, my work history, and my credentials) -->
 <html lang="en" class="no-js">
 <head>
   <!-- PAGE SETTINGS (the "head": information for the browser) -->
@@ -8,17 +8,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- The title on the browser tab and in search results. -->
-  <title>About | Kenneth Heisler</title>
+  <title>About &amp; Experience | Kenneth Heisler</title>
 
   <!-- A one-sentence summary of this page for search results. -->
-  <meta name="description" content="Learn about Kenneth Heisler: his background in informatics, technology integration, and special education.">
+  <meta name="description" content="About Kenneth Heisler: informaticist and Technology Integration Specialist. Background, experience, and credentials across data, technology, special education, and IT.">
 
   <!-- The preview card shown when this page is shared (LinkedIn, texts, email). -->
   <link rel="canonical" href="https://www.kennethheisler.com/about.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Kenneth Heisler">
-  <meta property="og:title" content="About | Kenneth Heisler">
-  <meta property="og:description" content="Learn about Kenneth Heisler: his background in informatics, technology integration, and special education.">
+  <meta property="og:title" content="About &amp; Experience | Kenneth Heisler">
+  <meta property="og:description" content="About Kenneth Heisler: informaticist and Technology Integration Specialist. Background, experience, and credentials across data, technology, special education, and IT.">
   <meta property="og:url" content="https://www.kennethheisler.com/about.html">
   <meta property="og:image" content="https://www.kennethheisler.com/images/share.png">
   <meta property="og:image:width" content="1200">
@@ -82,9 +82,7 @@
         <ul class="nav-list" id="site-menu" role="list">
           <li><a class="nav-link" href="index.html">Home</a></li>
           <li><a class="nav-link" href="about.html">About</a></li>
-          <li><a class="nav-link" href="showcase.html">Experience</a></li>
           <li><a class="nav-link" href="portfolio.html">Projects</a></li>
-          <li><a class="nav-link" href="features.html">Skills</a></li>
           <li><a class="nav-link" href="contact.html">Contact</a></li>
         </ul>
       </nav>
@@ -101,16 +99,21 @@
         <nav class="breadcrumb reveal" aria-label="Breadcrumb">
           <ol role="list">
             <li><a href="index.html">Home</a></li>
-            <li><span aria-current="page">About</span></li>
+            <li><span aria-current="page">About &amp; Experience</span></li>
           </ol>
         </nav>
         <!-- Page title and intro. -->
-        <h1 class="reveal">About Me</h1>
-        <p class="lead reveal">An informaticist applying a data science background to technology integration and special education.</p>
+        <h1>About &amp; Experience</h1>
+        <p class="lead reveal">An informaticist who applies a data science background to technology integration, shaped by hands-on work in special education and public service.</p>
+        <!-- EDIT ME: replace resume/Kenneth_Heisler_Resume.pdf with your newest PDF (same name) to update this button. -->
+        <div class="button-row reveal">
+          <a class="btn btn--primary" href="resume/Kenneth_Heisler_Resume.pdf" download>Download My Resume (PDF)</a>
+          <a class="btn btn--secondary" href="#experience">Jump to Experience</a>
+        </div>
       </div>
     </section>
 
-    <!-- OUR STORY -->
+    <!-- MY STORY (picture + text) -->
     <section class="section">
       <div class="container split">
         <div class="split-media reveal">
@@ -122,13 +125,13 @@
         <div class="split-content reveal">
           <!-- Your story. -->
           <h2>My Story</h2>
-          <p>I earned a BS in Informatics from the University of Massachusetts Amherst in 2023, with a minor in Natural Resource Economics. Before and during college I worked in municipal roles, from data entry in Excel and SQL-based systems to IT network support.</p>
-          <p>From 2023 to 2025 I worked in special education with the City of Chicopee, designing data-driven interventions, tracking measurable student goals, and advising educators on classroom accommodations for students with autism. In 2026 I joined Viability as a Technology Integration Specialist 2, where I lead the (VR)<sup>2</sup> initiative, build interactive dashboards, and manage the platforms and devices the team relies on.</p>
+          <p>I earned a BS in Informatics from the University of Massachusetts Amherst in 2023, with a minor in Natural Resource Economics. Before and during college, I worked in municipal roles, from data entry in Excel and SQL-based systems to IT network support.</p>
+          <p>From 2023 to 2025 I worked in special education for the City of Chicopee, designing data-driven interventions, tracking measurable student goals, and advising educators on classroom accommodations for students with autism. In 2026 I joined Viability as a Technology Integration Specialist 2, where I lead the (VR)<sup>2</sup> initiative, build interactive dashboards, and manage the platforms and devices the team relies on.</p>
         </div>
       </div>
     </section>
 
-    <!-- WHAT GUIDES US (mission, vision, values) -->
+    <!-- WHAT I BRING (three strengths) -->
     <section class="section section--alt">
       <div class="container">
 
@@ -139,17 +142,14 @@
         </div>
 
         <div class="pillars">
-          <!-- Mission. -->
           <article class="pillar reveal">
             <h3>Analytical Approach</h3>
             <p>I use data to set measurable goals, shape interventions, and track real-world outcomes.</p>
           </article>
-          <!-- Vision. -->
           <article class="pillar reveal">
             <h3>Technical Toolkit</h3>
-            <p>I work in RStudio, STATA, SQL, Python, and pandas, build interactive dashboards, and administer ArborXR, Jamf, and Apple Business Manager.</p>
+            <p>I pair statistical programming and interactive dashboards with hands-on administration of the platforms and devices teams use every day.</p>
           </article>
-          <!-- Values. -->
           <article class="pillar reveal">
             <h3>Collaboration</h3>
             <p>I communicate clearly, work well with teachers, colleagues, and clients, and stay organized across competing priorities.</p>
@@ -158,7 +158,7 @@
       </div>
     </section>
 
-    <!-- OUR IMPACT (stats block) -->
+    <!-- BY THE NUMBERS -->
     <section class="section">
       <div class="container">
 
@@ -178,48 +178,147 @@
       </div>
     </section>
 
-    <!-- OUR JOURNEY (timeline) -->
-    <section class="section section--alt">
-      <div class="container container--narrow">
+    <!-- EXPERIENCE: my work history and education on one timeline, newest first.
+         To add a job, copy one <li class="timeline-item career-item ..."> block and change the text and picture.
+         "timeline-item--now" gives the current job the highlight dot; keep it on one job only. -->
+    <section class="section section--alt" id="experience" aria-labelledby="experience-title">
+      <div class="container">
 
         <!-- Section heading and intro sentence. -->
-        <div class="section-header section-header--stacked reveal">
-          <h2>My Journey</h2>
-          <p>Key steps from municipal data work to informatics, special education, and technology integration.</p>
+        <div class="section-header reveal">
+          <h2 id="experience-title">Experience</h2>
+          <p>From municipal data work to informatics, special education, and technology integration. Newest first.</p>
         </div>
 
-        <ol class="timeline" role="list">
-          <!-- Milestone 1. -->
-          <li class="timeline-item reveal">
-            <p class="timeline-date">2015</p>
-            <h3>Data Entry Associate</h3>
-            <p>Started processing municipal records for the Town of South Hadley in Excel, reconciling 500+ entries against source documents.</p>
+        <ol class="timeline career" role="list">
+          <li class="timeline-item career-item timeline-item--now reveal">
+            <div class="career-media">
+              <img src="images/showcase-1.svg" alt="" loading="lazy">
+            </div>
+            <div class="career-body">
+              <p class="tag">Technology</p>
+              <p class="career-meta"><span class="career-date">2026 &ndash; Present</span> <span class="career-org">Viability</span></p>
+              <h3>Technology Integration Specialist 2</h3>
+              <p>I lead the (VR)<sup>2</sup> initiative, build and manage interactive dashboards and Excel data analysis, and administer ArborXR, Apple Business Manager, and Jamf, along with the software behind data reports and user and admin management.</p>
+            </div>
           </li>
-          <!-- Milestone 2. -->
-          <li class="timeline-item reveal">
-            <p class="timeline-date">2019</p>
-            <h3>IT Network Technician</h3>
-            <p>Handled troubleshooting, routing and switching, and support tickets for the City of Chicopee, then began my BS in Informatics at UMass Amherst.</p>
+
+          <li class="timeline-item career-item reveal">
+            <div class="career-media">
+              <img src="images/showcase-2.svg" alt="" loading="lazy">
+            </div>
+            <div class="career-body">
+              <p class="tag">Special Education</p>
+              <p class="career-meta"><span class="career-date">Aug 2024 &ndash; Jun 2025</span> <span class="career-org">City of Chicopee</span></p>
+              <h3>Special Education Autism Specialist</h3>
+              <p>Designed data-driven behavioral interventions, monitored measurable student goals, and advised educators on classroom accommodations for students with autism.</p>
+            </div>
           </li>
-          <!-- Milestone 3. -->
-          <li class="timeline-item reveal">
-            <p class="timeline-date">2023</p>
-            <h3>Graduation and Special Education</h3>
-            <p>Graduated from UMass Amherst and began designing data-driven accommodations as a Special Education Interventionist.</p>
+
+          <li class="timeline-item career-item reveal">
+            <div class="career-media">
+              <img src="images/showcase-3.svg" alt="" loading="lazy">
+            </div>
+            <div class="career-body">
+              <p class="tag">Special Education</p>
+              <p class="career-meta"><span class="career-date">Sep 2023 &ndash; Jun 2024</span> <span class="career-org">City of Chicopee</span></p>
+              <h3>Special Education Interventionist</h3>
+              <p>Started right after graduating: designed and implemented data-driven accommodations and instructional supports to improve student outcomes.</p>
+            </div>
           </li>
-          <!-- Milestone 4. -->
-          <li class="timeline-item reveal">
-            <p class="timeline-date">2024</p>
-            <h3>Autism Specialist</h3>
-            <p>Designed data-driven behavioral interventions, monitored measurable student goals, and advised educators on accommodations.</p>
+
+          <li class="timeline-item career-item career-item--text reveal">
+            <div class="career-body">
+              <p class="tag">Education</p>
+              <p class="career-meta"><span class="career-date">2019 &ndash; 2023</span> <span class="career-org">University of Massachusetts Amherst</span></p>
+              <h3>BS in Informatics</h3>
+              <p>Bachelor of Science in Informatics, with a minor in Natural Resource Economics.</p>
+            </div>
           </li>
-          <!-- The newest milestone (keeps the signal-color dot). -->
-          <li class="timeline-item timeline-item--now reveal">
-            <p class="timeline-date">Today</p>
-            <h3>Technology Integration Specialist 2</h3>
-            <p>At Viability, I lead the (VR)<sup>2</sup> initiative, build interactive dashboards and Excel analyses, and manage ArborXR, Jamf, and Apple Business Manager.</p>
+
+          <li class="timeline-item career-item reveal">
+            <div class="career-media">
+              <img src="images/showcase-6.svg" alt="" loading="lazy">
+            </div>
+            <div class="career-body">
+              <p class="tag">Community</p>
+              <p class="career-meta"><span class="career-date">2016 &ndash; 2019, 2022</span> <span class="career-org">City of Holyoke</span></p>
+              <h3>Community Programs &amp; Events</h3>
+              <p>As Event Associate (2016 to 2019), helped run holiday, elderly, and faculty events. In Parks and Recreation (summer 2022), supported recreational programs, public events, and outreach.</p>
+            </div>
+          </li>
+
+          <li class="timeline-item career-item reveal">
+            <div class="career-media">
+              <img src="images/showcase-4.svg" alt="" loading="lazy">
+            </div>
+            <div class="career-body">
+              <p class="tag">IT</p>
+              <p class="career-meta"><span class="career-date">Jan &ndash; Sep 2019</span> <span class="career-org">City of Chicopee</span></p>
+              <h3>IT Network Technician</h3>
+              <p>Hardware and software troubleshooting, routing and switching, computer imaging, and support ticket management.</p>
+            </div>
+          </li>
+
+          <li class="timeline-item career-item reveal">
+            <div class="career-media">
+              <img src="images/showcase-5.svg" alt="" loading="lazy">
+            </div>
+            <div class="career-body">
+              <p class="tag">Data</p>
+              <p class="career-meta"><span class="career-date">Jun 2015 &ndash; May 2019</span> <span class="career-org">Town of South Hadley</span></p>
+              <h3>Data Entry Associate</h3>
+              <p>My first data job: reconciled 500+ municipal records in Excel against source documents, validated permit applications, and updated contact lists in a SQL-based system.</p>
+            </div>
           </li>
         </ol>
+      </div>
+    </section>
+
+    <!-- CERTIFICATIONS AND TRAINING -->
+    <section class="section">
+      <div class="container">
+
+        <!-- Section heading and intro sentence. -->
+        <div class="section-header reveal">
+          <h2>Certifications &amp; Training</h2>
+          <p>The formal training behind the hands-on work.</p>
+        </div>
+
+        <!-- One item per credential: the name, then a short detail. -->
+        <ul class="credentials reveal" role="list">
+          <li>
+            <span class="credential-name">Cisco Networking Academy</span>
+            <span class="credential-detail">Four-year Internet support services and networking course covering routing, switching, and TCP/IP protocols</span>
+          </li>
+          <li>
+            <span class="credential-name">Routing &amp; Switching Admin</span>
+          </li>
+          <li>
+            <span class="credential-name">OSHA 10-Hour</span>
+          </li>
+          <li>
+            <span class="credential-name">MS Office Suite Specialist</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CLOSING CALL TO ACTION -->
+    <section class="section section--alt">
+      <div class="container">
+        <div class="cta reveal">
+          <div class="cta-content">
+            <!-- Heading and sentence. -->
+            <h2>Let's Work Together</h2>
+            <p>Interested in my background, or have a role in mind? I'd love to hear from you.</p>
+          </div>
+          <!-- Button words and links. -->
+          <div class="button-row cta-actions">
+            <a class="btn btn--primary" href="contact.html">Contact Me</a>
+            <a class="btn btn--secondary" href="portfolio.html">See My Projects</a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -243,9 +342,7 @@
         <ul class="footer-links" role="list">
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About</a></li>
-          <li><a href="showcase.html">Experience</a></li>
           <li><a href="portfolio.html">Projects</a></li>
-          <li><a href="features.html">Skills</a></li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
       </nav>

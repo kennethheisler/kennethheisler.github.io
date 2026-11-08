@@ -219,6 +219,7 @@ function motionLibrariesLoaded() {
 
     // Show one item straight away (no waiting for the scroll position).
     function revealNow(item) {
+      item.dataset.revealed = "true"; // so the scroll fade-in below leaves it alone
       gsap.to(item, {
         opacity: 1,
         y: 0,
@@ -266,7 +267,14 @@ function motionLibrariesLoaded() {
       start: "top 90%",
       once: true,
       onEnter: function (batch) {
-        gsap.to(batch, {
+        // Skip anything already shown (for example by the keyboard, above).
+        const waiting = batch.filter(function (item) {
+          return !item.dataset.revealed;
+        });
+        if (waiting.length === 0) {
+          return;
+        }
+        gsap.to(waiting, {
           opacity: 1,
           y: 0,
           duration: REVEAL_DURATION,

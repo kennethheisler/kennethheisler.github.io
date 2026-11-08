@@ -225,8 +225,8 @@ function startScene(renderer, holder) {
       u.uShapeOffset3.value.set(halfWidth * SHAPE_SIDE_OFFSET, 0, 0);
     } else {
       // Narrow: shapes sit in the top part of the screen, above the text.
-      u.uShapeScale.value = Math.min(halfWidth * 0.78, halfHeight * 0.34);
-      const above = new THREE.Vector3(0, halfHeight * 0.4, 0);
+      u.uShapeScale.value = Math.min(halfWidth * 0.78, halfHeight * 0.3);
+      const above = new THREE.Vector3(0, halfHeight * 0.46, 0);
       u.uShapeOffset1.value.copy(above);
       u.uShapeOffset2.value.copy(above);
       u.uShapeOffset3.value.copy(above);
@@ -271,7 +271,7 @@ function startScene(renderer, holder) {
   function onPauseClick() {
     userPaused = !userPaused;
     pauseButton.setAttribute("aria-pressed", userPaused ? "true" : "false");
-    pauseButton.textContent = userPaused ? "Play motion" : "Pause motion";
+    pauseButton.querySelector(".motion-toggle-label").textContent = userPaused ? "Play motion" : "Pause motion";
     root.classList.toggle("scene-paused", userPaused);
   }
   if (pauseButton) {
@@ -1017,7 +1017,7 @@ function setupScrollShapes(morph) {
       ScrollTrigger.create({
         trigger: step,
         start: "top bottom",
-        end: wide ? "top top" : "center center",
+        end: "top top", // fully formed when the step reaches the top of the screen
         onUpdate: function (self) {
           morph.target = i + self.progress;
         },

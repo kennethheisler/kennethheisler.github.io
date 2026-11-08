@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- PAGE: index.html (the Home page) -->
+<!-- PAGE: index.html (the Home page: a live particle hero, then "What I Do" with my skills) -->
 <html lang="en" class="no-js">
 <head>
   <!-- PAGE SETTINGS (the "head": information for the browser) -->
@@ -11,14 +11,14 @@
   <title>Home | Kenneth Heisler</title>
 
   <!-- A one-sentence summary of this page for search results. -->
-  <meta name="description" content="Kenneth Heisler: informaticist and technology integration specialist.">
+  <meta name="description" content="Kenneth Heisler: informaticist and technology integration specialist. Data analysis, interactive dashboards, and systems integration.">
 
   <!-- The preview card shown when this page is shared (LinkedIn, texts, email). -->
   <link rel="canonical" href="https://www.kennethheisler.com/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Kenneth Heisler">
   <meta property="og:title" content="Home | Kenneth Heisler">
-  <meta property="og:description" content="Kenneth Heisler: informaticist and technology integration specialist.">
+  <meta property="og:description" content="Kenneth Heisler: informaticist and technology integration specialist. Data analysis, interactive dashboards, and systems integration.">
   <meta property="og:url" content="https://www.kennethheisler.com/">
   <meta property="og:image" content="https://www.kennethheisler.com/images/share.png">
   <meta property="og:image:width" content="1200">
@@ -53,8 +53,28 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" crossorigin="anonymous" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js" crossorigin="anonymous" defer></script>
   <script src="js/motion.js" defer></script>
+
+  <!-- The live particle scene (Three.js, a 3D drawing library). An "import map" tells the browser
+       where to download it from; "modulepreload" starts those downloads early. "async" means the
+       rest of the page never waits for it. If it can't load ("onerror"), the page shows the normal
+       picture instead. Settings: top of js/hero-scene.js. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js" crossorigin="anonymous">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.min.js" crossorigin="anonymous">
+  <script type="module" src="js/hero-scene.js" async onerror="document.documentElement.classList.add('scene-settled')"></script>
 </head>
-<body>
+<body class="page-home">
+
+  <!-- THE PARTICLE LAYER: js/hero-scene.js draws the live scene in here, behind the whole page.
+       It's decoration only, so screen readers skip it (aria-hidden). -->
+  <div class="scene" aria-hidden="true"></div>
 
   <!-- SHARED HEADER (the bar at the top of every page) -->
   <header class="site-header" id="top">
@@ -85,9 +105,7 @@
         <ul class="nav-list" id="site-menu" role="list">
           <li><a class="nav-link" href="index.html">Home</a></li>
           <li><a class="nav-link" href="about.html">About</a></li>
-          <li><a class="nav-link" href="showcase.html">Experience</a></li>
           <li><a class="nav-link" href="portfolio.html">Projects</a></li>
-          <li><a class="nav-link" href="features.html">Skills</a></li>
           <li><a class="nav-link" href="contact.html">Contact</a></li>
         </ul>
       </nav>
@@ -98,16 +116,16 @@
   <!-- MAIN CONTENT (everything unique to this page) -->
   <main id="main" tabindex="-1">
 
-    <!-- HERO (the big welcome area) -->
-    <section class="hero">
-      <div class="container hero-inner">
+    <!-- HERO: full screen, big headline over the live particle field. -->
+    <section class="hero-xl">
+      <div class="container hero-xl-inner">
 
-        <div class="hero-content">
-          <!-- A short announcement. -->
+        <div class="hero-xl-content">
+          <!-- A short label above the headline. -->
           <p class="badge reveal"><span class="badge-dot" aria-hidden="true"></span>Technology Integration Specialist at Viability</p>
 
-          <!-- Your main headline. -->
-          <h1 class="hero-title reveal">Data-Driven Informaticist</h1>
+          <!-- Your main headline (real text, so search engines read it). -->
+          <h1 class="hero-xl-title">Data-Driven Informaticist</h1>
 
           <!-- One or two sentences about what you offer. -->
           <p class="lead reveal">Informaticist and Technology Integration Specialist, using a data science background to perform analysis and visualize results into clear interactive dashboards for stakeholders. I manage the systems behind data reporting, and connect data, technology, and people to make systems work better. Previously used data-driven methods to tailor support for students with autism and track real world outcomes.</p>
@@ -119,61 +137,108 @@
           </div>
         </div>
 
-        <div class="hero-media reveal">
-          <!-- Hero picture. -->
+        <!-- Backup picture: shown only when the live particle scene can't run. -->
+        <div class="hero-xl-fallback">
           <div class="frame">
             <img src="images/hero.svg" alt="Illustration of a dashboard with a rising line chart">
           </div>
         </div>
 
       </div>
+
+      <!-- A small hint to scroll (decoration only). -->
+      <p class="scroll-cue" aria-hidden="true"><span class="scroll-cue-line"></span>Scroll</p>
+
+      <!-- Stops the drifting particles for anyone who finds the movement distracting.
+           Hidden until the particle scene is running (js/hero-scene.js shows it). -->
+      <button class="motion-toggle" type="button" aria-pressed="false" hidden><span class="motion-toggle-icon" aria-hidden="true"></span><span class="motion-toggle-label">Pause motion</span></button>
     </section>
 
-    <!-- FEATURE CARDS -->
-    <section class="section section--alt">
-      <div class="container">
+    <!-- STORY: what I do, told in three steps. As each one scrolls in, the particles settle into a matching data shape. -->
+    <section class="story" id="what-i-do" aria-labelledby="story-title">
 
-        <!-- Section heading and intro sentence. -->
+      <div class="container story-intro">
         <div class="section-header reveal">
-          <h2>What I Do</h2>
-          <p>I combine analytical skills, technical know-how, and hands-on experience supporting people.</p>
-        </div>
-
-        <div class="grid grid--3">
-
-          <!-- Card 1 (icon, title, and text). -->
-          <article class="card reveal">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-            </div>
-            <h3>Data &amp; Analytics</h3>
-            <p>Interactive dashboards, Excel analysis, and statistical work using RStudio, STATA, SQL, Python, pandas, Tableau, and Power BI.</p>
-          </article>
-
-          <!-- Card 2 (icon, title, and text). -->
-          <article class="card reveal">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M12 3 5 6v5.5c0 4.4 3 8.2 7 9.5 4-1.3 7-5.1 7-9.5V6l-7-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <h3>Data-Driven Support</h3>
-            <p>Behavioral interventions and individualized support plans for students with autism, built around measurable goals.</p>
-          </article>
-
-          <!-- Card 3 (icon, title, and text). -->
-          <article class="card reveal">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="m12 3 9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m3 13 9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <h3>Technology Integration</h3>
-            <p>Managing ArborXR, Jamf, and Apple Business Manager, along with the software, reports, and user access behind them, and leading the (VR)<sup>2</sup> initiative.</p>
-          </article>
-
+          <h2 id="story-title">What I Do</h2>
+          <p>I turn raw data into clear decisions, keep the technology behind it running, and never lose sight of the people it's for.</p>
         </div>
       </div>
+
+      <!-- STEP 1: the particles become a rising line chart.
+           To change the tools, edit the <li> items in the "chips" list. -->
+      <article class="story-step" data-shape="chart">
+        <div class="container story-step-inner">
+          <div class="story-text">
+            <p class="story-index"><span class="story-index-number">01</span> / 03</p>
+            <div class="story-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="story-title">Data &amp; Analytics</h3>
+            <p class="story-lead">I take data from raw to readable: cleaning it, analyzing it, and turning it into interactive dashboards that help people decide what to do next.</p>
+            <p class="chips-label">Tools</p>
+            <ul class="chips" role="list">
+              <li>Excel</li>
+              <li>R / RStudio</li>
+              <li>STATA</li>
+              <li>SQL</li>
+              <li>Python</li>
+              <li>pandas</li>
+              <li>Tableau</li>
+              <li>Power BI</li>
+              <li>Statistical analysis</li>
+              <li>Data mining</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- STEP 2: the particles become a puzzle piece wearing a graduation cap. -->
+      <article class="story-step story-step--right" data-shape="puzzle">
+        <div class="container story-step-inner">
+          <div class="story-text">
+            <p class="story-index"><span class="story-index-number">02</span> / 03</p>
+            <div class="story-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="m12 4 10 5-10 5L2 9l10-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 11v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 9v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <h3 class="story-title">Data-Driven Support</h3>
+            <p class="story-lead">Before moving into technology, I spent two years in special education designing behavioral interventions for students with autism, setting measurable goals and tracking real progress. It taught me that data only matters when it helps a person.</p>
+            <p class="chips-label">Strengths</p>
+            <ul class="chips" role="list">
+              <li>Clear communicator</li>
+              <li>Collaborator</li>
+              <li>Organized multitasker</li>
+              <li>Training &amp; presentation materials</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- STEP 3: the particles become a network of connected systems. -->
+      <article class="story-step" data-shape="network">
+        <div class="container story-step-inner">
+          <div class="story-text">
+            <p class="story-index"><span class="story-index-number">03</span> / 03</p>
+            <div class="story-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="m12 3 9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m3 13 9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="story-title">Technology Integration</h3>
+            <p class="story-lead">I manage the platforms and devices a team depends on, along with the software, reports, and user access behind them, and I lead Viability's (VR)<sup>2</sup> initiative.</p>
+            <p class="chips-label">Platforms</p>
+            <ul class="chips" role="list">
+              <li>ArborXR</li>
+              <li>Jamf</li>
+              <li>Apple Business Manager</li>
+              <li>Software &amp; user administration</li>
+              <li>Data reporting</li>
+              <li>Networking: routing, switching, TCP/IP</li>
+            </ul>
+          </div>
+        </div>
+      </article>
     </section>
 
-    <!-- CLOSING CALL TO ACTION -->
-    <section class="section">
+    <!-- CLOSING CALL TO ACTION (the particles drift apart again here) -->
+    <section class="section story-end">
       <div class="container">
         <div class="cta reveal">
           <div class="cta-content">
@@ -184,7 +249,7 @@
           <!-- Button words and links. -->
           <div class="button-row cta-actions">
             <a class="btn btn--primary" href="contact.html">Contact Me</a>
-            <a class="btn btn--secondary" href="showcase.html">See My Experience</a>
+            <a class="btn btn--secondary" href="about.html#experience">See My Experience</a>
           </div>
         </div>
       </div>
@@ -210,9 +275,7 @@
         <ul class="footer-links" role="list">
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About</a></li>
-          <li><a href="showcase.html">Experience</a></li>
           <li><a href="portfolio.html">Projects</a></li>
-          <li><a href="features.html">Skills</a></li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
       </nav>
