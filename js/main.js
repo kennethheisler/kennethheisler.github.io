@@ -3,18 +3,12 @@
 
 /* 1. SETTINGS */
 
-// Animations: true = on, false = off.
+// Animations: true = on, false = off. (Also switches off everything in js/motion.js.)
 const ANIMATIONS_ON = true;
-
-// The theme a first-time visitor sees: "dark" or "light".
-const DEFAULT_THEME = "dark";
 
 // The screen width in pixels where the full menu appears.
 // Keep this matching the "max-width" small-screen rule in css/style.css.
 const DESKTOP_MENU_WIDTH = 880;
-
-// The name used to save the theme choice in the browser.
-const THEME_STORAGE_KEY = "site-theme";
 
 
 /* 2. RUN RIGHT AWAY (before the page is drawn) */
@@ -27,10 +21,7 @@ const THEME_STORAGE_KEY = "site-theme";
   root.classList.remove("no-js");
   root.classList.add("js");
 
-  // Use the saved theme, or the default one if nothing is saved yet.
-  applyTheme(getSavedTheme() || DEFAULT_THEME);
-
-  // Animation mode is on only when it is allowed (see section 7).
+  // Animation mode is on only when it is allowed (see section 6).
   if (animationsAllowed()) {
     root.classList.add("motion");
   }
@@ -39,7 +30,10 @@ const THEME_STORAGE_KEY = "site-theme";
 
 /* 3. START EVERYTHING ELSE (once the page has loaded) */
 document.addEventListener("DOMContentLoaded", function () {
-  setupThemeToggle();
+  // Tells the CSS the page is ready. By now js/motion.js has already split the
+  // big headings into lines, so it is safe to show them (see CSS section 17).
+  document.documentElement.classList.add("motion-ready");
+
   setupMobileMenu();
   highlightCurrentPage();
   setupRevealOnScroll();
@@ -49,70 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-/* 4. LIGHT / DARK THEME */
-
-// Reads the saved theme.
-function getSavedTheme() {
-  try {
-    const saved = localStorage.getItem(THEME_STORAGE_KEY);
-    if (saved === "light" || saved === "dark") {
-      return saved;
-    }
-    return null;
-  } catch (error) {
-    return null;
-  }
-}
-
-function saveTheme(theme) {
-  try {
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
-  } catch (error) {
-    // Storage is blocked: the theme still changes, it just isn't saved.
-  }
-}
-
-// Puts data-theme="dark" or data-theme="light" on the <html> tag.
-function applyTheme(theme) {
-  document.documentElement.setAttribute("data-theme", theme);
-}
-
-function getCurrentTheme() {
-  return document.documentElement.getAttribute("data-theme") || DEFAULT_THEME;
-}
-
-function setupThemeToggle() {
-  const button = document.querySelector(".theme-toggle");
-  if (!button) {
-    return; // no theme button on this page, so stop here
-  }
-
-  updateThemeButton(button);
-
-  // Runs every time the theme button is clicked.
-  button.addEventListener("click", function () {
-    let newTheme = "dark";
-    if (getCurrentTheme() === "dark") {
-      newTheme = "light";
-    }
-    applyTheme(newTheme);
-    saveTheme(newTheme);
-    updateThemeButton(button);
-  });
-}
-
-// Keeps the label true, for example "Switch to light mode".
-function updateThemeButton(button) {
-  let label = "Switch to dark mode";
-  if (getCurrentTheme() === "dark") {
-    label = "Switch to light mode";
-  }
-  button.setAttribute("aria-label", label);
-  button.setAttribute("title", label);
-}
-
-
-/* 5. MOBILE MENU (the hamburger button) */
+/* 4. MOBILE MENU (the hamburger button) */
 function setupMobileMenu() {
   const header = document.querySelector(".site-header");
   const toggle = document.querySelector(".nav-toggle");
@@ -178,7 +109,7 @@ function setupMobileMenu() {
 }
 
 
-/* 6. HIGHLIGHT THE CURRENT PAGE */
+/* 5. HIGHLIGHT THE CURRENT PAGE */
 function highlightCurrentPage() {
   const currentPage = getPageName(window.location.pathname);
   const links = document.querySelectorAll(".nav-list a");
@@ -202,7 +133,7 @@ function getPageName(path) {
 }
 
 
-/* 7. FADE IN ON SCROLL */
+/* 6. FADE IN ON SCROLL (the simple version, used when js/motion.js can't run) */
 
 // Animations run only when the switch is on and "reduce motion" is off.
 function animationsAllowed() {
@@ -214,6 +145,12 @@ function setupRevealOnScroll() {
   const root = document.documentElement;
   if (!root.classList.contains("motion")) {
     return; // animations are off, so the CSS already shows everything
+  }
+
+  // js/motion.js loaded its animation libraries, so it handles the fade-ins instead.
+  // (If the libraries failed to download, this simple version below runs as a backup.)
+  if (typeof motionLibrariesLoaded === "function" && motionLibrariesLoaded()) {
+    return;
   }
 
   // Reacts if "reduce motion" is turned on while the page is open.
@@ -250,7 +187,7 @@ function setupRevealOnScroll() {
 }
 
 
-/* 8. HEADER LINE ON SCROLL */
+/* 7. HEADER LINE ON SCROLL */
 function setupHeaderLine() {
   const header = document.querySelector(".site-header");
   if (!header) {
@@ -267,7 +204,7 @@ function setupHeaderLine() {
 }
 
 
-/* 9. CURRENT YEAR IN THE FOOTER */
+/* 8. CURRENT YEAR IN THE FOOTER */
 function fillCurrentYear() {
   const thisYear = new Date().getFullYear();
   document.querySelectorAll("[data-current-year]").forEach(function (element) {
@@ -276,7 +213,7 @@ function fillCurrentYear() {
 }
 
 
-/* 10. DEMO CONTACT FORM */
+/* 9. DEMO CONTACT FORM */
 function setupDemoForm() {
   document.querySelectorAll("form[data-demo-form]").forEach(function (form) {
     form.addEventListener("submit", function (event) {
