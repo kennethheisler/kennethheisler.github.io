@@ -114,8 +114,11 @@
   /* PROJECTS PAGE SETTINGS (sections 21-22)
      How much of each project line stays empty on the right, so the hover chart has room to show. */
   --hover-room: 36%;
-  /* The width of the words in an open project (one width for every line, label and list). */
-  --project-column: 38rem;
+  /* An open project's note: its width as a short summary, and once opened into the full write-up
+     (it widens and, near the right edge, shifts left to fit). And how strongly the chart shows (1 = solid). */
+  --note-width: 26rem;
+  --note-open-width: 40rem;
+  --chart-opacity: 0.92;
 
   /* Tells the browser to draw scrollbars and form controls dark. */
   color-scheme: dark;
@@ -2211,11 +2214,16 @@ html.lenis {
 
 
 /* 22. PROJECTS PAGE: AN OPEN PROJECT
-   The chart becomes a soft, glowing background on one side, and the words wrap around its
-   outline (CSS "shape-outside" uses a blurred outline picture, images/projects/themed/*-shape.svg).
-   Each project sets its own look in the HTML: which side (project-chart--left or --right),
-   --chart-width (how much of the row it takes) and --chart-opacity (how strongly it shows).
-   Pointing at the chart brings it to full strength so it's easy to read. */
+   An open project is a "stage": its chart floats large in drifting blue smoke (drawn by
+   js/project-glow.js), and a short note sits in the chart's emptiest spot. Hovering the note,
+   clicking it, or pressing "More" opens it into the full write-up on a dark glass card that
+   covers the chart where it needs to.
+   Each project places its own chart and note in the HTML (style="--chart-x ... --note-y ...").
+   22a. The stage and the chart (phones first)
+   22b. The note and its write-up
+   22c. Wide screens: the chart fills the stage and the note floats over it
+   22d. Without WebGL: a softer smoke made with CSS
+   22e. Printing */
 
 /* Before js/projects.js is ready, the projects stay closed (no flash of open sections). */
 html.js .project-index:not(.is-ready) .project-panel {
@@ -2226,50 +2234,141 @@ html.js .project-index:not(.is-ready) .project-panel {
   overflow: hidden; /* trims the panel while it grows open */
 }
 
-.project-panel-inner {
+/* 22a. THE STAGE AND THE CHART */
+.project-stage {
   position: relative;
-  display: flow-root; /* the panel grows to fit the floating chart */
-  padding: 0 var(--space-lg) var(--space-lg);
+  display: grid;
+  isolation: isolate; /* keeps the smoke behind the note */
+  padding: 0 var(--space-md) var(--space-lg);
 }
 
-/* Phones: the chart sits on top at full strength, then the words. */
+/* The chart's layer: as big as the stage, so the smoke can drift all around the chart. */
+.project-visual {
+  position: relative;
+  z-index: 0;
+  padding: var(--space-lg) 0;
+}
+
 .project-chart {
-  margin: 0 0 var(--space-lg);
-}
-
-.project-chart img {
+  display: block;
   width: 100%;
   height: auto;
+  opacity: var(--chart-opacity);
 }
 
-.project-text {
-  max-width: 68ch;
+/* The smoke drawing (added by js/project-glow.js). It draws the chart too, so the plain picture
+   underneath turns invisible, but stays for screen readers and printing. */
+.project-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.project-stage.has-glow .project-chart {
+  opacity: 0;
+}
+
+/* 22b. THE NOTE AND ITS WRITE-UP */
+.project-note {
+  position: relative;
+  z-index: 2;
+  padding: var(--space-lg);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  transition:
+    background-color var(--speed-slow) var(--ease),
+    border-color var(--speed-slow) var(--ease),
+    box-shadow var(--speed-slow) var(--ease);
+}
+
+/* Open: the note's background turns into dark frosted glass that covers the chart behind it. */
+.project-note.is-expanded {
+  background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
+  border-color: var(--color-border);
+  box-shadow: 0 32px 64px -32px rgba(0, 0, 0, 0.9);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(18px) saturate(1.2);
+}
+
+/* The short summary: big, bright, with a dark halo so it reads over the smoke. */
+.project-brief {
+  margin-bottom: var(--space-xs);
+  font-size: clamp(1.25rem, 1rem + 0.7vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--color-heading);
+  text-shadow:
+    0 0 6px var(--color-bg),
+    0 0 18px var(--color-bg),
+    0 0 36px var(--color-bg);
+}
+
+/* "More": a small mono button with a plus that turns into a minus. */
+.project-more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: 44px;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-link);
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.project-more::before {
+  content: "";
+  width: 0.7rem;
+  height: 0.7rem;
+  background:
+    linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+}
+
+.project-more[aria-expanded="true"]::before {
+  background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat;
+}
+
+.project-details {
+  overflow: hidden; /* trims the write-up while it grows open */
+}
+
+.project-details > :first-child {
+  margin-top: var(--space-md);
 }
 
 .project-full-title {
   margin-bottom: var(--space-sm);
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
 }
 
 .project-lead {
-  font-size: var(--text-lg);
-  line-height: 1.55;
-  color: var(--color-heading);
+  color: var(--color-text);
 }
 
 .project-source {
   color: var(--color-text-muted);
 }
 
-.project-text .chips {
-  margin-bottom: var(--space-lg);
+.project-details .chips {
+  margin-bottom: var(--space-md);
 }
 
 .project-links {
   margin-bottom: var(--space-sm);
 }
 
-/* "Close": folds the project back up. */
+.project-details > :last-child {
+  margin-bottom: 0;
+}
+
+/* "Close project": folds the whole project back up (shown once the note is open). */
 .project-close {
   display: flex;
   align-items: center;
@@ -2299,110 +2398,140 @@ html.js .project-index:not(.is-ready) .project-panel {
   color: var(--color-link);
 }
 
-/* The research paper has no chart: a huge faint number fills the space instead. */
-.project-panel--text .project-panel-inner {
-  isolation: isolate; /* keeps the big number behind the words */
+.project-note:not(.is-expanded) .project-close,
+html:not(.js) .project-close {
+  display: none;
 }
 
+/* The research paper has no chart: a huge faint number stands in. */
 .project-ghost-number {
   position: absolute;
-  right: 0;
-  bottom: -0.1em;
-  z-index: -1;
+  right: var(--space-md);
+  bottom: 0;
+  z-index: 1;
   font-family: var(--font-mono);
   font-size: clamp(8rem, 4rem + 18vw, 22rem);
   font-weight: 500;
-  line-height: 1;
-  color: color-mix(in srgb, var(--accent) 8%, transparent);
+  line-height: 0.9;
+  color: color-mix(in srgb, var(--accent) 9%, transparent);
   pointer-events: none;
 }
 
-/* Wide screens: the chart floats to one side as a soft background, and the words wrap around it. */
+.project-stage--text .project-visual {
+  min-height: 14rem;
+}
+
+/* 22c. WIDE SCREENS: the chart fills the stage, the note floats over its emptiest spot. */
 @media (min-width: 900px) {
-  .project-panel-inner {
-    padding: var(--space-md) 0 var(--space-section);
+  .project-stage {
+    padding: 0;
+  }
+
+  .project-visual {
+    grid-area: 1 / 1;
+    padding: clamp(1.5rem, 3vw, 3rem) 0 clamp(3rem, 5vw, 5rem);
   }
 
   .project-chart {
-    position: relative;
-    width: var(--chart-width, 55%);
-    margin: 0;
-    shape-margin: 1.75rem;          /* the gap kept between the chart's outline and the words */
-    shape-image-threshold: 0.5;
+    width: var(--chart-width, 90%);
+    margin-left: var(--chart-x, 5%);
   }
 
-  .project-chart--left {
-    float: left;
+  .project-stage--text .project-visual {
+    min-height: 26rem;
   }
 
-  .project-chart--right {
-    float: right;
+  /* Once js/projects.js is running, the note floats at its spot (--note-x, --note-y). */
+  .project-index.is-ready .project-note {
+    position: absolute;
+    top: var(--note-top, var(--note-y, 10%)); /* --note-top is worked out by js/projects.js */
+    left: var(--note-x, 5%);
+    width: min(var(--note-width), calc(100% - var(--note-x, 5%)));
   }
 
-  /* The soft look: see-through, a gentle cyan glow, and edges that melt into the page. */
-  .project-chart img {
-    opacity: var(--chart-opacity, 0.7);
-    filter: drop-shadow(0 0 32px color-mix(in srgb, var(--accent) 22%, transparent));
-    -webkit-mask-image: radial-gradient(ellipse 80% 85% at 50% 50%, #000 70%, transparent 100%);
-    mask-image: radial-gradient(ellipse 80% 85% at 50% 50%, #000 70%, transparent 100%);
-  }
-
-  .motion .project-chart img {
+  /* A soft dark mist behind the summary, so it reads cleanly over the chart's lines.
+     It fades away once the note opens onto its glass card. */
+  .project-index.is-ready .project-note::before {
+    content: "";
+    position: absolute;
+    inset: -12% -8%;
+    z-index: -1;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--color-bg) 78%, transparent), transparent);
+    pointer-events: none;
     transition: opacity var(--speed-slow) var(--ease);
   }
 
-  /* Point at the chart to read it at full strength. */
-  .project-chart:hover img {
-    opacity: 1;
-    -webkit-mask-image: none;
-    mask-image: none;
+  .project-index.is-ready .project-note.is-expanded::before {
+    opacity: 0;
   }
 
-  /* The words keep to a comfortable reading column on the side away from the chart.
-     Where the chart's outline leaves room, the lines reach in toward it. */
-  .project-text {
-    max-width: none;
+  /* Opened, the note widens; if that would run past the right edge, it slides left to fit. */
+  .project-index.is-ready .project-note.is-expanded {
+    left: max(0px, min(var(--note-x, 5%), calc(100% - var(--note-open-width))));
+    width: min(var(--note-open-width), 100%);
   }
 
-  .project-text > * {
-    max-width: var(--project-column);
-  }
-
-  .project-chart--left ~ .project-text > * {
-    margin-left: auto;
-  }
-
-  .project-chart--right ~ .project-text > * {
-    margin-right: auto;
-  }
-
-  .project-full-title {
-    font-size: var(--text-3xl);
+  .motion .project-index.is-ready .project-note {
+    transition:
+      background-color var(--speed-slow) var(--ease),
+      border-color var(--speed-slow) var(--ease),
+      box-shadow var(--speed-slow) var(--ease),
+      left var(--speed-slow) var(--ease),
+      width var(--speed-slow) var(--ease);
   }
 }
 
-/* Printing: every project prints open, with its chart at full strength. */
+/* 22d. WITHOUT WEBGL: a softer glow and smoke made with CSS (blurred clouds of color). */
+.project-stage:not(.has-glow) .project-chart {
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--accent) 35%, transparent));
+}
+
+.project-stage:not(.has-glow) .project-visual::before {
+  content: "";
+  position: absolute;
+  inset: 5% 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 45% 50% at 30% 45%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 70% 60%, color-mix(in srgb, #2a5bd7 22%, transparent), transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* 22e. PRINTING: every project prints open, with its full write-up and plain chart. */
 @media print {
   .project-panel,
-  .project-panel[hidden] {
+  .project-panel[hidden],
+  .project-details,
+  .project-details[hidden] {
     display: block !important;
     content-visibility: visible !important;
     height: auto !important;
   }
 
+  .project-index.is-ready .project-note {
+    position: static !important;
+    width: auto !important;
+  }
+
   .project-hover,
+  .project-glow,
   .project-row-thumb,
   .project-row-icon,
+  .project-more,
   .project-close,
-  .project-ghost-number {
+  .project-ghost-number,
+  .project-visual::before {
     display: none !important;
   }
 
-  .project-chart img {
+  .project-chart {
     opacity: 1 !important;
     filter: none !important;
-    -webkit-mask-image: none !important;
-    mask-image: none !important;
+  }
+
+  .project-brief {
+    text-shadow: none;
   }
 
   .project-row-title {

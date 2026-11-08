@@ -66,7 +66,7 @@ All text pairs meet at least 4.5:1 contrast on the backgrounds above.
 | Fade-ins | Anything with `class="reveal"` fades up 24px as it scrolls into view, staggered. | `js/motion.js` section 6 |
 | Magnetic buttons | Buttons lean toward the mouse (`MAGNETIC_STRENGTH`) on a little spring. Buttons side by side bump each other aside instead of overlapping and bounce back (`BUTTON_BOUNCE`, `BUTTON_GAP`). Mouse and trackpad only. | `js/motion.js` section 7 |
 | Particle scene (home) | About 60k glowing particles (15k on phones) drift like ink; the mouse pushes them aside. Scrolling through "What I Do" forms a line chart, a puzzle piece with a graduation cap, and a network, each with one amber "insight". A "Pause motion" button freezes the drift. | `js/hero-scene.js`, CSS section 19 |
-| Project list (Projects) | Big project titles with mono numbers and year/type labels; the right part of each line stays empty. Hovering or focusing a title fades the others back and slides it right, and (wide screens with a mouse) its chart appears in the empty strip, rippling in, bending when moved, and wiping over to the next chart. Clicking opens the project in place: the chart drifts in out of a blur as a soft, glowing background on one side, and the words wrap around its outline (`shape-outside`). One project open at a time; links like `#vr2` open that project. Phones get cards with the chart on top, and never download Three.js. | `js/projects.js`, `js/projects-hover.js`, CSS sections 21-22 |
+| Project list (Projects) | Big project titles with mono numbers and year/type labels; the right part of each line stays empty. Hovering or focusing a title fades the others back and slides it right, and (wide screens with a mouse) its chart appears in the empty strip, rippling in and wiping over to the next chart. Clicking opens the project in place: its chart drifts in out of a blur, large, in wisps of blue smoke that cling to its bars, dots and lines (`js/project-glow.js`, raw WebGL2, no library). A short note sits in the chart's emptiest spot; hovering, clicking or "More" opens it into the full write-up on a widening dark glass card. One project open at a time; links like `#vr2` open that project. Without WebGL the smoke is a soft CSS glow. Phones get cards with the chart on top, the note below. | `js/projects.js`, `js/project-glow.js`, `js/projects-hover.js`, CSS sections 21-22 |
 | Cursor ring | A 36px cyan ring trails the mouse (`CURSOR_LAG`) and grows over links and buttons. The normal arrow stays visible. Mouse and trackpad only; hidden in print and high-contrast mode. | `js/motion.js` section 8, CSS section 17 |
 | Page transitions | The old page fades out and rises 12px (300ms); the new one fades in from 16px below (600ms). The header stays still. Uses View Transitions; other browsers switch pages normally. | CSS section 17 |
 
@@ -80,11 +80,11 @@ Four pages, kept simple on purpose:
 |---|---|---|
 | Home | `index.html` | Particle hero, then "What I Do": three story steps, each with its tools and strengths as chips |
 | About & Experience | `about.html` | Story, strengths, numbers, the experience timeline (with the job graphics), certifications, resume download |
-| Projects | `portfolio.html` | The big project list; each project opens in place (chart, what I did, tools) |
+| Projects | `portfolio.html` | The big project list; each project opens in place (chart in smoke, short note, full write-up) |
 | Contact | `contact.html` | Form and contact details |
 
 `showcase.html` (old Experience) and `features.html` (old Skills) only forward visitors to their new places, so old links keep working. They are not in the menu or `sitemap.xml`.
 
 ## 8. Charts
 
-Project charts are recolored to match the site by `tools/theme_charts.py`: see-through background, light ink, cyan data, one amber highlight. Every value stays exactly where it was; only colors change. The originals stay in `images/projects/`, the recolored ones and their wrap outlines go in `images/projects/themed/`.
+Project charts are recolored to match the site by `tools/theme_charts.py`: see-through background, light ink, cyan data, one amber highlight. Every value stays exactly where it was; only colors change. The originals stay in `images/projects/`; the recolored ones go in `images/projects/themed/`.

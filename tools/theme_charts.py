@@ -1,20 +1,17 @@
 """THEME_CHARTS.PY: recolors the project charts to match the site.
 
-Reads the original charts in images/projects/ and writes two files per chart to images/projects/themed/:
-  - name.png        the chart with a see-through background, recolored in the site's colors
-                    (light ink, cyan data, amber highlight). Every bar, dot and line keeps exactly its
-                    position and size; only the colors change.
-  - name-shape.svg  a soft outline of everything readable in the chart, used by the Projects page
-                    so the words wrap around the chart (CSS "shape-outside").
+Reads the original charts in images/projects/ and writes each one to images/projects/themed/ with a
+see-through background, recolored in the site's colors (light ink, cyan data, amber highlight).
+Every bar, dot and line keeps exactly its position and size; only the colors change.
 
-How to run it (needs Python with: pip install pillow numpy scipy):
+How to run it (needs Python with: pip install pillow numpy):
     python tools/theme_charts.py
 
 Adding a new chart: put the original in images/projects/, then add it to section 1 (if it's
 already drawn on the site's dark navy) or section 2 (light background) below, saying which of its
 colors become cyan and which become amber."""
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image
 import colorsys, os
 
 SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "images", "projects")
@@ -43,37 +40,9 @@ def hls(fg):
     return out.reshape(fg.shape)
 
 
-def save(name, fg, a, mask_blur):
+def save(name, fg, a):
     img = np.dstack([fg, a])
     Image.fromarray((img * 255).round().astype(np.uint8), "RGBA").save(os.path.join(OUT, name), optimize=True)
-    # Shape mask: everything readable in the chart (bars, dots, lines of data, labels), but not the
-    # long thin grid and frame lines, grown a little and softened, so page text wraps around it.
-    from scipy import ndimage
-    strong = a > 0.4
-    labels, count = ndimage.label(strong)
-    keep = np.zeros_like(strong)
-    for i, box in enumerate(ndimage.find_objects(labels), start=1):
-        hgt = box[0].stop - box[0].start
-        wid = box[1].stop - box[1].start
-        long_thin = (max(hgt, wid) > 0.25 * min(a.shape) and min(hgt, wid) <= 4)
-        frame = (hgt > 0.6 * a.shape[0] and wid > 0.6 * a.shape[1] and (labels[box] == i).mean() < 0.05)
-        if not (long_thin or frame):
-            keep |= labels == i
-    grow = max(2, round(a.shape[1] * mask_blur))
-    grown = ndimage.binary_dilation(keep, iterations=grow)
-    m = ndimage.gaussian_filter(grown.astype(float), grow / 2)
-    m = np.clip((m - 0.2) / 0.3, 0, 1)
-    mask = Image.fromarray(np.dstack([np.full(m.shape + (3,), 255), (m * 255)[..., None]]).astype(np.uint8), "RGBA")
-    mask = mask.resize((400, round(400 * mask.height / mask.width)), Image.LANCZOS)
-    # Saved inside an SVG with only a viewBox (no fixed size), so CSS stretches the outline to fit
-    # the chart at any size. (A plain PNG outline would stay at its own pixel size.)
-    import io, base64
-    buf = io.BytesIO()
-    mask.save(buf, "PNG", optimize=True)
-    data = base64.b64encode(buf.getvalue()).decode()
-    svg = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {mask.width} {mask.height}" preserveAspectRatio="none">'
-           f'<image width="{mask.width}" height="{mask.height}" preserveAspectRatio="none" href="data:image/png;base64,{data}"/></svg>')
-    open(os.path.join(OUT, name.replace(".png", "-shape.svg")), "w").write(svg)
     print(name, "saved", os.path.getsize(os.path.join(OUT, name)) // 1024, "KB")
 
 
@@ -85,7 +54,7 @@ def load(name):
 for name in ["vr2-usage.png", "crop-watersheds.png", "civic-massachusetts.png"]:
     rgb = load(name)
     fg, a = color_to_alpha(rgb, DEEP_BG)
-    save(name, fg, a, 0.012)
+    save(name, fg, a)
 
 # 2. Light charts: lift the ink off the light background, then repaint it in theme colors.
 def repaint(name, bg, colored, neutral_alpha=1.0, prep=None, sat_cut=0.35):
@@ -99,7 +68,7 @@ def repaint(name, bg, colored, neutral_alpha=1.0, prep=None, sat_cut=0.35):
     out = np.where(is_color[..., None], 0, TEXT)
     out_a = np.where(is_color, a, a * neutral_alpha)
     out, out_a = colored(rgb, fg, a, hue, light, sat, is_color, out, out_a)
-    save(name, out, out_a, 0.012)
+    save(name, out, out_a)
 
 
 # Heart rate (ggplot gray panel with white grid): treat white as background too.
