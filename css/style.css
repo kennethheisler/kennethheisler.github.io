@@ -3,29 +3,33 @@
 
 /* 1. SETTINGS (DESIGN VARIABLES) */
 :root {
-  /* Accent color: the main color of the site */
+  /* Primary color (cyan): buttons, links, focus rings, particles. See DESIGN.md. */
   --accent: #36cfff;
 
   /* The text color that sits ON the accent color (the words on the main button). */
   --color-on-accent: #04121f;
 
-  /* Second color for small details (badge dot, "Today" timeline dot). */
+  /* Highlight color (amber): at most one key number or data point per screen. */
   --accent-2: #ffb547;
 
   /* --- Backgrounds --- */
-  --color-bg: #0a1628;             /* main page background */
-  --color-bg-alt: #0c1b31;         /* every other section */
-  --color-surface: #0f2038;        /* cards and panels */
-  --color-surface-raised: #142a47; /* drop-down menu and form fields */
+  --color-bg: #070d18;             /* main page background */
+  --color-bg-alt: #0a1220;         /* every other section */
+  --color-surface: #0e1726;        /* cards and panels */
+  --color-surface-raised: #142034; /* drop-down menu and form fields */
 
   /* --- Lines --- */
-  --color-border: #22385a;         /* thin dividing lines */
-  --color-border-strong: #5d7598;  /* form fields and outline buttons */
+  --color-border: #1f2c42;         /* thin dividing lines */
+  --color-border-strong: #4f6280;  /* form fields and outline buttons */
 
   /* --- Text --- */
-  --color-heading: #f3f7fc;        /* headings */
-  --color-text: #dce6f3;           /* normal paragraphs */
-  --color-text-muted: #a3b4cb;     /* softer supporting text */
+  --color-heading: #f5f8fc;        /* headings */
+  --color-text: #dfe7f2;           /* normal paragraphs */
+  --color-text-muted: #93a3b8;     /* softer supporting text */
+
+  /* --- Messages --- */
+  --color-success: #3ddc97;        /* "message sent" */
+  --color-error: #ff7a7a;          /* form errors */
 
   /* --- Colors made from the accent --- */
   --color-link: var(--accent);
@@ -37,19 +41,23 @@
   --grid-major: color-mix(in srgb, var(--accent) 14%, transparent);
   --color-header-bg: color-mix(in srgb, var(--color-bg) 85%, transparent);
   --shadow-raised: 0 24px 48px -32px rgba(0, 0, 0, 0.9);
+  --glow-accent: 0 0 28px color-mix(in srgb, var(--accent) 35%, transparent); /* soft cyan glow */
 
   /* Fonts */
-  --font-body: "Lato", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  --font-heading: "Lato", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  /* Geist and Geist Mono load from Google Fonts in each page's <head>. */
+  --font-body: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; /* labels and data values */
 
   /* Text sizes (keep 16px / 1rem or larger) */
   --text-sm: 1rem;                                          /* 16px: smallest text */
   --text-base: 1.125rem;                                    /* 18px: paragraphs */
   --text-lg: 1.3125rem;                                     /* 21px: intro text */
   --text-xl: 1.5rem;                                        /* 24px: h3 headings */
-  --text-2xl: clamp(1.875rem, 1.4rem + 1.6vw, 2.25rem);     /* 30-36px: h2 */
-  --text-3xl: clamp(2.25rem, 1.6rem + 2.6vw, 3rem);         /* 36-48px: page titles */
+  --text-2xl: clamp(2rem, 1.5rem + 2vw, 3rem);              /* 32-48px: h2 */
+  --text-3xl: clamp(2.5rem, 1.6rem + 3.5vw, 4rem);          /* 40-64px: page titles */
   --text-hero: clamp(2.75rem, 1.6rem + 4.8vw, 4.5rem);      /* 44-72px: home headline */
+  --text-display: clamp(3rem, 1rem + 8vw, 7.5rem);          /* 48-120px: rebuilt hero headline (coming soon) */
 
   /* Spacing scale */
   --space-2xs: 0.25rem;  /* 4px */
@@ -59,7 +67,7 @@
   --space-lg: 1.5rem;    /* 24px */
   --space-xl: 2rem;      /* 32px */
   --space-2xl: 3rem;     /* 48px */
-  --space-section: clamp(4rem, 2.5rem + 5vw, 7rem); /* top and bottom of each section */
+  --space-section: clamp(5rem, 3rem + 6vw, 9rem);   /* top and bottom of each section */
 
   /* Rounded corners */
   --radius-sm: 8px;      /* buttons and form fields */
@@ -77,7 +85,7 @@
   --speed-fast: 150ms;
   --speed: 250ms;
   --speed-slow: 650ms;
-  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);  /* starts fast, ends gently */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);   /* starts fast, long soft stop */
   --reveal-distance: 18px;                 /* how far items rise as they fade in */
   --hover-lift: -4px;                      /* how far cards rise on hover */
 
@@ -86,34 +94,7 @@
 }
 
 
-/* 2. LIGHT THEME COLORS */
-:root[data-theme="light"] {
-  --color-bg: #f4f7fb;             /* main page background */
-  --color-bg-alt: #eaf0f7;         /* every other section */
-  --color-surface: #ffffff;        /* cards and panels */
-  --color-surface-raised: #ffffff; /* drop-down menu and form fields */
-  --color-border: #d3dce8;         /* thin dividing lines */
-  --color-border-strong: #6c7d95;  /* form fields and outline buttons */
-  --color-heading: #0a1628;        /* headings */
-  --color-text: #1a2638;           /* normal paragraphs */
-  --color-text-muted: #4a5a72;     /* softer supporting text */
-
-  /* The accent mixed with 45% black: a deeper shade that is easy to read on white. */
-  --color-link: color-mix(in srgb, var(--accent) 55%, #000000);
-  --color-button: var(--color-link);
-  --color-focus: var(--color-link);
-  --color-on-accent: #ffffff;
-  --color-accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
-  --color-accent-line: color-mix(in srgb, var(--color-link) 40%, transparent);
-  --grid-minor: color-mix(in srgb, var(--color-link) 7%, transparent);
-  --grid-major: color-mix(in srgb, var(--color-link) 13%, transparent);
-  --shadow-raised: 0 24px 48px -32px rgba(10, 22, 40, 0.45);
-
-  color-scheme: light;
-}
-
-
-/* 3. BASE STYLES */
+/* 2. BASE STYLES */
 *,
 *::before,
 *::after {
@@ -155,7 +136,7 @@ h2,
 h3 {
   margin: 0 0 var(--space-md);
   font-family: var(--font-heading);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.01em;
   color: var(--color-heading);
@@ -164,11 +145,14 @@ h3 {
 
 h1 {
   font-size: var(--text-3xl);
-  line-height: 1.1;
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 h2 {
   font-size: var(--text-2xl);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
 }
 
 h3 {
@@ -226,7 +210,7 @@ textarea {
 }
 
 
-/* 4. ACCESSIBILITY HELPERS */
+/* 3. ACCESSIBILITY HELPERS */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -258,7 +242,7 @@ textarea {
 }
 
 
-/* 5. LAYOUT HELPERS */
+/* 4. LAYOUT HELPERS */
 .container {
   width: 100%;
   max-width: var(--container-width);
@@ -330,7 +314,7 @@ textarea {
 }
 
 
-/* 6. BUTTONS AND LINKS */
+/* 5. BUTTONS AND LINKS */
 .button-row {
   display: flex;
   flex-wrap: wrap; /* buttons drop to a new line on narrow screens */
@@ -380,7 +364,7 @@ textarea {
 }
 
 
-/* 7. SITE HEADER AND NAVIGATION */
+/* 6. SITE HEADER AND NAVIGATION */
 .site-header {
   position: sticky; /* sticks to the top of the screen while scrolling */
   top: 0;
@@ -474,8 +458,7 @@ textarea {
   border-radius: 2px;
 }
 
-/* Shared look for the two round icon buttons. */
-.theme-toggle,
+/* The round menu button. */
 .nav-toggle {
   display: inline-flex;
   align-items: center;
@@ -491,23 +474,9 @@ textarea {
   cursor: pointer;
 }
 
-.theme-toggle:hover,
 .nav-toggle:hover {
   background-color: var(--color-accent-soft);
   border-color: var(--color-link);
-}
-
-/* Dark mode shows the sun ("switch to light"); light mode shows the moon. */
-.icon-moon {
-  display: none;
-}
-
-:root[data-theme="light"] .icon-sun {
-  display: none;
-}
-
-:root[data-theme="light"] .icon-moon {
-  display: block;
 }
 
 /* The hamburger: three bars that turn into an X when the menu opens. */
@@ -537,8 +506,7 @@ textarea {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* Without JavaScript the buttons can't work, so hide them. */
-.no-js .theme-toggle,
+/* Without JavaScript the button can't work, so hide it. */
 .no-js .nav-toggle {
   display: none;
 }
@@ -596,7 +564,7 @@ textarea {
 }
 
 
-/* 8. HOME PAGE HERO */
+/* 7. HOME PAGE HERO */
 .hero {
   position: relative;
   isolation: isolate; /* keeps the grid layer behind the hero content */
@@ -642,7 +610,10 @@ textarea {
   gap: var(--space-xs);
   margin: 0 0 var(--space-lg);
   padding: 0.35rem 0.9rem;
+  font-family: var(--font-mono);
   font-size: var(--text-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--color-text);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -662,8 +633,8 @@ textarea {
   max-width: 16ch; /* "ch" = the width of one character */
   margin-bottom: var(--space-lg);
   font-size: var(--text-hero);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  line-height: 1;
+  letter-spacing: -0.035em;
 }
 
 /* Larger, softer intro paragraph (used in every page header). */
@@ -678,7 +649,7 @@ textarea {
 }
 
 
-/* 9. INNER PAGE HEADERS AND BREADCRUMBS */
+/* 8. INNER PAGE HEADERS AND BREADCRUMBS */
 .page-hero {
   position: relative;
   isolation: isolate;
@@ -742,7 +713,7 @@ textarea {
 }
 
 
-/* 10. FEATURE CARDS */
+/* 9. FEATURE CARDS */
 .card {
   padding: var(--space-xl);
   background-color: var(--color-surface);
@@ -779,7 +750,7 @@ textarea {
 }
 
 
-/* 11. IMAGE FRAME (CORNER MARKS) */
+/* 10. IMAGE FRAME (CORNER MARKS) */
 .frame {
   position: relative;
   padding: var(--space-sm);
@@ -814,7 +785,7 @@ textarea {
 }
 
 
-/* 12. SPLIT SECTIONS (IMAGE + TEXT) */
+/* 11. SPLIT SECTIONS (IMAGE + TEXT) */
 .split {
   display: grid;
   gap: var(--space-xl);
@@ -870,7 +841,7 @@ textarea {
 }
 
 
-/* 13. ABOUT PAGE: PILLARS, STATS, TIMELINE */
+/* 12. ABOUT PAGE: PILLARS, STATS, TIMELINE */
 .pillars {
   display: grid;
   gap: var(--space-xl);
@@ -985,7 +956,7 @@ textarea {
 }
 
 
-/* 14. SHOWCASE CARDS */
+/* 13. SHOWCASE CARDS */
 @media (min-width: 600px) {
   .grid--showcase {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1046,7 +1017,7 @@ textarea {
 }
 
 
-/* 15. CALL-TO-ACTION PANEL */
+/* 14. CALL-TO-ACTION PANEL */
 .cta {
   position: relative;
   isolation: isolate;
@@ -1094,11 +1065,17 @@ textarea {
 }
 
 
-/* 16. CONTACT PAGE AND FORM */
+/* 15. CONTACT PAGE AND FORM */
 .contact-layout {
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* lets the panels shrink to fit narrow phones */
   gap: var(--space-xl);
   align-items: start;
+}
+
+/* Long email addresses wrap instead of pushing the panel wider than the screen. */
+.contact-layout a {
+  overflow-wrap: anywhere;
 }
 
 @media (min-width: 960px) {
@@ -1224,7 +1201,7 @@ textarea.form-input {
 }
 
 
-/* 17. SITE FOOTER */
+/* 16. SITE FOOTER */
 .site-footer {
   padding-top: var(--space-2xl);
   background-color: var(--color-bg-alt);
@@ -1297,7 +1274,7 @@ textarea.form-input {
 }
 
 
-/* 18. MOTION: FADE-INS AND HOVER EFFECTS */
+/* 17. MOTION: FADE-INS AND HOVER EFFECTS */
 
 /* Smooth scrolling for links that jump within the page. */
 html.motion {
@@ -1326,7 +1303,6 @@ html.motion {
 /* Smooth changes ("transitions") for things that react to the mouse. */
 .motion .btn,
 .motion .nav-link,
-.motion .theme-toggle,
 .motion .nav-toggle,
 .motion .form-input {
   transition:
@@ -1387,7 +1363,7 @@ html.motion {
 }
 
 
-/* 19. REDUCED MOTION, HIGH CONTRAST, AND PRINTING */
+/* 18. REDUCED MOTION, HIGH CONTRAST, AND PRINTING */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto !important;
@@ -1417,7 +1393,6 @@ html.motion {
 @media print {
   .skip-link,
   .site-nav,
-  .theme-toggle,
   .back-to-top {
     display: none;
   }
