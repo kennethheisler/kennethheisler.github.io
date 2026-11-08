@@ -22,7 +22,7 @@ const SCROLL_SMOOTHNESS = 0.1;
 const HEADLINES = "main h1, main h2, .story-title";
 
 // Headings inside these boxes are skipped: they move together with their box instead.
-const HEADLINES_SKIP = ".card, .media-card, .panel";
+const HEADLINES_SKIP = ".card, .panel";
 
 // Headline lines: how long each line takes to rise (seconds), and the gap between lines.
 const LINE_DURATION = 1.1;

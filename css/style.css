@@ -60,7 +60,6 @@
   --text-xl: 1.5rem;                                        /* 24px: h3 headings */
   --text-2xl: clamp(1.875rem, 1.4rem + 1.6vw, 2.25rem);     /* 30-36px: h2 */
   --text-3xl: clamp(2.25rem, 1.6rem + 2.6vw, 3rem);         /* 36-48px: page titles */
-  --text-hero: clamp(2.75rem, 1.6rem + 4.8vw, 4.5rem);      /* 44-72px: home headline */
   --text-display: clamp(3rem, 1.5rem + 7.5vw, 7.5rem);      /* 48-120px: the rebuilt home hero (not used yet) */
 
   /* Spacing scale */
@@ -579,17 +578,9 @@ textarea {
 }
 
 
-/* 7. HOME PAGE HERO */
-.hero {
-  position: relative;
-  isolation: isolate; /* keeps the grid layer behind the hero content */
-  overflow: hidden;
-  padding-block: clamp(3rem, 1.5rem + 6vw, 6.5rem) var(--space-section);
-  border-bottom: 1px solid var(--color-border);
-}
+/* 7. PAGE HEADER GRID, BADGE AND LEAD TEXT */
 
 /* The blueprint grid: small squares every 32px and stronger lines every 128px, drawn with stacked "linear-gradient" stripes. */
-.hero::before,
 .page-hero::before {
   content: "";
   position: absolute;
@@ -604,18 +595,6 @@ textarea {
   background-size: 128px 128px, 128px 128px, 32px 32px, 32px 32px;
   -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent 95%);
   mask-image: linear-gradient(to bottom, #000 35%, transparent 95%);
-}
-
-.hero-inner {
-  display: grid;
-  gap: var(--space-2xl);
-  align-items: center;
-}
-
-@media (min-width: 960px) {
-  .hero-inner {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  }
 }
 
 /* The small label above the headline: monospaced capital letters, like a reading on an instrument. */
@@ -642,23 +621,11 @@ textarea {
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 22%, transparent);
 }
 
-.hero-title {
-  max-width: 16ch; /* "ch" = the width of one character */
-  margin-bottom: var(--space-lg);
-  font-size: var(--text-hero);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-}
-
 /* Larger, softer intro paragraph (used in every page header). */
 .lead {
   max-width: 58ch;
   font-size: var(--text-lg);
   color: var(--color-text-muted);
-}
-
-.hero .lead {
-  margin-bottom: var(--space-xl);
 }
 
 
@@ -952,13 +919,6 @@ textarea {
   box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent-2) 22%, transparent);
 }
 
-.timeline-date {
-  margin: 0 0 var(--space-2xs);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  color: var(--color-link);
-}
-
 .timeline-item h3 {
   margin-bottom: var(--space-xs);
 }
@@ -969,55 +929,8 @@ textarea {
 }
 
 
-/* 13. SHOWCASE CARDS */
-@media (min-width: 600px) {
-  .grid--showcase {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1000px) {
-  .grid--showcase {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.media-card {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden; /* trims the zoomed picture on hover */
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.media-card-image {
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background-color: var(--color-bg-alt);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.media-card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* fills the space; trims edges if needed */
-}
-
-.media-card-body {
-  padding: var(--space-lg);
-}
-
-.media-card-body h3 {
-  margin-bottom: var(--space-xs);
-}
-
-.media-card-body p:last-child {
-  margin: 0;
-  color: var(--color-text-muted);
-}
-
-/* The small category label on each card. */
+/* 13. TAGS */
+/* The small category label on cards and experience entries. */
 .tag {
   display: inline-block;
   margin: 0 0 var(--space-sm);
@@ -1397,16 +1310,11 @@ html.lenis {
   transition: transform var(--speed) var(--ease), opacity var(--speed-fast) ease;
 }
 
-.motion .card,
-.motion .media-card {
+.motion .card {
   transition:
     transform var(--speed) var(--ease),
     border-color var(--speed) var(--ease),
     box-shadow var(--speed) var(--ease);
-}
-
-.motion .media-card-image img {
-  transition: transform var(--speed-slow) var(--ease);
 }
 
 .motion .site-header {
@@ -1427,15 +1335,10 @@ html.lenis {
 
 /* Hover movement only for devices with a real pointer (mouse or trackpad). */
 @media (hover: hover) {
-  .motion .card:hover,
-  .motion .media-card:hover {
+  .motion .card:hover {
     transform: translateY(var(--hover-lift));
     border-color: var(--color-accent-line);
     box-shadow: var(--shadow-raised);
-  }
-
-  .motion .media-card:hover .media-card-image img {
-    transform: scale(1.04);
   }
 }
 
