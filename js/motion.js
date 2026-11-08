@@ -18,8 +18,8 @@ const SMOOTH_SCROLL_ON = true;
 // (0.1 means the page moves 10% of the remaining distance each frame.)
 const SCROLL_SMOOTHNESS = 0.1;
 
-// Which headings rise into place line by line.
-const HEADLINES = "main h1, main h2";
+// Which headings rise into place line by line. (".story-title" = the big step headings on the new home page.)
+const HEADLINES = "main h1, main h2, .story-title";
 
 // Headings inside these boxes are skipped: they move together with their box instead.
 const HEADLINES_SKIP = ".card, .media-card, .panel";
@@ -34,6 +34,10 @@ const REVEAL_DURATION = 0.9;
 const REVEAL_DISTANCE = 24;
 const REVEAL_STAGGER = 0.08;
 
+// Fade-ins inside these areas (the top of each page) play right away instead of waiting
+// for the scroll position, so nothing on the first screen stays hidden.
+const REVEAL_RIGHT_AWAY = ".hero, .hero-xl, .page-hero";
+
 // The feel of every movement. "expo.out" starts fast and glides to a soft stop.
 const MOTION_EASE = "expo.out";
 
@@ -43,7 +47,7 @@ const MAGNETIC_STRENGTH = 0.3;
 
 // Cursor ring: a soft circle that trails the mouse. Lag = seconds it takes to catch up.
 const CURSOR_ON = true;
-const CURSOR_LAG = 0.35;
+const CURSOR_LAG = 0.12;
 
 
 /* 2. CHECK THE LIBRARIES */
@@ -228,8 +232,27 @@ function motionLibrariesLoaded() {
       document.removeEventListener("focusin", onFocusIn);
     });
 
+    // Items at the top of the page: fade in now, one after another.
+    const rightAway = items.filter(function (item) {
+      return item.closest(REVEAL_RIGHT_AWAY);
+    });
+    if (rightAway.length > 0) {
+      gsap.to(rightAway, {
+        opacity: 1,
+        y: 0,
+        duration: REVEAL_DURATION,
+        ease: MOTION_EASE,
+        stagger: REVEAL_STAGGER,
+        delay: 0.1,
+        clearProps: "transform,transition"
+      });
+    }
+    const later = items.filter(function (item) {
+      return rightAway.indexOf(item) === -1;
+    });
+
     // "batch" groups items that come into view together, so they can appear one after another.
-    ScrollTrigger.batch(items, {
+    ScrollTrigger.batch(later, {
       start: "top 90%",
       once: true,
       onEnter: function (batch) {

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!-- PAGE: lab/index.html (PROTOTYPE of the new Home page: "data in motion")
+     This test page is hidden from search engines. Once it's approved, it replaces index.html. -->
+<html lang="en" class="no-js">
+<head>
+  <!-- PAGE SETTINGS (the "head": information for the browser) -->
+  <meta charset="UTF-8">
+  <!-- Makes the page fit phone screens instead of showing a tiny desktop page. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- All addresses on this page start from the main folder (so "css/style.css" works from lab/). -->
+  <base href="../">
+
+  <!-- The title on the browser tab. -->
+  <title>Home (prototype) | Kenneth Heisler</title>
+  <meta name="description" content="Kenneth Heisler: informaticist and technology integration specialist.">
+
+  <!-- Test page: keep it out of search results. -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- The small icon on the browser tab (a "favicon"). -->
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+  <!-- Fonts: Geist for headings and text, Geist Mono for small labels (from Google Fonts). -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400..500&display=swap">
+
+  <!-- The look of the site, plus the extra styles for this prototype. -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="lab/lab.css">
+
+  <!-- The behavior of the site. -->
+  <script src="js/main.js"></script>
+
+  <!-- Motion effects: smooth scrolling, headlines that rise line by line, magnetic buttons and a cursor ring.
+       The animation libraries (GSAP and Lenis) come from a free public file server (a "CDN").
+       "defer" downloads them without slowing the page down. If they can't load, the site still
+       works and js/main.js uses its own simple fade-ins instead. Settings: top of js/motion.js. -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js" crossorigin="anonymous" defer></script>
+  <script src="js/motion.js" defer></script>
+
+  <!-- The live particle scene (Three.js, a 3D drawing library). An "import map" tells the browser
+       where to download it from; "modulepreload" starts those downloads early. "async" means the
+       rest of the page never waits for it. If it can't load ("onerror"), the page shows the normal
+       picture instead. Settings: top of js/hero-scene.js. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js" crossorigin="anonymous">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.min.js" crossorigin="anonymous">
+  <script type="module" src="js/hero-scene.js" async onerror="document.documentElement.classList.add('scene-settled')"></script>
+</head>
+<body class="page-home-lab">
+
+  <!-- THE PARTICLE LAYER: js/hero-scene.js draws the live scene in here, behind the whole page.
+       It's decoration only, so screen readers skip it (aria-hidden). -->
+  <div class="scene" aria-hidden="true"></div>
+
+  <!-- SHARED HEADER (the bar at the top of every page) -->
+  <header class="site-header" id="top">
+
+    <!-- Skip link: invisible until someone presses the Tab key. -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <div class="container header-inner">
+
+      <!-- Your brand. -->
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+        <span class="brand-name">Kenneth Heisler</span>
+      </a>
+
+      <!-- MAIN MENU. -->
+      <nav class="site-nav" aria-label="Main">
+
+        <!-- Hamburger button (small screens only). -->
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="nav-toggle-bar" aria-hidden="true"></span>
+          <span class="sr-only">Menu</span>
+        </button>
+
+        <!-- Menu links. -->
+        <ul class="nav-list" id="site-menu" role="list">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li><a class="nav-link" href="about.html">About</a></li>
+          <li><a class="nav-link" href="showcase.html">Experience</a></li>
+          <li><a class="nav-link" href="portfolio.html">Projects</a></li>
+          <li><a class="nav-link" href="features.html">Skills</a></li>
+          <li><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT (everything unique to this page) -->
+  <main id="main" tabindex="-1">
+
+    <!-- HERO: full screen, big headline over the live particle field. -->
+    <section class="hero-xl">
+      <div class="container hero-xl-inner">
+
+        <div class="hero-xl-content">
+          <!-- A short label above the headline. -->
+          <p class="badge reveal"><span class="badge-dot" aria-hidden="true"></span>Technology Integration Specialist at Viability</p>
+
+          <!-- Your main headline (real text, so search engines read it). -->
+          <h1 class="hero-xl-title">Data-Driven Informaticist</h1>
+
+          <!-- One or two sentences about what you offer. -->
+          <p class="lead reveal">Informaticist and Technology Integration Specialist, using a data science background to perform analysis and visualize results into clear interactive dashboards for stakeholders. I manage the systems behind data reporting, and connect data, technology, and people to make systems work better. Previously used data-driven methods to tailor support for students with autism and track real world outcomes.</p>
+
+          <!-- Buttons. -->
+          <div class="button-row reveal">
+            <a class="btn btn--primary" href="portfolio.html">See My Projects</a>
+            <a class="btn btn--secondary" href="contact.html">Get in Touch</a>
+          </div>
+        </div>
+
+        <!-- Backup picture: shown only when the live particle scene can't run. -->
+        <div class="hero-xl-fallback">
+          <div class="frame">
+            <img src="images/hero.svg" alt="Illustration of a dashboard with a rising line chart">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- A small hint to scroll (decoration only). -->
+      <p class="scroll-cue" aria-hidden="true"><span class="scroll-cue-line"></span>Scroll</p>
+
+      <!-- Stops the drifting particles for anyone who finds the movement distracting.
+           Hidden until the particle scene is running (js/hero-scene.js shows it). -->
+      <button class="motion-toggle" type="button" aria-pressed="false" hidden>Pause motion</button>
+    </section>
+
+    <!-- STORY: what I do, told in three steps. As each one scrolls in, the particles settle into a matching data shape. -->
+    <section class="story" aria-labelledby="story-title">
+
+      <div class="container story-intro">
+        <div class="section-header reveal">
+          <h2 id="story-title">What I Do</h2>
+          <p>I combine analytical skills, technical know-how, and hands-on experience supporting people.</p>
+        </div>
+      </div>
+
+      <!-- STEP 1: the particles become a rising line chart. -->
+      <article class="story-step" data-shape="chart">
+        <div class="container story-step-inner">
+          <div class="story-text">
+            <p class="story-index"><span class="story-index-number">01</span> / 03</p>
+            <div class="story-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="story-title">Data &amp; Analytics</h3>
+            <p>Interactive dashboards, Excel analysis, and statistical work using RStudio, STATA, SQL, Python, pandas, Tableau, and Power BI.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- STEP 2: the particles become clusters of points (a scatter plot). -->
+      <article class="story-step story-step--right" data-shape="scatter">
+        <div class="container story-step-inner">
+          <div class="story-text">
+            <p class="story-index"><span class="story-index-number">02</span> / 03</p>
+            <div class="story-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M12 3 5 6v5.5c0 4.4 3 8.2 7 9.5 4-1.3 7-5.1 7-9.5V6l-7-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="story-title">Data-Driven Support</h3>
+            <p>Behavioral interventions and individualized support plans for students with autism, built around measurable goals.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- STEP 3: the particles become a network of connected systems. -->
+      <article class="story-step" data-shape="network">
+        <div class="container story-step-inner">
+          <div class="story-text">
+            <p class="story-index"><span class="story-index-number">03</span> / 03</p>
+            <div class="story-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="m12 3 9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m3 13 9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="story-title">Technology Integration</h3>
+            <p>Managing ArborXR, Jamf, and Apple Business Manager, along with the software, reports, and user access behind them, and leading the (VR)<sup>2</sup> initiative.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- CLOSING CALL TO ACTION (the particles drift apart again here) -->
+    <section class="section story-end">
+      <div class="container">
+        <div class="cta reveal">
+          <div class="cta-content">
+            <!-- Heading and sentence. -->
+            <h2>Let's Work Together</h2>
+            <p>Have an opportunity, a project, or a question about my work? I'd love to hear from you.</p>
+          </div>
+          <!-- Button words and links. -->
+          <div class="button-row cta-actions">
+            <a class="btn btn--primary" href="contact.html">Contact Me</a>
+            <a class="btn btn--secondary" href="showcase.html">See My Experience</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SHARED FOOTER (the bottom of every page) -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+
+      <div class="footer-about">
+        <!-- Your brand name. -->
+        <a class="brand" href="index.html">
+          <img class="brand-logo" src="images/logo.svg" alt="" width="36" height="36">
+          <span class="brand-name">Kenneth Heisler</span>
+        </a>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer">
+        <h2 class="footer-heading">Explore</h2>
+        <!-- Keep these links matching the main menu. -->
+        <ul class="footer-links" role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="showcase.html">Experience</a></li>
+          <li><a href="portfolio.html">Projects</a></li>
+          <li><a href="features.html">Skills</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2 class="footer-heading">Contact</h2>
+        <!-- Your contact details. -->
+        <ul class="footer-links" role="list">
+          <li><a href="mailto:me@kennethheisler.com">me@kennethheisler.com</a></li>
+          <li><a href="tel:+14138880213">(413) 888-0213</a></li>
+          <li><a href="https://www.linkedin.com/in/kennethcheisler">LinkedIn</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <!-- Your name in the copyright line. -->
+      <p>&copy; <span data-current-year>2026</span> Kenneth Heisler. All rights reserved.</p>
+      <a class="back-to-top" href="#top">Back to top</a>
+    </div>
+  </footer>
+
+</body>
+</html>

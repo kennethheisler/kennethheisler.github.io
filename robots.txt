@@ -1,5 +1,7 @@
 # Lets search engines visit every page and points them to the page list.
 User-agent: *
 Allow: /
+# The lab folder holds test pages that aren't finished yet.
+Disallow: /lab/
 
 Sitemap: https://www.kennethheisler.com/sitemap.xml
