@@ -45,6 +45,16 @@ const MOTION_EASE = "expo.out";
 const MAGNETIC_BUTTONS_ON = true;
 const MAGNETIC_STRENGTH = 0.3;
 
+// Each button sits on a little spring. Springiness: higher = snappier pull back to place.
+// Damping: higher = settles calmly, lower = wobbles longer.
+const MAGNETIC_SPRING = 180;
+const MAGNETIC_DAMPING = 14;
+
+// Buttons side by side bump into each other instead of overlapping.
+// Bounce: 0 = they just push, 1 = they bounce off fully. Gap: the closest they get (pixels).
+const BUTTON_BOUNCE = 0.6;
+const BUTTON_GAP = 6;
+
 // Cursor ring: a soft circle that trails the mouse. Lag = seconds it takes to catch up.
 const CURSOR_ON = true;
 const CURSOR_LAG = 0.12;
@@ -271,39 +281,161 @@ function motionLibrariesLoaded() {
   }
 
 
-  /* 7. MAGNETIC BUTTONS (mouse and trackpad only) */
+  /* 7. MAGNETIC BUTTONS (mouse and trackpad only)
+     Each button is a little "body" on a spring. The one under the mouse is pulled toward it;
+     buttons in the same row bump into each other instead of overlapping, bounce apart, and
+     spring back to their places. A tiny physics step runs every frame, only while something moves. */
   function setupMagneticButtons() {
     if (!MAGNETIC_BUTTONS_ON || !finePointer.matches) {
       return;
     }
 
+    // 7a. One body per button, grouped by the row they sit in (only neighbors can bump).
+    const groups = new Map();
+    const bodies = [];
     document.querySelectorAll(".btn").forEach(function (button) {
-      // "quickTo" makes a reusable, smooth mover for one property.
-      const moveX = gsap.quickTo(button, "x", { duration: 0.6, ease: "expo.out" });
-      const moveY = gsap.quickTo(button, "y", { duration: 0.6, ease: "expo.out" });
+      const row = button.closest(".button-row") || button;
+      if (!groups.has(row)) {
+        groups.set(row, []);
+      }
+      // x, y = how far it has moved; vx, vy = its speed; targetX, targetY = where the mouse pulls it.
+      const body = { el: button, x: 0, y: 0, vx: 0, vy: 0, targetX: 0, targetY: 0, hovered: false, rest: null, group: groups.get(row) };
+      body.group.push(body);
+      bodies.push(body);
+    });
 
-      // Lean toward the mouse: the distance from the button's resting center, times the strength.
-      function onMove(event) {
-        const box = button.getBoundingClientRect();
-        // The box includes how far the button has already moved, so take that away
-        // to find where its center sits at rest.
-        const restX = box.left - gsap.getProperty(button, "x") + box.width / 2;
-        const restY = box.top - gsap.getProperty(button, "y") + box.height / 2;
-        moveX((event.clientX - restX) * MAGNETIC_STRENGTH);
-        moveY((event.clientY - restY) * MAGNETIC_STRENGTH);
+    // 7b. Measure where each button in a row sits at rest (its box, minus how far it has moved).
+    function measure(group) {
+      group.forEach(function (body) {
+        const box = body.el.getBoundingClientRect();
+        body.rest = { left: box.left - body.x, top: box.top - body.y, width: box.width, height: box.height };
+      });
+    }
+
+    // 7c. Mouse over a button: pull it toward the mouse (distance from its resting center x strength).
+    function onMove(event) {
+      const body = this.magnetBody;
+      measure(body.group);
+      body.hovered = true;
+      body.targetX = (event.clientX - (body.rest.left + body.rest.width / 2)) * MAGNETIC_STRENGTH;
+      body.targetY = (event.clientY - (body.rest.top + body.rest.height / 2)) * MAGNETIC_STRENGTH;
+      wake();
+    }
+
+    // Mouse leaves: let the spring bring it home.
+    function onLeave() {
+      const body = this.magnetBody;
+      body.hovered = false;
+      body.targetX = 0;
+      body.targetY = 0;
+      wake();
+    }
+
+    bodies.forEach(function (body) {
+      body.el.magnetBody = body;
+      body.el.addEventListener("pointermove", onMove);
+      body.el.addEventListener("pointerleave", onLeave);
+    });
+
+    // 7d. Two buttons too close? Push them apart and bounce them off each other.
+    function collide(a, b) {
+      if (!a.rest || !b.rest) {
+        return;
+      }
+      // Each button's current box, grown by half the gap on every side.
+      const half = BUTTON_GAP / 2;
+      const aLeft = a.rest.left + a.x - half;
+      const aTop = a.rest.top + a.y - half;
+      const bLeft = b.rest.left + b.x - half;
+      const bTop = b.rest.top + b.y - half;
+      const overlapX = Math.min(aLeft + a.rest.width + BUTTON_GAP, bLeft + b.rest.width + BUTTON_GAP) - Math.max(aLeft, bLeft);
+      const overlapY = Math.min(aTop + a.rest.height + BUTTON_GAP, bTop + b.rest.height + BUTTON_GAP) - Math.max(aTop, bTop);
+      if (overlapX <= 0 || overlapY <= 0) {
+        return; // not touching
       }
 
-      // Settle back to the middle when the mouse leaves.
-      function onLeave() {
-        moveX(0);
-        moveY(0);
+      // The button under the mouse is "heavier", so it mostly shoves the other one.
+      const massA = a.hovered ? 3 : 1;
+      const massB = b.hovered ? 3 : 1;
+      const shareA = massB / (massA + massB);
+      const shareB = massA / (massA + massB);
+
+      // Separate along the side with the smaller overlap (side by side = left/right).
+      const sideways = overlapX < overlapY;
+      const key = sideways ? "x" : "y";
+      const speed = sideways ? "vx" : "vy";
+      const overlap = sideways ? overlapX : overlapY;
+      const aCenter = sideways ? aLeft + a.rest.width / 2 : aTop + a.rest.height / 2;
+      const bCenter = sideways ? bLeft + b.rest.width / 2 : bTop + b.rest.height / 2;
+      const direction = bCenter >= aCenter ? 1 : -1;
+      a[key] -= direction * overlap * shareA;
+      b[key] += direction * overlap * shareB;
+
+      // Bounce: if they're moving toward each other, swap some of that speed back out.
+      const closing = (b[speed] - a[speed]) * direction;
+      if (closing < 0) {
+        const kick = -(1 + BUTTON_BOUNCE) * closing / (1 / massA + 1 / massB);
+        a[speed] -= direction * kick / massA;
+        b[speed] += direction * kick / massB;
+      }
+    }
+
+    // 7e. One physics step per frame: springs, then bumps, then move the buttons on screen.
+    let awake = false;
+    function step() {
+      // Seconds since the last frame (deltaRatio = 1 at 60 frames per second), capped after a pause.
+      const dt = Math.min(gsap.ticker.deltaRatio() / 60, 1 / 30);
+      const substep = dt / 2; // two small steps are steadier than one big one
+      let moving = false;
+
+      for (let pass = 0; pass < 2; pass++) {
+        bodies.forEach(function (b) {
+          // Spring pull toward the target, minus damping (friction).
+          b.vx += (MAGNETIC_SPRING * (b.targetX - b.x) - MAGNETIC_DAMPING * b.vx) * substep;
+          b.vy += (MAGNETIC_SPRING * (b.targetY - b.y) - MAGNETIC_DAMPING * b.vy) * substep;
+          b.x += b.vx * substep;
+          b.y += b.vy * substep;
+        });
+        groups.forEach(function (group) {
+          for (let i = 0; i < group.length; i++) {
+            for (let j = i + 1; j < group.length; j++) {
+              collide(group[i], group[j]);
+            }
+          }
+        });
       }
 
-      button.addEventListener("pointermove", onMove);
-      button.addEventListener("pointerleave", onLeave);
-      cleanups.push(function () {
-        button.removeEventListener("pointermove", onMove);
-        button.removeEventListener("pointerleave", onLeave);
+      bodies.forEach(function (b) {
+        const settled = !b.hovered && Math.abs(b.x) < 0.05 && Math.abs(b.y) < 0.05 && Math.abs(b.vx) < 0.05 && Math.abs(b.vy) < 0.05;
+        if (settled) {
+          b.x = b.y = b.vx = b.vy = 0;
+          gsap.set(b.el, { clearProps: "transform" });
+        } else {
+          moving = true;
+          gsap.set(b.el, { x: b.x, y: b.y });
+        }
+      });
+
+      // Everything is back at rest: stop running the physics until the mouse returns.
+      if (!moving) {
+        gsap.ticker.remove(step);
+        awake = false;
+      }
+    }
+
+    function wake() {
+      if (!awake) {
+        awake = true;
+        gsap.ticker.add(step);
+      }
+    }
+
+    cleanups.push(function () {
+      gsap.ticker.remove(step);
+      bodies.forEach(function (body) {
+        body.el.removeEventListener("pointermove", onMove);
+        body.el.removeEventListener("pointerleave", onLeave);
+        delete body.el.magnetBody;
       });
     });
   }

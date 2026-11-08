@@ -379,7 +379,7 @@ function startScene(renderer, holder) {
 
 /* 4. BUILD THE PARTICLES AND THEIR SHAPES
    Every particle gets one position per state: the drifting cloud ("position"), the line chart,
-   the scatter plot, and the network (a start and end point, so it can travel along a link).
+   the puzzle piece with a cap, and the network (a start and end point, so it can travel along a link).
    Shapes are made in a box from -1 to 1; the shader scales and places them on screen. */
 function buildParticles(count, insightCount) {
   const random = seededRandom(20261107); // same "random" layout on every visit
@@ -390,7 +390,7 @@ function buildParticles(count, insightCount) {
 
   const cloud = new Float32Array(count * 3);
   const chart = new Float32Array(count * 3);
-  const scatter = new Float32Array(count * 3);
+  const support = new Float32Array(count * 3);
   const netStart = new Float32Array(count * 3);
   const netEnd = new Float32Array(count * 3);
   const extra = new Float32Array(count * 4); // size, delay/phase, speed, insight (1 or 0)
@@ -421,8 +421,8 @@ function buildParticles(count, insightCount) {
     // 4b. Line chart
     setXYZ(chart, k3, ...chartPoint(random, gauss, insight));
 
-    // 4c. Scatter plot
-    setXYZ(scatter, k3, ...scatterPoint(random, gauss, insight));
+    // 4c. Puzzle piece with a graduation cap
+    setXYZ(support, k3, ...supportPoint(random, gauss, insight));
 
     // 4d. Network: a start and end point (the same for particles sitting on a node)
     const [a, b] = networkPoint(network, random, gauss, insight);
@@ -439,7 +439,7 @@ function buildParticles(count, insightCount) {
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.BufferAttribute(cloud, 3));
   geometry.setAttribute("aChart", new THREE.BufferAttribute(chart, 3));
-  geometry.setAttribute("aScatter", new THREE.BufferAttribute(scatter, 3));
+  geometry.setAttribute("aSupport", new THREE.BufferAttribute(support, 3));
   geometry.setAttribute("aNetwork", new THREE.BufferAttribute(netStart, 3));
   geometry.setAttribute("aNetEnd", new THREE.BufferAttribute(netEnd, 3));
   geometry.setAttribute("aRandom", new THREE.BufferAttribute(extra, 4));
@@ -509,43 +509,118 @@ function chartPoint(random, gauss, insight) {
   return [corner[0] + Math.cos(angle) * 0.035, corner[1] + Math.sin(angle) * 0.035, 0];
 }
 
-// Scatter clusters: [x, y, spread, share of the cyan dots]. The last one is "the insight":
-// it gets only amber dots (share 0), so it reads clearly as the one that stands out.
-const SCATTER_CLUSTERS = [
-  [-0.55, -0.35, 0.16, 0.28],
-  [-0.1, 0.32, 0.2, 0.33],
-  [0.45, -0.12, 0.14, 0.27],
-  [-0.62, 0.52, 0.09, 0.12],
-  [0.62, 0.55, 0.06, 0]
-];
+// The "support" shape: a jigsaw puzzle piece wearing a graduation cap.
+// The puzzle piece: a square body with a knob sticking out on the right and the bottom,
+// and a notch cut into the left (the classic jigsaw outline).
+const PUZZLE = {
+  centerX: -0.05,   // middle of the square body
+  centerY: -0.25,
+  half: 0.5,        // half the body's width
+  corner: 0.06,     // corner rounding
+  knob: 0.17,       // knob (and notch) size
+  knobReach: 0.1    // how far a knob's center sits beyond the edge
+};
 
-function scatterPoint(random, gauss, insight) {
+// The cap: a flat diamond-shaped board on top of a band, with a tassel hanging off one corner.
+const CAP = {
+  boardX: -0.05, boardY: 0.56,     // middle of the board
+  boardHalfWidth: 0.72,            // from the middle to the left/right corner
+  boardHalfHeight: 0.2,            // from the middle to the front/back corner (it's seen at an angle)
+  bandHalfWidth: 0.36, bandBottom: 0.26, bandTop: 0.48, // the part that sits on the "head"
+  tasselX: 0.67, tasselBottom: 0.16 // the tassel hangs from the right corner down to here (the insight)
+};
+
+// How far a point is from the puzzle piece's edge: negative = inside, positive = outside.
+// (Built from simple shapes: a rounded square, plus two circles, minus one circle.)
+function puzzleDistance(x, y) {
+  const p = PUZZLE;
+  const dx = Math.abs(x - p.centerX) - p.half + p.corner;
+  const dy = Math.abs(y - p.centerY) - p.half + p.corner;
+  const body = Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) + Math.min(Math.max(dx, dy), 0) - p.corner;
+  const knobRight = Math.hypot(x - (p.centerX + p.half + p.knobReach), y - p.centerY) - p.knob;
+  const knobBottom = Math.hypot(x - p.centerX, y - (p.centerY - p.half - p.knobReach)) - p.knob;
+  const notchLeft = Math.hypot(x - (p.centerX - p.half + p.knobReach), y - p.centerY) - p.knob;
+  return Math.max(Math.min(body, knobRight, knobBottom), -notchLeft);
+}
+
+// Pick random spots until one passes the test (used to scatter dots inside or along a shape).
+function pickSpot(random, test, left, right, bottom, top) {
+  for (let tries = 0; tries < 4000; tries++) {
+    const x = left + random() * (right - left);
+    const y = bottom + random() * (top - bottom);
+    if (test(x, y)) {
+      return [x, y];
+    }
+  }
+  return [left, bottom];
+}
+
+// A point partway along a straight line from a to b.
+function along(a, b, t) {
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+}
+
+function supportPoint(random, gauss, insight) {
+  const c = CAP;
   if (insight) {
-    const c = SCATTER_CLUSTERS[SCATTER_CLUSTERS.length - 1];
-    return [c[0] + gauss() * 0.05, c[1] + gauss() * 0.05, gauss() * 0.05];
+    // The amber tassel end: the insight.
+    return [c.tasselX + gauss() * 0.035, c.tasselBottom + gauss() * 0.045, gauss() * 0.03];
   }
+  const depth = gauss() * 0.04;
   const r = random();
-  if (r < 0.08) {
-    // Axes, so it reads as a chart.
-    if (random() < 0.5) {
-      return [random() * 2.1 - 1.05, -0.95 + gauss() * 0.006, 0];
+
+  if (r < 0.38) {
+    // Puzzle piece outline (a thin bright edge).
+    const [x, y] = pickSpot(random, (px, py) => Math.abs(puzzleDistance(px, py)) < 0.012, -0.75, 0.8, -1.05, 0.3);
+    return [x, y, depth];
+  }
+  if (r < 0.56) {
+    // Puzzle piece inside (a soft, sparse fill).
+    const [x, y] = pickSpot(random, (px, py) => puzzleDistance(px, py) < -0.02, -0.75, 0.8, -1.05, 0.3);
+    return [x, y, depth];
+  }
+
+  // The board's four corners: left, back, right, front.
+  const corners = [
+    [c.boardX - c.boardHalfWidth, c.boardY],
+    [c.boardX, c.boardY + c.boardHalfHeight],
+    [c.boardX + c.boardHalfWidth, c.boardY],
+    [c.boardX, c.boardY - c.boardHalfHeight]
+  ];
+  if (r < 0.69) {
+    // Board outline.
+    const k = Math.floor(random() * 4);
+    const [x, y] = along(corners[k], corners[(k + 1) % 4], random());
+    return [x + gauss() * 0.006, y + gauss() * 0.006, depth];
+  }
+  if (r < 0.81) {
+    // Board inside (a diamond: |x| / width + |y| / height < 1).
+    const [x, y] = pickSpot(random, (px, py) =>
+      Math.abs(px - c.boardX) / c.boardHalfWidth + Math.abs(py - c.boardY) / c.boardHalfHeight < 0.97,
+      c.boardX - c.boardHalfWidth, c.boardX + c.boardHalfWidth, c.boardY - c.boardHalfHeight, c.boardY + c.boardHalfHeight);
+    return [x, y, depth];
+  }
+  if (r < 0.93) {
+    // The band under the board: its sides and curved bottom edge, plus a light fill.
+    const s = random();
+    if (s < 0.3) {
+      const side = random() < 0.5 ? -1 : 1;
+      return [c.boardX + side * c.bandHalfWidth + gauss() * 0.005, c.bandBottom + random() * (c.bandTop - c.bandBottom), depth];
     }
-    return [-1.05 + gauss() * 0.006, -0.95 + random() * 1.9, 0];
-  }
-  if (r < 0.18) {
-    // A few stray points.
-    return [random() * 2 - 1, random() * 1.8 - 0.9, gauss() * 0.15];
-  }
-  // Pick a cluster by its share.
-  let pick = random();
-  for (const c of SCATTER_CLUSTERS) {
-    pick -= c[3];
-    if (pick <= 0) {
-      return [c[0] + gauss() * c[2], c[1] + gauss() * c[2], gauss() * 0.15];
+    const x = c.boardX + (random() * 2 - 1) * c.bandHalfWidth;
+    const sag = 0.05 * (1 - Math.pow((x - c.boardX) / c.bandHalfWidth, 2)); // the bottom edge curves down a little
+    if (s < 0.65) {
+      return [x, c.bandBottom - sag + gauss() * 0.005, depth];
     }
+    return [x, c.bandBottom - sag + random() * (c.bandTop - c.bandBottom + sag), depth];
   }
-  const c = SCATTER_CLUSTERS[0];
-  return [c[0] + gauss() * c[2], c[1] + gauss() * c[2], gauss() * 0.15];
+  // The tassel cord: from the middle of the board to the right corner, then hanging down.
+  const middle = [c.boardX, c.boardY];
+  const corner = corners[2];
+  const [x, y] = random() < 0.55
+    ? along(middle, corner, random())
+    : along(corner, [c.tasselX, c.tasselBottom], random());
+  return [x + gauss() * 0.004, y + gauss() * 0.004, depth];
 }
 
 // Build a small network: one central hub plus nodes around it, each linked to its nearest neighbors.
@@ -715,7 +790,7 @@ const NOISE_GLSL = /* glsl */ `
 
 const VERTEX_SHADER = /* glsl */ `
   uniform float uTime;           // seconds since the scene started
-  uniform float uMorph;          // 0 = cloud, 1 = chart, 2 = scatter, 3 = network, 4 = cloud again
+  uniform float uMorph;          // 0 = cloud, 1 = chart, 2 = puzzle + cap, 3 = network, 4 = cloud again
   uniform float uPixelRatio;     // screen sharpness (so dots are the same size on every screen)
   uniform float uPointSize;      // dot size in pixels
   uniform float uBrightness;     // overall dot brightness
@@ -734,7 +809,7 @@ const VERTEX_SHADER = /* glsl */ `
   uniform vec3 uShapeOffset3;
 
   attribute vec3 aChart;         // this dot's spot in the line chart
-  attribute vec3 aScatter;       // ...in the scatter plot
+  attribute vec3 aSupport;       // ...in the puzzle piece with a cap
   attribute vec3 aNetwork;       // ...in the network (start of its link)
   attribute vec3 aNetEnd;        // ...in the network (end of its link)
   attribute vec4 aRandom;        // size, delay, speed, insight (1 = amber)
@@ -757,7 +832,7 @@ const VERTEX_SHADER = /* glsl */ `
 
     // 2. How much of each shape to show right now (each peaks at its own number).
     float w1 = clamp(1.0 - abs(uMorph - 1.0), 0.0, 1.0); // line chart
-    float w2 = clamp(1.0 - abs(uMorph - 2.0), 0.0, 1.0); // scatter
+    float w2 = clamp(1.0 - abs(uMorph - 2.0), 0.0, 1.0); // puzzle piece + cap
     float w3 = clamp(1.0 - abs(uMorph - 3.0), 0.0, 1.0); // network
     float shapeAmount = w1 + w2 + w3;                     // 0 = pure cloud, 1 = pure shapes
     float safe = max(shapeAmount, 0.0001);                // avoids dividing by zero
@@ -767,7 +842,7 @@ const VERTEX_SHADER = /* glsl */ `
     vec3 net = rotateY(mix(aNetwork, aNetEnd, travel), sin(uTime * 0.25) * 0.45); // and the whole web gently sways
 
     // 4. Blend the shapes, then size and place them on screen.
-    vec3 shape = (aChart * w1 + aScatter * w2 + net * w3) / safe;
+    vec3 shape = (aChart * w1 + aSupport * w2 + net * w3) / safe;
     vec3 offset = (uShapeOffset1 * w1 + uShapeOffset2 * w2 + uShapeOffset3 * w3) / safe;
     vec3 shapeSpot = shape * uShapeScale + offset;
 
