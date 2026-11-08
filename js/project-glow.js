@@ -46,6 +46,11 @@ const CHART_OPACITY = 0.92;
 const EDGE_WISPS = 0.8;
 const EDGE_GLOW = 0.5;
 
+// The mouse stirs the smoke: how strongly it pushes the smoke aside (0 = not at all), and the
+// size of the stirred patch (as a share of the stage).
+const SMOKE_STIR = 0.35;
+const SMOKE_STIR_SIZE = 0.14;
+
 // Seconds for the smoke to fade in when a project opens.
 const FADE_IN_TIME = 1.6;
 
@@ -79,7 +84,7 @@ function startGlow() {
   }
   const u = {};
   ["uChart", "uHasChart", "uRes", "uRect", "uTime", "uReveal", "uSmoke", "uReach", "uSwirl",
-    "uOpacity", "uWisps", "uGlow", "uLight", "uDeep", "uDetail"].forEach(function (name) {
+    "uOpacity", "uWisps", "uGlow", "uLight", "uDeep", "uDetail", "uMouse", "uStirSize"].forEach(function (name) {
     u[name] = gl.getUniformLocation(program, name);
   });
 
@@ -94,6 +99,14 @@ function startGlow() {
   let openedAt = 0;
   let frozenTime = 0;      // the moment to show when "reduce motion" keeps the smoke still
   let broken = false;      // the graphics card dropped the drawing: fall back to CSS for good
+  const pointer = { x: -1e4, y: -1e4, stir: 0 }; // the mouse, and how much it's stirring right now
+
+  window.addEventListener("pointermove", function (event) {
+    if (event.pointerType === "mouse" || event.pointerType === "pen") {
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
+    }
+  }, { passive: true });
 
   const watcher = new IntersectionObserver(function (entries) {
     visible = entries[0].isIntersecting;
@@ -257,6 +270,12 @@ function startGlow() {
       ];
     }
 
+    // The stir eases in while the mouse is over the stage and fades out when it leaves.
+    const over = pointer.x >= box.left && pointer.x <= box.right && pointer.y >= box.top && pointer.y <= box.bottom;
+    pointer.stir += ((over && moving() ? 1 : 0) - pointer.stir) * 0.08;
+    const mouseX = (pointer.x - box.left) * ratio;
+    const mouseY = (box.bottom - pointer.y) * ratio;
+
     const seconds = moving() ? (now - openedAt) / 1000 : frozenTime;
     const reveal = moving() ? Math.min(1, (now - openedAt) / 1000 / FADE_IN_TIME) : 1;
 
@@ -278,6 +297,8 @@ function startGlow() {
     gl.uniform3fv(u.uLight, hexToRgb(SMOKE_COLOR_LIGHT));
     gl.uniform3fv(u.uDeep, hexToRgb(SMOKE_COLOR_DEEP));
     gl.uniform1i(u.uDetail, phone.matches ? PHONE_SMOKE_DETAIL : SMOKE_DETAIL);
+    gl.uniform3f(u.uMouse, mouseX, mouseY, pointer.stir * SMOKE_STIR);
+    gl.uniform1f(u.uStirSize, SMOKE_STIR_SIZE);
 
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -345,6 +366,8 @@ uniform float uGlow;        // EDGE_GLOW
 uniform vec3 uLight;        // SMOKE_COLOR_LIGHT
 uniform vec3 uDeep;         // SMOKE_COLOR_DEEP
 uniform int uDetail;        // layers of swirl detail
+uniform vec3 uMouse;        // the mouse (x, y in pixels from bottom left) and how hard it stirs
+uniform float uStirSize;    // SMOKE_STIR_SIZE
 out vec4 outColor;
 
 // Smooth random "noise" (simplex noise): gentle hills and valleys between -1 and 1.
@@ -388,6 +411,11 @@ void main() {
   vec2 p = pixel / unit * uSwirl;
   float t = uTime;
 
+  // THE STIR: near the mouse, the smoke is pushed aside, leaving a soft clearing that follows it.
+  vec2 fromMouse = (pixel - uMouse.xy) / unit;
+  float stir = uMouse.z * exp(-dot(fromMouse, fromMouse) / (uStirSize * uStirSize));
+  p += normalize(fromMouse + 1e-5) * stir * 0.6;
+
   // THE SMOKE: soft noise, gently bent by more noise ("domain warping") so it curls into wisps.
   vec2 bend = vec2(layers(p + vec2(0.0, t)), layers(p + vec2(5.2, -0.8 * t)));
   float swirl = layers(p * 1.3 + 1.1 * bend + vec2(1.7, 9.2) + 0.4 * t);
@@ -427,7 +455,8 @@ void main() {
 
   // The smoke: a faint mist around the chart, with brighter strands where it clings to the shapes.
   float density = (0.10 * haze + 0.30 * wisps) * near + 0.35 * wisps * closeToShapes;
-  density *= uSmoke * edges;
+  // Thinner where the mouse stirs it, with a faint bright rim of wisps around the clearing.
+  density = (density * (1.0 - 0.7 * stir) + 0.12 * stir * wisps * near) * uSmoke * edges;
   vec3 smokeColor = mix(uDeep, uLight, clamp(wisps * 0.8 + closeToShapes * 0.5, 0.0, 1.0));
 
   // THE CHART: its shapes made solid (some charts come with faint, see-through marks).

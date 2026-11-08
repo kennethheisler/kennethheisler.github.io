@@ -1251,6 +1251,17 @@ html.lenis {
 
 /* The cursor ring (built by js/motion.js, mouse and trackpad only).
    It never blocks clicks ("pointer-events: none"), and the normal arrow stays visible. */
+/* The cursor's glowing particles (drawn by js/cursor-particles.js): a see-through layer over the
+   whole window, just under the cursor ring. Decoration only: it never catches clicks. */
+.cursor-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 290;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .cursor {
   position: fixed;
   top: 0;
@@ -1430,7 +1441,8 @@ html.lenis {
   .skip-link,
   .site-nav,
   .back-to-top,
-  .cursor {
+  .cursor,
+  .cursor-particles {
     display: none;
   }
 
