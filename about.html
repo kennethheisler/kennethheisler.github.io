@@ -52,7 +52,7 @@
   <script src="js/motion.js" defer></script>
   <!-- Glowing particles that follow the mouse and burst on clicks. Settings: top of js/cursor-particles.js. -->
   <script src="js/cursor-particles.js" defer></script>
-  <!-- The ribbon of light behind the page that follows your scroll. Settings: top of js/scroll-ribbon.js. -->
+  <!-- The spark of light behind the page that leads you down it, and the dust at the screen edges. Settings: top of js/scroll-ribbon.js. -->
   <script src="js/scroll-ribbon.js" defer></script>
   <!-- The skill cards that fan in and flip over as you scroll. Settings: top of js/about-cards.js. -->
   <script src="js/about-cards.js" defer></script>
@@ -115,6 +115,11 @@
             <li><span aria-current="page">About &amp; Experience</span></li>
           </ol>
         </nav>
+        <!-- THE GIANT WORD: a thin outline that lights up where a ribbon of light follows the mouse
+             (js/glow-word.js). Decoration only; the real page title is just below.
+             EDIT ME: change data-word to show a different word. -->
+        <div class="glow-word glow-word--hero" data-word="EXPERIENCE" aria-hidden="true"></div>
+
         <!-- Page title and intro. -->
         <h1>About &amp; Experience</h1>
         <p class="lead reveal">An informaticist who applies a data science background to technology integration, shaped by hands-on work in special education and public service.</p>
@@ -123,6 +128,15 @@
           <a class="btn btn--primary" href="resume/Kenneth_Heisler_Resume.pdf" download>Download My Resume (PDF)</a>
           <a class="btn btn--secondary" href="#experience">Jump to Experience</a>
         </div>
+      </div>
+    </section>
+
+    <!-- THE WORD JUMBLE: the language of the work (words and statistics formulas), laid out across
+         and down. Each one types itself in as you scroll past, and the mouse lights them up
+         (js/glow-word.js; edit the words in its settings). Decoration only. -->
+    <section class="jumble-section" aria-hidden="true">
+      <div class="container">
+        <div class="glow-word glow-word--jumble" data-layout="jumble"></div>
       </div>
     </section>
 
@@ -226,7 +240,7 @@
             </article>
           </li>
           <li class="skill-card">
-            <article class="skill-card-inner" aria-labelledby="card-tech">
+            <article class="skill-card-inner" aria-labelledby="card-systems">
               <!-- The back: the same pattern on every card (drawn once, at the top of this section). -->
               <div class="skill-card-face skill-card-back" aria-hidden="true">
                 <svg viewBox="0 0 250 350" focusable="false"><use href="#card-back-art"></use></svg>
@@ -234,8 +248,8 @@
               <!-- The front. EDIT ME: the card's name and its five lines. -->
               <div class="skill-card-face skill-card-front">
                 <div class="skill-card-top">
-                  <h3 id="card-tech">Tech</h3>
-                  <span class="skill-card-mark" aria-hidden="true">T</span>
+                  <h3 id="card-systems">Systems</h3>
+                  <span class="skill-card-mark" aria-hidden="true">S</span>
                 </div>
                 <ul class="skill-card-list" role="list">
                   <li>ArborXR</li>
@@ -245,34 +259,8 @@
                   <li>Networking: routing, switching, TCP/IP</li>
                 </ul>
                 <div class="skill-card-bottom" aria-hidden="true">
-                  <span class="skill-card-mark">T</span>
-                  <span class="skill-card-name">Tech</span>
-                </div>
-              </div>
-            </article>
-          </li>
-          <li class="skill-card">
-            <article class="skill-card-inner" aria-labelledby="card-people">
-              <!-- The back: the same pattern on every card (drawn once, at the top of this section). -->
-              <div class="skill-card-face skill-card-back" aria-hidden="true">
-                <svg viewBox="0 0 250 350" focusable="false"><use href="#card-back-art"></use></svg>
-              </div>
-              <!-- The front. EDIT ME: the card's name and its five lines. -->
-              <div class="skill-card-face skill-card-front">
-                <div class="skill-card-top">
-                  <h3 id="card-people">People</h3>
-                  <span class="skill-card-mark" aria-hidden="true">P</span>
-                </div>
-                <ul class="skill-card-list" role="list">
-                  <li>Clear communicator</li>
-                  <li>Collaborator</li>
-                  <li>Organized multitasker</li>
-                  <li>Training and presentation materials</li>
-                  <li>Measurable goals and progress tracking</li>
-                </ul>
-                <div class="skill-card-bottom" aria-hidden="true">
-                  <span class="skill-card-mark">P</span>
-                  <span class="skill-card-name">People</span>
+                  <span class="skill-card-mark">S</span>
+                  <span class="skill-card-name">Systems</span>
                 </div>
               </div>
             </article>
@@ -299,6 +287,32 @@
                 <div class="skill-card-bottom" aria-hidden="true">
                   <span class="skill-card-mark">C</span>
                   <span class="skill-card-name">Credentials</span>
+                </div>
+              </div>
+            </article>
+          </li>
+          <li class="skill-card">
+            <article class="skill-card-inner" aria-labelledby="card-teamwork">
+              <!-- The back: the same pattern on every card (drawn once, at the top of this section). -->
+              <div class="skill-card-face skill-card-back" aria-hidden="true">
+                <svg viewBox="0 0 250 350" focusable="false"><use href="#card-back-art"></use></svg>
+              </div>
+              <!-- The front. EDIT ME: the card's name and its five lines. -->
+              <div class="skill-card-face skill-card-front">
+                <div class="skill-card-top">
+                  <h3 id="card-teamwork">Teamwork</h3>
+                  <span class="skill-card-mark" aria-hidden="true">T</span>
+                </div>
+                <ul class="skill-card-list" role="list">
+                  <li>Clear communicator</li>
+                  <li>Collaborator</li>
+                  <li>Organized multitasker</li>
+                  <li>Training and presentation materials</li>
+                  <li>Measurable goals and progress tracking</li>
+                </ul>
+                <div class="skill-card-bottom" aria-hidden="true">
+                  <span class="skill-card-mark">T</span>
+                  <span class="skill-card-name">Teamwork</span>
                 </div>
               </div>
             </article>
@@ -332,11 +346,6 @@
          "timeline-item--now" gives the current job the highlight dot; keep it on one job only. -->
     <section class="section section--alt" id="experience" aria-labelledby="experience-title">
       <div class="container">
-
-        <!-- THE GIANT WORD: a thin outline that lights up where a ribbon of light follows the mouse
-             (js/glow-word.js). Decoration only; the real heading is just below.
-             EDIT ME: change data-word to show a different word. -->
-        <div class="glow-word" data-word="EXPERIENCE" aria-hidden="true"></div>
 
         <!-- Section heading and intro sentence. -->
         <div class="section-header reveal">

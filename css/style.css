@@ -2828,7 +2828,7 @@ html:not(.js) .project-close {
 }
 
 
-/* 24. THE GIANT GLOWING WORD (js/glow-word.js draws it; see that file to tune the ribbon) */
+/* 24. THE GIANT GLOWING WORDS AND THE WORD JUMBLE (js/glow-word.js draws them; tune them there) */
 .glow-word {
   position: relative;
   margin-bottom: var(--space-xl);
@@ -2854,8 +2854,23 @@ html:not(.js) .project-close {
   -webkit-text-stroke: 1px color-mix(in srgb, var(--color-text) 25%, transparent);
 }
 
+/* In the page header: the giant word sits between the breadcrumb and the page title. */
+.glow-word--hero {
+  margin: var(--space-sm) 0 var(--space-md);
+}
+
+/* The word jumble needs JavaScript to draw; without it, it simply isn't there. */
+.glow-word--jumble:not(.is-drawn) {
+  display: none;
+}
+
+.jumble-section {
+  padding-block: clamp(2rem, 1rem + 4vw, 5rem);
+}
+
 @media print {
-  .glow-word {
+  .glow-word,
+  .jumble-section {
     display: none;
   }
 }

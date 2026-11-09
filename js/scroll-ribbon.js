@@ -1,57 +1,71 @@
-/* SCROLL-RIBBON.JS: A RIBBON OF LIGHT THAT FOLLOWS YOUR SCROLL
-   Behind the page, a soft ribbon of blue, cyan and amber light changes shape as you scroll.
-   Every screen or so of scrolling it moves on to its next "move": a big swoop, flying in from
-   the side and curling into a loop, drifting apart into glowing motes and coming back together,
-   diving down the screen, a low wave. A pulse of light runs along it as you scroll.
+/* SCROLL-RIBBON.JS: A SPARK OF LIGHT THAT LEADS YOU DOWN THE PAGE
+   Far behind the page, a warm amber spark glides along a long, gentle path as you scroll,
+   leading the way. Behind it trails a soft ribbon of light that cools from gold into pale
+   blue, periwinkle and violet, then fades away. The spark sheds tiny embers as it goes.
+   The trail moves at only part of your scrolling speed ("parallax"), so it feels far away.
 
-   On the Projects page, the same layer also fills the side margins beside the project list with
-   drifting particles, faintly linked like a network. They part around the mouse, and dim while a
-   project is open.
+   Around the edges of the screen, a light dust of violet-blue wisps and a few golden embers
+   drifts and dances, like the home page's particles spilling over onto the other pages.
+   On the Projects page, both go quieter while a project is open.
 
-   It sits behind all the text (section backgrounds are made slightly see-through so it shows).
-   It's decoration only: it never catches clicks and screen readers skip it. It pauses while the
+   It sits behind all the text (section backgrounds are slightly see-through so it shows).
+   Decoration only: it never catches clicks and screen readers skip it. It pauses while the
    tab is hidden, is lighter on phones, and is off with "reduce motion".
 
    SECTIONS
    1. Settings
    2. Start
-   3. The ribbon's moves
-   4. The side particles (Projects page)
+   3. The path and the spark
+   4. The edge dust
    5. Drawing */
 
 
 /* 1. SETTINGS */
 
-// true = the ribbon runs; false = off.
+// true = the spark, its trail and the edge dust run; false = off.
 const RIBBON_ON = true;
 
-// How much scrolling each move lasts (in screen heights: 1 = one full screen).
-const RIBBON_MOVE_LENGTH = 1.1;
+// How far away the trail feels: the share of your scrolling speed it moves at (1 = with the page,
+// 0.5 = half speed, far behind; smaller = further away).
+const RIBBON_DEPTH = 0.5;
 
-// How bright the ribbon is overall (0 = invisible, 1 = full). It sits behind text, so keep it soft.
-const RIBBON_BRIGHTNESS = 0.55;
+// Where the spark rides on the screen, from the top (0 = top, 1 = bottom).
+const RIBBON_SPARK_HEIGHT = 0.6;
 
-// The ribbon's thickness (pixels at its widest glow), and how fast it gently sways on its own.
-const RIBBON_WIDTH = 34;
-const RIBBON_SWAY_SPEED = 0.35;
+// How smoothly the spark catches up with your scrolling (smaller = a slower, more graceful glide).
+const RIBBON_GLIDE = 0.05;
 
-// How far the light pulse travels along the ribbon per screen of scrolling.
-const RIBBON_PULSE_SPEED = 1.4;
+// How wide the path sweeps from side to side (share of the screen width), and how far down the
+// page each sweep lasts (in screen heights).
+const RIBBON_SWEEP = 0.34;
+const RIBBON_SWEEP_LENGTH = 1.6;
 
-// The ribbon's colors: soft outer glow, bright middle, white-hot core, and the amber strand.
-const RIBBON_COLORS = ["#2a5bd7", "#36cfff", "#e8fbff"];
-const RIBBON_STRAND = "#ffb547";
+// The trail: how long it is (in screen heights of path behind the spark), how wide its soft glow
+// is (pixels), and how bright it is overall (0 = invisible, 1 = full). Soft and dim = far away.
+const RIBBON_TRAIL_LENGTH = 1.5;
+const RIBBON_WIDTH = 30;
+const RIBBON_BRIGHTNESS = 0.42;
 
-// Side particles on the Projects page: how many on each side, how bright, how far they're linked
-// (pixels; 0 = no lines), and how far the mouse pushes them (pixels).
-const SIDE_PARTICLES = 70;
-const SIDE_BRIGHTNESS = 0.7;
-const SIDE_LINK_DISTANCE = 70;
-const SIDE_MOUSE_PUSH = 90;
+// The trail's colors, from the spark back to the tail: gold, pale glowing blue, periwinkle,
+// violet, deep indigo.
+const RIBBON_COLORS = ["#ffcf7a", "#d8f4ff", "#7f9cff", "#8b5cff", "#4b3fd6"];
 
-// Lighter on phones: fewer points along the ribbon, lower sharpness, no side particles.
-const RIBBON_POINTS = 150;
-const RIBBON_PHONE_POINTS = 70;
+// The soft violet haze around the whole trail.
+const RIBBON_HALO = "#6a4cff";
+
+// The spark: its size (pixels), and how many embers it sheds per second.
+const SPARK_SIZE = 9;
+const SPARK_EMBERS = 6;
+
+// The edge dust: how many motes, how far in from the edges they mostly stay (share of the
+// screen width), how bright they are, and the share that are golden embers.
+const DUST_COUNT = 70;
+const DUST_EDGE = 0.16;
+const DUST_BRIGHTNESS = 0.55;
+const DUST_EMBER_SHARE = 0.12;
+
+// Lighter on phones: fewer motes and lower sharpness.
+const DUST_PHONE_COUNT = 28;
 const RIBBON_PIXEL_RATIO = 1.5;
 const RIBBON_PHONE_SCREEN = 900;
 
@@ -71,10 +85,9 @@ function startScrollRibbon() {
     return;
   }
   document.body.insertBefore(canvas, document.body.firstChild);
-  root.classList.add("has-ribbon"); // style.css lets the ribbon show through section backgrounds
+  root.classList.add("has-ribbon"); // style.css lets it show through section backgrounds
 
   const phone = window.matchMedia("(max-width: " + (RIBBON_PHONE_SCREEN - 1) + "px)");
-  const projectList = document.querySelector(".project-index");
   let width = 0;
   let height = 0;
   let ratio = 1;
@@ -82,27 +95,31 @@ function startScrollRibbon() {
   let stopped = false;
   let quiet = 0;          // eases to 1 while a project is open
   let openProjects = 0;
+  let lastScroll = window.scrollY;
   const mouse = { x: -1e4, y: -1e4 };
 
-  // A soft glowing dot, drawn once and stamped for each mote and particle.
-  const dot = document.createElement("canvas");
-  dot.width = dot.height = 32;
-  const d = dot.getContext("2d");
-  const g = d.createRadialGradient(16, 16, 0, 16, 16, 16);
-  g.addColorStop(0, "rgba(232,251,255,1)");
-  g.addColorStop(0.3, "rgba(54,207,255,0.7)");
-  g.addColorStop(1, "rgba(54,207,255,0)");
-  d.fillStyle = g;
-  d.fillRect(0, 0, 32, 32);
-  const amberDot = document.createElement("canvas");
-  amberDot.width = amberDot.height = 32;
-  const a = amberDot.getContext("2d");
-  const ga = a.createRadialGradient(16, 16, 0, 16, 16, 16);
-  ga.addColorStop(0, "rgba(255,240,210,1)");
-  ga.addColorStop(0.3, "rgba(255,181,71,0.7)");
-  ga.addColorStop(1, "rgba(255,181,71,0)");
-  a.fillStyle = ga;
-  a.fillRect(0, 0, 32, 32);
+  // Every page gets its own path (seeded from its address), so each one is its own journey.
+  let seed = 0;
+  for (const ch of location.pathname) {
+    seed = (seed * 31 + ch.charCodeAt(0)) % 1000;
+  }
+
+  // Soft glowing dots, drawn once and stamped for the spark, embers and dust.
+  function makeDot(inner, outer) {
+    const c = document.createElement("canvas");
+    c.width = c.height = 64;
+    const d = c.getContext("2d");
+    const g = d.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, inner);
+    g.addColorStop(0.25, outer);
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    d.fillStyle = g;
+    d.fillRect(0, 0, 64, 64);
+    return c;
+  }
+  const goldDot = makeDot("rgba(255,246,220,1)", "rgba(255,181,71,0.55)");
+  const blueDot = makeDot("rgba(216,244,255,1)", "rgba(127,156,255,0.45)");
+  const violetDot = makeDot("rgba(230,220,255,1)", "rgba(139,92,255,0.45)");
 
   function resize() {
     ratio = Math.min(window.devicePixelRatio || 1, phone.matches ? 1 : RIBBON_PIXEL_RATIO);
@@ -110,7 +127,7 @@ function startScrollRibbon() {
     height = window.innerHeight;
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
-    placeSideParticles();
+    placeDust();
   }
 
   window.addEventListener("resize", resize);
@@ -132,141 +149,58 @@ function startScrollRibbon() {
   if (reduceMotion.addEventListener) {
     reduceMotion.addEventListener("change", function () {
       if (reduceMotion.matches) {
-        stopped = true;
-        canvas.remove();
-        root.classList.remove("has-ribbon");
+        stop();
       }
     });
   }
 
-
-  /* 3. THE RIBBON'S MOVES
-     Each move is a curve across the screen. "s" runs from 0 to 1 along the ribbon, "t" is time.
-     x and y are shares of the screen (0 = left/top, 1 = right/bottom; a little past 0 or 1 means
-     just off screen). "apart" = how much it breaks into motes (0 = a solid ribbon, 1 = scattered). */
-  const MOVES = [
-    { // a big swoop over the middle of the screen
-      apart: 0,
-      path: function (s, t) {
-        return { x: -0.12 + s * 1.24, y: 0.8 - 0.55 * Math.sin(Math.PI * s) + 0.03 * Math.sin(t + s * 6) };
-      }
-    },
-    { // flies in from the right and curls into a loop
-      apart: 0,
-      path: function (s, t) {
-        const angle = s * Math.PI * 2.3 + t * 0.2;
-        const radius = 0.06 + 0.3 * (1 - s);
-        return {
-          x: 0.58 + Math.cos(angle) * radius * 0.75 + (1 - s) * (1 - s) * 0.6,
-          y: 0.48 + Math.sin(angle) * radius
-        };
-      }
-    },
-    { // drifts apart into glowing motes along a gentle wave
-      apart: 1,
-      path: function (s, t) {
-        return { x: -0.1 + s * 1.2, y: 0.32 + 0.12 * Math.sin(s * Math.PI * 3 + t * 0.4) };
-      }
-    },
-    { // dives down the screen
-      apart: 0,
-      path: function (s, t) {
-        return { x: 0.12 + 0.75 * s + 0.05 * Math.sin(t + s * 5), y: -0.12 + 1.24 * s * s };
-      }
-    },
-    { // a low wave along the bottom, slightly frayed
-      apart: 0.35,
-      path: function (s, t) {
-        return { x: -0.1 + s * 1.2, y: 0.86 + 0.05 * Math.sin(s * Math.PI * 4 + t * 0.6) };
-      }
-    }
-  ];
-
-  function smooth(x) {
-    return x * x * (3 - 2 * x);
+  function stop() {
+    stopped = true;
+    canvas.remove();
+    root.classList.remove("has-ribbon");
   }
 
-  // The ribbon right now: a list of points, blended between the current move and the next.
-  function ribbonPoints(time) {
-    const count = phone.matches ? RIBBON_PHONE_POINTS : RIBBON_POINTS;
-    const progress = window.scrollY / (height * RIBBON_MOVE_LENGTH);
-    const index = Math.floor(progress);
-    const within = progress - index;
-    const blend = smooth(Math.min(1, Math.max(0, (within - 0.35) / 0.65))); // hold, then morph
-    const now = MOVES[index % MOVES.length];
-    const next = MOVES[(index + 1) % MOVES.length];
-    const t = time * RIBBON_SWAY_SPEED;
-    const apart = now.apart + (next.apart - now.apart) * blend;
-    const points = [];
+
+  /* 3. THE PATH AND THE SPARK
+     The path runs down the whole page. "distance" is measured in pixels of page height.
+     Its side-to-side position is a mix of two slow waves, so it sweeps gracefully and never zigzags. */
+  function pathX(distance) {
+    const u = distance / (height * RIBBON_SWEEP_LENGTH);
+    const wave = Math.sin(u * Math.PI * 2 + seed) * 0.75 + Math.sin(u * Math.PI * 0.9 + seed * 1.7) * 0.25;
+    return width * (0.5 + RIBBON_SWEEP * wave);
+  }
+
+  let sparkAt = window.scrollY + height * RIBBON_SPARK_HEIGHT; // where the spark is along the path
+  const embers = [];
+
+
+  /* 4. THE EDGE DUST */
+  const dust = [];
+  function placeDust() {
+    dust.length = 0;
+    const count = phone.matches ? DUST_PHONE_COUNT : DUST_COUNT;
     for (let i = 0; i < count; i++) {
-      const s = i / (count - 1);
-      const p1 = now.path(s, t);
-      const p2 = next.path(s, t);
-      let x = (p1.x + (p2.x - p1.x) * blend) * width;
-      let y = (p1.y + (p2.y - p1.y) * blend) * height;
-      if (apart > 0) {
-        // Each mote wanders off on its own little current.
-        x += Math.sin(i * 12.9898 + t * 1.3) * apart * width * 0.06;
-        y += Math.cos(i * 78.233 + t * 1.1) * apart * height * 0.09;
-      }
-      points.push({ x: x, y: y, s: s });
-    }
-    return { points: points, apart: apart, pulse: window.scrollY / height * RIBBON_PULSE_SPEED };
-  }
-
-
-  /* 4. THE SIDE PARTICLES (Projects page) */
-  const side = [];
-  function placeSideParticles() {
-    side.length = 0;
-    if (!projectList || phone.matches) {
-      return;
-    }
-    for (let i = 0; i < SIDE_PARTICLES * 2; i++) {
-      side.push({
-        left: i % 2 === 0,               // which margin
-        across: Math.random(),           // where across the margin (0 = outer edge, 1 = by the list)
-        down: Math.random(),             // where down the list (0 = top, 1 = bottom)
-        drift: Math.random() * 1000,
-        size: 3 + Math.random() * 5,
-        amber: Math.random() < 0.05,
-        pushX: 0,
-        pushY: 0
-      });
+      dust.push(newMote(Math.random() * height));
     }
   }
 
-  function sidePositions(time) {
-    const box = projectList.getBoundingClientRect();
-    const out = [];
-    side.forEach(function (p) {
-      const margin = p.left ? box.left : width - box.right;
-      const room = Math.max(40, margin - 12);
-      const outer = p.left ? 0 : width;
-      let x = p.left ? outer + p.across * room : outer - p.across * room;
-      // Spread along the list's height, drifting slowly upward and swaying.
-      let y = box.top + ((p.down - time * 0.004 + 10) % 1) * box.height;
-      x += Math.sin(time * 0.6 + p.drift) * 8;
-      y += Math.cos(time * 0.4 + p.drift) * 10;
-      // The mouse pushes nearby particles aside; they ease back afterward.
-      const dx = x - mouse.x;
-      const dy = y - mouse.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < SIDE_MOUSE_PUSH && dist > 0) {
-        const force = (1 - dist / SIDE_MOUSE_PUSH) * 26;
-        p.pushX += (dx / dist * force - p.pushX) * 0.2;
-        p.pushY += (dy / dist * force - p.pushY) * 0.2;
-      } else {
-        p.pushX *= 0.94;
-        p.pushY *= 0.94;
-      }
-      x += p.pushX;
-      y += p.pushY;
-      if (y > -20 && y < height + 20) {
-        out.push({ x: x, y: y, p: p });
-      }
-    });
-    return out;
+  function newMote(y) {
+    // Mostly near the left or right edge; now and then one strays a little further in.
+    const fromEdge = Math.pow(Math.random(), 1.8) * DUST_EDGE * (Math.random() < 0.15 ? 2 : 1);
+    const left = Math.random() < 0.5;
+    const ember = Math.random() < DUST_EMBER_SHARE;
+    return {
+      x: (left ? fromEdge : 1 - fromEdge) * width,
+      y: y,
+      ember: ember,
+      violet: !ember && Math.random() < 0.45,
+      size: (ember ? 3 : 4) + Math.random() * (ember ? 4 : 7),
+      // Embers rise; wisps drift slowly down, like dust falling through the cracks.
+      fall: ember ? -(8 + Math.random() * 14) : 4 + Math.random() * 10,
+      phase: Math.random() * 1000,
+      pushX: 0,
+      pushY: 0
+    };
   }
 
 
@@ -276,125 +210,161 @@ function startScrollRibbon() {
       return;
     }
     running = true;
+    lastTime = performance.now();
     requestAnimationFrame(frame);
   }
 
+  let lastTime = performance.now();
   function frame(now) {
     if (stopped || document.hidden) {
       running = false;
       return;
     }
     if (!root.classList.contains("motion")) {
-      stopped = true;
-      canvas.remove();
-      root.classList.remove("has-ribbon");
+      stop();
       return;
     }
+    const dt = Math.min((now - lastTime) / 1000, 1 / 20);
+    lastTime = now;
     const time = now / 1000;
     quiet += ((openProjects > 0 ? 1 : 0) - quiet) * 0.05;
+    const scrolled = window.scrollY - lastScroll;
+    lastScroll = window.scrollY;
 
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     ctx.clearRect(0, 0, width, height);
     ctx.globalCompositeOperation = "lighter";
 
-    // The ribbon.
-    const ribbon = ribbonPoints(time);
-    const pts = ribbon.points;
-    const solid = 1 - ribbon.apart;
-    const fade = RIBBON_BRIGHTNESS * (1 - quiet * 0.45);
-    if (solid > 0.02) {
-      const passes = [
-        { color: RIBBON_COLORS[0], width: RIBBON_WIDTH, alpha: 0.22 },
-        { color: RIBBON_COLORS[1], width: RIBBON_WIDTH * 0.4, alpha: 0.32 },
-        { color: RIBBON_COLORS[2], width: RIBBON_WIDTH * 0.08, alpha: 0.6 }
-      ];
-      ctx.lineCap = "butt"; // square ends, so the short pieces don't overlap into beads
-      ctx.lineJoin = "round";
-      passes.forEach(function (pass) {
-        ctx.strokeStyle = pass.color;
-        ctx.lineWidth = pass.width;
-        // Drawn in short pieces so the light pulse can brighten parts of it.
-        for (let i = 1; i < pts.length; i++) {
-          const s = pts[i].s;
-          const pulse = 0.55 + 0.45 * Math.cos((s * 2 - ribbon.pulse) * Math.PI * 2);
-          const ends = Math.min(1, s * 6, (1 - s) * 6); // soft tapered ends
-          ctx.globalAlpha = pass.alpha * pulse * ends * solid * fade;
-          ctx.beginPath();
-          ctx.moveTo(pts[i - 1].x, pts[i - 1].y);
-          ctx.lineTo(pts[i].x, pts[i].y);
-          ctx.stroke();
-        }
-      });
-      // The amber strand, winding around the ribbon.
-      ctx.strokeStyle = RIBBON_STRAND;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      for (let i = 1; i < pts.length; i++) {
-        const prev = pts[i - 1];
-        const p = pts[i];
-        const nx = -(p.y - prev.y);
-        const ny = p.x - prev.x;
-        const len = Math.hypot(nx, ny) || 1;
-        const twist = Math.sin(p.s * Math.PI * 5 + time * 1.2) * RIBBON_WIDTH * 0.35;
-        const x = p.x + nx / len * twist;
-        const y = p.y + ny / len * twist;
-        if (i === 1) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-      }
-      ctx.globalAlpha = 0.35 * solid * fade;
-      ctx.stroke();
+    // The spark glides toward its spot (a little below the middle of what you're reading).
+    const target = window.scrollY + height * RIBBON_SPARK_HEIGHT;
+    sparkAt += (target - sparkAt) * (1 - Math.pow(1 - RIBBON_GLIDE, dt * 60));
+    const fade = RIBBON_BRIGHTNESS * (1 - quiet * 0.5);
+    const sway = Math.sin(time * 0.6) * 10;
+
+    // Where a point of the path shows on screen: the spark rides at RIBBON_SPARK_HEIGHT, and the
+    // path behind it is squeezed by RIBBON_DEPTH, so it trails slowly, far behind the page.
+    function onScreen(distance) {
+      return {
+        x: pathX(distance) + sway * Math.sin(distance * 0.002),
+        y: height * RIBBON_SPARK_HEIGHT + (distance - sparkAt) * RIBBON_DEPTH
+      };
     }
-    // The motes, as the ribbon breaks apart (a few always shimmer along it).
-    pts.forEach(function (p, i) {
-      if (i % 2) {
-        return;
+
+    // THE TRAIL: soft, wide and dim at the back; a thin brighter core near the spark.
+    const trailLength = height * RIBBON_TRAIL_LENGTH / RIBBON_DEPTH;
+    const pieces = phone.matches ? 60 : 110;
+    const points = [];
+    for (let i = 0; i <= pieces; i++) {
+      const along = i / pieces; // 0 = at the spark, 1 = the end of the tail
+      points.push({ p: onScreen(sparkAt - along * trailLength), along: along });
+    }
+    // The wide outer haze is always violet (the mythical glow around the whole trail); the inner
+    // passes cool from gold to blue along the trail.
+    const passes = [
+      { width: RIBBON_WIDTH * 1.6, alpha: 0.1, halo: true },
+      { width: RIBBON_WIDTH, alpha: 0.13 },
+      { width: RIBBON_WIDTH * 0.45, alpha: 0.2 },
+      { width: RIBBON_WIDTH * 0.12, alpha: 0.45 }
+    ];
+    ctx.lineCap = "butt";
+    passes.forEach(function (pass) {
+      ctx.lineWidth = pass.width;
+      for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1];
+        const b = points[i];
+        const along = b.along;
+        ctx.strokeStyle = pass.halo ? RIBBON_HALO : trailColor(along);
+        // Bright near the spark, fading out along the tail; the tail also thins.
+        const tail = pass.halo ? Math.pow(1 - along, 0.8) : Math.pow(1 - along, 1.15);
+        ctx.globalAlpha = pass.alpha * fade * tail * Math.min(1, along * 30 + 0.3);
+        ctx.lineWidth = pass.width * (0.35 + 0.65 * (1 - along));
+        ctx.beginPath();
+        ctx.moveTo(a.p.x, a.p.y);
+        ctx.lineTo(b.p.x, b.p.y);
+        ctx.stroke();
       }
-      const twinkle = 0.5 + 0.5 * Math.sin(time * 3 + i * 1.7);
-      const alpha = (0.12 + ribbon.apart * 0.7) * twinkle * fade;
-      if (alpha < 0.02) {
-        return;
-      }
-      const size = 6 + ribbon.apart * 8;
-      ctx.globalAlpha = alpha;
-      ctx.drawImage(i % 23 === 0 ? amberDot : dot, p.x - size / 2, p.y - size / 2, size, size);
     });
 
-    // The side particles and their faint links.
-    if (projectList && side.length) {
-      const spots = sidePositions(time);
-      const bright = SIDE_BRIGHTNESS * (1 - quiet * 0.4);
-      if (SIDE_LINK_DISTANCE > 0) {
-        ctx.strokeStyle = RIBBON_COLORS[1];
-        ctx.lineWidth = 1;
-        for (let i = 0; i < spots.length; i++) {
-          for (let j = i + 1; j < spots.length; j++) {
-            if (spots[i].p.left !== spots[j].p.left) {
-              continue;
-            }
-            const dist = Math.hypot(spots[i].x - spots[j].x, spots[i].y - spots[j].y);
-            if (dist < SIDE_LINK_DISTANCE) {
-              ctx.globalAlpha = (1 - dist / SIDE_LINK_DISTANCE) * 0.18 * bright;
-              ctx.beginPath();
-              ctx.moveTo(spots[i].x, spots[i].y);
-              ctx.lineTo(spots[j].x, spots[j].y);
-              ctx.stroke();
-            }
-          }
-        }
-      }
-      spots.forEach(function (spot) {
-        const p = spot.p;
-        const twinkle = 0.6 + 0.4 * Math.sin(time * 2 + p.drift);
-        ctx.globalAlpha = twinkle * bright;
-        ctx.drawImage(p.amber ? amberDot : dot, spot.x - p.size / 2, spot.y - p.size / 2, p.size, p.size);
+    // THE SPARK: a warm glow that breathes, with a bright core.
+    const spark = onScreen(sparkAt);
+    const breathe = 1 + Math.sin(time * 2.4) * 0.12;
+    const glowSize = SPARK_SIZE * 9 * breathe;
+    ctx.globalAlpha = 0.5 * (1 - quiet * 0.4);
+    ctx.drawImage(goldDot, spark.x - glowSize / 2, spark.y - glowSize / 2, glowSize, glowSize);
+    const coreSize = SPARK_SIZE * 2.4;
+    ctx.globalAlpha = 0.95;
+    ctx.drawImage(goldDot, spark.x - coreSize / 2, spark.y - coreSize / 2, coreSize, coreSize);
+
+    // EMBERS shed by the spark: they drift off, sink a little and fade.
+    if (Math.random() < SPARK_EMBERS * dt * (1 + Math.min(3, Math.abs(scrolled) * 0.05))) {
+      embers.push({
+        x: spark.x, y: spark.y,
+        vx: (Math.random() - 0.5) * 40, vy: (Math.random() - 0.2) * 30,
+        life: 1.2 + Math.random() * 1.2, age: 0, size: 3 + Math.random() * 4
       });
     }
+    for (let i = embers.length - 1; i >= 0; i--) {
+      const e = embers[i];
+      e.age += dt;
+      if (e.age > e.life) {
+        embers.splice(i, 1);
+        continue;
+      }
+      e.vx *= 0.98;
+      e.vy += 12 * dt;
+      e.x += e.vx * dt;
+      e.y += e.vy * dt - scrolled * RIBBON_DEPTH;
+      ctx.globalAlpha = (1 - e.age / e.life) * 0.8;
+      ctx.drawImage(goldDot, e.x - e.size / 2, e.y - e.size / 2, e.size, e.size);
+    }
+
+    // THE EDGE DUST: dancing on a gentle swirl, nudged by your scrolling, parting around the mouse.
+    const dustFade = DUST_BRIGHTNESS * (1 - quiet * 0.4);
+    dust.forEach(function (m, i) {
+      m.y += m.fall * dt - scrolled * 0.25;
+      m.x += Math.sin(time * 0.7 + m.phase) * 14 * dt + Math.cos(time * 0.31 + m.phase * 2) * 6 * dt;
+      const dx = m.x - mouse.x;
+      const dy = m.y - mouse.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 90 && dist > 0) {
+        m.pushX += (dx / dist * (1 - dist / 90) * 30 - m.pushX) * 0.15;
+        m.pushY += (dy / dist * (1 - dist / 90) * 30 - m.pushY) * 0.15;
+      } else {
+        m.pushX *= 0.95;
+        m.pushY *= 0.95;
+      }
+      // Drifted off the top or bottom: come back in from the other end.
+      if (m.y > height + 20) {
+        dust[i] = newMote(-20);
+        return;
+      }
+      if (m.y < -20) {
+        dust[i] = newMote(height + 20);
+        return;
+      }
+      const twinkle = 0.55 + 0.45 * Math.sin(time * (m.ember ? 3 : 1.6) + m.phase);
+      ctx.globalAlpha = twinkle * dustFade * (m.ember ? 1 : 0.8);
+      const img = m.ember ? goldDot : (m.violet ? violetDot : blueDot);
+      ctx.drawImage(img, m.x + m.pushX - m.size / 2, m.y + m.pushY - m.size / 2, m.size, m.size);
+    });
 
     ctx.globalAlpha = 1;
     requestAnimationFrame(frame);
+  }
+
+  // The trail's color at a point along it: gold at the spark, cooling to violet and indigo.
+  const stops = RIBBON_COLORS.map(function (hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  });
+  function trailColor(along) {
+    const pos = Math.min(0.999, Math.pow(along, 0.7)) * (stops.length - 1);
+    const i = Math.floor(pos);
+    const f = pos - i;
+    const a = stops[i];
+    const b = stops[i + 1];
+    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * f) + "," +
+      Math.round(a[1] + (b[1] - a[1]) * f) + "," + Math.round(a[2] + (b[2] - a[2]) * f) + ")";
   }
 
   resize();
