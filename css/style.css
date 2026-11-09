@@ -2761,22 +2761,38 @@ html:not(.js) .project-close {
   color: #0a1220;
 }
 
-/* The suit mark: a bold block letter, like a playing card's corner. */
-.skill-card-mark {
+/* The suit: a real playing-card suit with a nod to the card's title (drawn at the top of the
+   section in about.html). Spade and club are deep navy; diamond and heart are warm amber. */
+.skill-card-front {
+  --suit: #0a1f57; /* (the front is already positioned, so the big suit sits inside it) */
+}
+
+.skill-card--warm .skill-card-front {
+  --suit: #d9711f;
+}
+
+.skill-card-suit {
   flex-shrink: 0;
-  display: inline-grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  font-family: var(--font-mono);
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #ffffff;
-  background-color: #0a1f57;
-  border-radius: 6px;
+  width: 2.1rem;
+  height: 2.1rem;
+  color: var(--suit);
+}
+
+/* The big faint suit in the middle of the card, like an ace. */
+.skill-card-pip {
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  width: 58%;
+  height: auto;
+  color: var(--suit);
+  opacity: 0.07;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .skill-card-list {
+  position: relative; /* above the big faint suit */
   display: grid;
   margin: var(--space-md) 0 auto;
 }

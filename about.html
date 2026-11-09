@@ -164,6 +164,29 @@
       <!-- THE CARD BACK ARTWORK (drawn once, reused on every card): a frame, a network, a little bar
            chart and the KH monogram in line art. Decoration only. -->
       <svg class="sr-only" aria-hidden="true" focusable="false">
+        <!-- THE SUITS: each card's playing-card suit, with a nod to its title. -->
+        <!-- Data: a spade with a rising bar chart. -->
+        <symbol id="suit-data" viewBox="0 0 32 32">
+          <path fill="currentColor" d="M16 2C16 2 4 11.5 4 19a6 6 0 0 0 10 4.4L12.2 30h7.6L18 23.4A6 6 0 0 0 28 19C28 11.5 16 2 16 2Z"/>
+          <g fill="#ffffff"><rect x="10.2" y="17" width="3" height="4.4" rx="0.6"/><rect x="14.5" y="13.8" width="3" height="7.6" rx="0.6"/><rect x="18.8" y="10.6" width="3" height="10.8" rx="0.6"/></g>
+        </symbol>
+        <!-- Systems: a club whose three leaves are linked network nodes. -->
+        <symbol id="suit-systems" viewBox="0 0 32 32">
+          <g fill="currentColor"><circle cx="16" cy="9" r="6"/><circle cx="8.8" cy="18.5" r="6"/><circle cx="23.2" cy="18.5" r="6"/><path d="M14.4 19 12.4 30h7.2L17.6 19Z"/></g>
+          <path d="M16 9 8.8 18.5 23.2 18.5Z" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linejoin="round"/>
+          <g fill="#ffffff"><circle cx="16" cy="9" r="2"/><circle cx="8.8" cy="18.5" r="2"/><circle cx="23.2" cy="18.5" r="2"/></g>
+        </symbol>
+        <!-- Credentials: a diamond with a graduation cap. -->
+        <symbol id="suit-credentials" viewBox="0 0 32 32">
+          <path fill="currentColor" d="M16 1 29.5 16 16 31 2.5 16Z"/>
+          <g fill="#ffffff"><path d="M8.5 14.8 16 11.2l7.5 3.6-7.5 3.6Z"/><path d="M11.8 16.9v3.1c2.6 1.9 5.8 1.9 8.4 0v-3.1L16 18.9Z"/></g>
+          <path d="M23.5 14.8v4.4" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+        </symbol>
+        <!-- Teamwork: a heart with two people inside. -->
+        <symbol id="suit-teamwork" viewBox="0 0 32 32">
+          <path fill="currentColor" d="M16 29.5S3 21 3 11.6A6.6 6.6 0 0 1 16 8.4a6.6 6.6 0 0 1 13 3.2C29 21 16 29.5 16 29.5Z"/>
+          <g fill="#ffffff"><circle cx="12.4" cy="13.4" r="2.3"/><circle cx="19.6" cy="13.4" r="2.3"/><path d="M8.6 21.2a3.8 3.8 0 0 1 7.6 0Z"/><path d="M15.8 21.2a3.8 3.8 0 0 1 7.6 0Z"/></g>
+        </symbol>
         <symbol id="card-back-art" viewBox="0 0 250 350">
           <defs>
             <linearGradient id="card-back-fill" x1="0" y1="0" x2="1" y2="1">
@@ -223,8 +246,10 @@
               <div class="skill-card-face skill-card-front">
                 <div class="skill-card-top">
                   <h3 id="card-data">Data</h3>
-                  <span class="skill-card-mark" aria-hidden="true">D</span>
+                  <svg class="skill-card-suit" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#suit-data"></use></svg>
                 </div>
+                <!-- The big faint suit in the middle, like an ace. -->
+                <svg class="skill-card-pip" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#suit-data"></use></svg>
                 <ul class="skill-card-list" role="list">
                   <li>Excel</li>
                   <li>R / RStudio and STATA</li>
@@ -233,8 +258,8 @@
                   <li>Statistical analysis and data mining</li>
                 </ul>
                 <div class="skill-card-bottom" aria-hidden="true">
-                  <span class="skill-card-mark">D</span>
                   <span class="skill-card-name">Data</span>
+                  <svg class="skill-card-suit" viewBox="0 0 32 32" focusable="false"><use href="#suit-data"></use></svg>
                 </div>
               </div>
             </article>
@@ -249,8 +274,10 @@
               <div class="skill-card-face skill-card-front">
                 <div class="skill-card-top">
                   <h3 id="card-systems">Systems</h3>
-                  <span class="skill-card-mark" aria-hidden="true">S</span>
+                  <svg class="skill-card-suit" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#suit-systems"></use></svg>
                 </div>
+                <!-- The big faint suit in the middle, like an ace. -->
+                <svg class="skill-card-pip" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#suit-systems"></use></svg>
                 <ul class="skill-card-list" role="list">
                   <li>ArborXR</li>
                   <li>Jamf</li>
@@ -259,14 +286,14 @@
                   <li>Networking: routing, switching, TCP/IP</li>
                 </ul>
                 <div class="skill-card-bottom" aria-hidden="true">
-                  <span class="skill-card-mark">S</span>
                   <span class="skill-card-name">Systems</span>
+                  <svg class="skill-card-suit" viewBox="0 0 32 32" focusable="false"><use href="#suit-systems"></use></svg>
                 </div>
               </div>
             </article>
           </li>
           <li class="skill-card">
-            <article class="skill-card-inner" aria-labelledby="card-credentials">
+            <article class="skill-card-inner skill-card--warm" aria-labelledby="card-credentials">
               <!-- The back: the same pattern on every card (drawn once, at the top of this section). -->
               <div class="skill-card-face skill-card-back" aria-hidden="true">
                 <svg viewBox="0 0 250 350" focusable="false"><use href="#card-back-art"></use></svg>
@@ -275,8 +302,10 @@
               <div class="skill-card-face skill-card-front">
                 <div class="skill-card-top">
                   <h3 id="card-credentials">Credentials</h3>
-                  <span class="skill-card-mark" aria-hidden="true">C</span>
+                  <svg class="skill-card-suit" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#suit-credentials"></use></svg>
                 </div>
+                <!-- The big faint suit in the middle, like an ace. -->
+                <svg class="skill-card-pip" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#suit-credentials"></use></svg>
                 <ul class="skill-card-list" role="list">
                   <li>BS in Informatics, UMass Amherst</li>
                   <li>Cisco Networking Academy (four years)</li>
@@ -285,14 +314,14 @@
                   <li>MS Office Suite Specialist</li>
                 </ul>
                 <div class="skill-card-bottom" aria-hidden="true">
-                  <span class="skill-card-mark">C</span>
                   <span class="skill-card-name">Credentials</span>
+                  <svg class="skill-card-suit" viewBox="0 0 32 32" focusable="false"><use href="#suit-credentials"></use></svg>
                 </div>
               </div>
             </article>
           </li>
           <li class="skill-card">
-            <article class="skill-card-inner" aria-labelledby="card-teamwork">
+            <article class="skill-card-inner skill-card--warm" aria-labelledby="card-teamwork">
               <!-- The back: the same pattern on every card (drawn once, at the top of this section). -->
               <div class="skill-card-face skill-card-back" aria-hidden="true">
                 <svg viewBox="0 0 250 350" focusable="false"><use href="#card-back-art"></use></svg>
@@ -301,8 +330,10 @@
               <div class="skill-card-face skill-card-front">
                 <div class="skill-card-top">
                   <h3 id="card-teamwork">Teamwork</h3>
-                  <span class="skill-card-mark" aria-hidden="true">T</span>
+                  <svg class="skill-card-suit" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#suit-teamwork"></use></svg>
                 </div>
+                <!-- The big faint suit in the middle, like an ace. -->
+                <svg class="skill-card-pip" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#suit-teamwork"></use></svg>
                 <ul class="skill-card-list" role="list">
                   <li>Clear communicator</li>
                   <li>Collaborator</li>
@@ -311,8 +342,8 @@
                   <li>Measurable goals and progress tracking</li>
                 </ul>
                 <div class="skill-card-bottom" aria-hidden="true">
-                  <span class="skill-card-mark">T</span>
                   <span class="skill-card-name">Teamwork</span>
+                  <svg class="skill-card-suit" viewBox="0 0 32 32" focusable="false"><use href="#suit-teamwork"></use></svg>
                 </div>
               </div>
             </article>
