@@ -278,10 +278,6 @@ textarea {
   padding-inline: var(--container-padding);
 }
 
-.container--narrow {
-  max-width: var(--container-narrow);
-}
-
 .section {
   padding-block: var(--space-section);
 }
@@ -317,12 +313,6 @@ textarea {
     grid-template-columns: 5fr 7fr;
     gap: var(--space-2xl);
   }
-
-  /* Keeps heading and intro stacked (used in narrow columns). */
-  .section-header--stacked {
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
-  }
 }
 
 /* "Grid" is a CSS layout tool for rows and columns. */
@@ -332,13 +322,6 @@ textarea {
 }
 
 @media (min-width: 900px) {
-  .grid--2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 equal columns */
-  }
-
-  .grid--3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 equal columns */
-  }
 }
 
 
@@ -889,10 +872,6 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(2rem, 5vw, 5rem);
   }
-
-  .split--reverse .split-media {
-    order: 2; /* moves the picture after the text, onto the right */
-  }
 }
 
 .split-content p {
@@ -927,27 +906,7 @@ textarea {
   transform: rotate(45deg);
 }
 
-
-/* 12. ABOUT PAGE: PILLARS, STATS, TIMELINE */
-.pillars {
-  display: grid;
-  gap: var(--space-xl);
-}
-
 @media (min-width: 900px) {
-  .pillars {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.pillar {
-  padding-top: var(--space-lg);
-  border-top: 2px solid var(--color-link);
-}
-
-.pillar p {
-  margin: 0;
-  color: var(--color-text-muted);
 }
 
 .stats {
@@ -1291,6 +1250,14 @@ textarea.form-input {
 .footer-links a:hover {
   color: var(--color-link);
   text-decoration: underline;
+}
+
+/* On phones the footer keeps the brand and contact details only: the page links
+   already live in the Menu button at the top of every page. */
+@media (max-width: 767px) {
+  .footer-nav {
+    display: none;
+  }
 }
 
 .footer-bottom {
@@ -2027,33 +1994,7 @@ html.lenis {
   margin-bottom: var(--space-xs);
 }
 
-/* Certifications: a simple list with a thin line between items. */
-.credentials {
-  display: grid;
-  border-top: 1px solid var(--color-border);
-}
-
 @media (min-width: 900px) {
-  .credentials {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-2xl);
-  }
-}
-
-.credentials li {
-  display: grid;
-  gap: var(--space-2xs);
-  padding-block: var(--space-lg);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.credential-name {
-  font-weight: 600;
-  color: var(--color-heading);
-}
-
-.credential-detail {
-  color: var(--color-text-muted);
 }
 
 
