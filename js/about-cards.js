@@ -1,8 +1,8 @@
 /* ABOUT-CARDS.JS: THE SKILL CARDS ON THE ABOUT PAGE
    Four playing cards that get "dealt" as you scroll:
-   - Wide screens: the section holds still while you scroll. The cards rise as a fanned stack,
-     face down, spread out into a row, then flip over one after another. Scrolling back up plays
-     it in reverse.
+   - Wide screens: as the section scrolls into view, the cards rise in as a fanned stack, face
+     down. Then the section holds still while you scroll: they spread out into a row and flip over
+     one after another. Scrolling back up plays it in reverse.
    - Smaller screens: each card flips over as it scrolls into view.
    - With a mouse, a face-up card leans toward the pointer.
    Without motion (reduce motion, or the animation libraries didn't load), the cards simply show
@@ -19,7 +19,11 @@
 /* 1. SETTINGS */
 
 // How long the deal lasts on wide screens, in screen heights of scrolling (1 = one full screen).
-const CARDS_DEAL_LENGTH = 1.3;
+const CARDS_DEAL_LENGTH = 1.1;
+
+// When the face-down stack starts rising in: when the section's top reaches this far down the
+// screen (0.85 = as soon as it's near the bottom of the screen).
+const CARDS_ARRIVE_FROM = 0.85;
 
 // The starting stack: how far below its spot each card starts (pixels), and how much the stacked
 // cards fan out (degrees of tilt between neighbors).
@@ -66,6 +70,40 @@ function startAboutCards() {
 
   /* 3. WIDE SCREENS: THE DEAL */
   media.add("(min-width: " + CARDS_WIDE_SCREEN + "px)", function () {
+    // Where each card sits in the face-down stack: pulled in toward the middle, slightly fanned,
+    // the outer cards a little lower, like a fan in a hand.
+    function stackX(i) {
+      return (middle - i) * step() * 0.82;
+    }
+    function stackY(i) {
+      return Math.abs(i - middle) * 14;
+    }
+    function fan(i) {
+      return (i - middle) * CARDS_FAN_ANGLE;
+    }
+
+    // 1. THE ARRIVAL: as the section scrolls up into view, the face-down stack rises in, so the
+    //    space below the heading is never empty.
+    gsap.fromTo(cards, {
+      x: stackX,
+      y: CARDS_START_DROP,
+      rotation: fan,
+      opacity: 0
+    }, {
+      y: stackY,
+      opacity: 1,
+      ease: "power2.out",
+      immediateRender: true,
+      scrollTrigger: {
+        trigger: section,
+        start: "top " + CARDS_ARRIVE_FROM * 100 + "%",
+        end: "top top",
+        scrub: 1,
+        invalidateOnRefresh: true
+      }
+    });
+
+    // 2. THE DEAL: the section holds still while you scroll; the stack spreads out into a row...
     const deal = gsap.timeline({
       scrollTrigger: {
         trigger: section,
@@ -78,40 +116,19 @@ function startAboutCards() {
         invalidateOnRefresh: true
       }
     });
-
-    // Rise as a fanned stack in the middle, face down...
-    deal.fromTo(cards, {
-      x: function (i) {
-        return (middle - i) * step() * 0.82; // pulled in toward the middle, slightly fanned
-      },
-      y: CARDS_START_DROP,
-      rotation: function (i) {
-        return (i - middle) * CARDS_FAN_ANGLE;
-      },
-      opacity: 0
-    }, {
-      y: function (i) {
-        return Math.abs(i - middle) * 14; // the outer cards sit a little lower, like a fan in a hand
-      },
-      opacity: 1,
-      duration: 0.22,
-      ease: "power2.out",
-      immediateRender: true
-    }, 0);
-
-    // ...spread out into a row...
-    deal.to(cards, {
+    deal.fromTo(cards, { x: stackX, y: stackY, rotation: fan }, {
       x: 0,
       y: 0,
       rotation: 0,
-      duration: 0.4,
-      ease: "power2.inOut"
-    }, 0.2);
+      duration: 0.45,
+      ease: "power2.inOut",
+      immediateRender: false
+    }, 0);
 
-    // ...and flip over one after another, lifting as they turn.
+    // ...and the cards flip over one after another, lifting as they turn.
     inners.forEach(function (inner, i) {
-      // The flips begin once the row has spread out (at 0.6 of the deal) and end with the deal.
-      const start = 0.6 + i * ((1 - 0.6 - CARDS_FLIP_SHARE) / Math.max(1, cards.length - 1));
+      // The flips begin once the row has spread out (at 0.45 of the deal) and end with the deal.
+      const start = 0.45 + i * ((1 - 0.45 - CARDS_FLIP_SHARE) / Math.max(1, cards.length - 1));
       deal.fromTo(inner, { rotationY: 0 }, {
         rotationY: 180,
         duration: CARDS_FLIP_SHARE,

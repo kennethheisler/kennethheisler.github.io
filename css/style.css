@@ -1582,8 +1582,7 @@ html.lenis {
 /* A soft, nearly solid dark backing behind blocks of text over the particles.
    (A blurred rounded box: it covers the corners of the text, unlike a round glow.) */
 .webgl .hero-xl-content::before,
-.webgl-story .story-text::before,
-.webgl-story .story-intro .section-header::before {
+.webgl-story .story-text::before {
   content: "";
   position: absolute;
   inset: -2rem -3rem;
@@ -1592,11 +1591,6 @@ html.lenis {
   border-radius: 3rem;
   filter: blur(var(--scene-scrim-blur));
   pointer-events: none;
-}
-
-.webgl-story .story-intro .section-header {
-  position: relative;
-  isolation: isolate;
 }
 
 
@@ -1802,10 +1796,6 @@ html.lenis {
 
 
 /* 19c. STORY (three full-width steps instead of three boxes) */
-.story-intro {
-  padding-top: var(--space-section);
-}
-
 .story-step {
   padding-block: var(--space-section);
 }
