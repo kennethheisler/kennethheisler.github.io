@@ -61,7 +61,7 @@ const BUTTON_GAP = 6;
 
 // Cursor ring: a soft circle that trails the mouse. Lag = seconds it takes to catch up.
 const CURSOR_ON = true;
-const CURSOR_LAG = 0.12;
+const CURSOR_LAG = 0.06;
 
 
 /* 2. CHECK THE LIBRARIES */

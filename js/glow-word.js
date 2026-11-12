@@ -92,11 +92,11 @@ const BACKDROP_WORDS = [
 // Sharpness on high-resolution screens (capped to keep things smooth; the backdrop fills the
 // whole screen, so it's capped lower).
 const GLOW_WORD_PIXEL_RATIO = 2;
-const BACKDROP_PIXEL_RATIO = 1.5;
+const BACKDROP_PIXEL_RATIO = 2;
 
 // The backdrop's light is soft, so it's drawn at a lower sharpness and stretched to fit (0.5 = half
 // sharpness, a quarter of the work). The faint outlines stay sharp.
-const BACKDROP_LIGHT_SHARPNESS = 0.5;
+const BACKDROP_LIGHT_SHARPNESS = 1;
 
 
 /* 2. START */
@@ -608,6 +608,7 @@ function makeGlowLight(lightSharpness) {
       rctx.setTransform(lr, 0, 0, lr, 0, 0);
       rctx.lineCap = "round";
       rctx.lineJoin = "round";
+      rctx.globalCompositeOperation = "lighten";
       const passes = [
         { color: GLOW_WORD_COLORS[0], width: thick, alpha: 0.6, shift: 0 },
         { color: GLOW_WORD_COLORS[1], width: thick * 0.5, alpha: 0.75, shift: 0 },
@@ -616,8 +617,8 @@ function makeGlowLight(lightSharpness) {
       ];
       passes.forEach(function (pass) {
         // (every other point is plenty for a smooth ribbon, and half the work)
-        for (let i = 2; i < trail.length; i += 2) {
-          const a = trail[i - 2];
+        for (let i = 1; i < trail.length; i++) {
+          const a = trail[i - 1];
           const b = trail[i];
           const age = (time - b.time) / (GLOW_WORD_TAIL * 1000);
           const nx = -(b.y - a.y);
@@ -633,6 +634,7 @@ function makeGlowLight(lightSharpness) {
         }
       });
       rctx.globalAlpha = 1;
+      rctx.globalCompositeOperation = "source-over";
 
       lctx.setTransform(1, 0, 0, 1, 0, 0);
       lctx.globalCompositeOperation = "lighter";
