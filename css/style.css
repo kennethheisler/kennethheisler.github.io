@@ -1260,6 +1260,15 @@ textarea.form-input {
   color: var(--color-text-muted);
 }
 
+/* On phones the footer keeps the brand and tagline only: the page links
+   and contact details already live in the Menu button at the top of every page. */
+@media (max-width: 767px) {
+  .footer-nav,
+  .footer-contact {
+    display: none;
+  }
+}
+
 .footer-heading {
   margin-bottom: var(--space-xs);
   font-size: var(--text-base);
