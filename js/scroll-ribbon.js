@@ -1,8 +1,10 @@
 /* SCROLL-RIBBON.JS: A SPARK OF LIGHT THAT LEADS YOU DOWN THE PAGE
-   Far behind the page, a warm amber spark glides along a long, gentle path as you scroll,
-   leading the way. Behind it trails a soft ribbon of light that cools from gold into pale
-   blue, periwinkle and violet, then fades away. The spark sheds tiny embers as it goes.
-   The trail moves at only part of your scrolling speed ("parallax"), so it feels far away.
+   Far behind the page, a warm amber spark leads the way as you scroll. It travels mostly down
+   the side margins, curling into loops there, and now and then swoops across the page to the
+   other side. Behind it trails a soft ribbon of light that cools from gold into pale blue,
+   periwinkle and violet, then fades away. The spark sheds tiny embers, and keeps drifting gently
+   even when you stop scrolling. The trail moves at only part of your scrolling speed
+   ("parallax"), so it feels far away.
 
    Around the edges of the screen, a light dust of violet-blue wisps and a few golden embers
    drifts and dances, like the home page's particles spilling over onto the other pages.
@@ -35,23 +37,37 @@ const RIBBON_SPARK_HEIGHT = 0.6;
 // How smoothly the spark catches up with your scrolling (smaller = a slower, more graceful glide).
 const RIBBON_GLIDE = 0.05;
 
-// How wide the path sweeps from side to side (share of the screen width), and how far down the
-// page each sweep lasts (in screen heights).
-const RIBBON_SWEEP = 0.34;
-const RIBBON_SWEEP_LENGTH = 1.6;
+// Where the path mostly travels: how far from the middle its two lanes are (share of the screen
+// width: 0.43 = in the side margins), and how often it swoops across to the other side (in screen
+// heights of scrolling between crossings).
+const RIBBON_LANE = 0.43;
+const RIBBON_CROSSING_EVERY = 2.2;
+
+// The loops: their size (share of the screen width), how much scrolling one turn takes (screen
+// heights), and how often the path curls into a run of loops (screen heights between runs).
+const RIBBON_LOOP_SIZE = 0.07;
+const RIBBON_LOOP_TURN = 0.45;
+const RIBBON_LOOP_EVERY = 1.3;
+
+// Even when you're not scrolling, the spark keeps drifting along its path (pixels per second).
+const RIBBON_IDLE_DRIFT = 18;
 
 // The trail: how long it is (in screen heights of path behind the spark), how wide its soft glow
 // is (pixels), and how bright it is overall (0 = invisible, 1 = full). Soft and dim = far away.
-const RIBBON_TRAIL_LENGTH = 1.5;
-const RIBBON_WIDTH = 30;
-const RIBBON_BRIGHTNESS = 0.42;
+const RIBBON_TRAIL_LENGTH = 1.4;
+const RIBBON_WIDTH = 34;
+const RIBBON_BRIGHTNESS = 0.5;
+
+// How strongly each of the trail's glowing dots shows (they overlap, so small numbers add up).
+const RIBBON_GLOW_STRENGTH = 0.22;
+
+// How many glowing dots make up the trail (more = smoother but more work; phones use fewer).
+const RIBBON_DOTS = 420;
+const RIBBON_PHONE_DOTS = 200;
 
 // The trail's colors, from the spark back to the tail: gold, pale glowing blue, periwinkle,
 // violet, deep indigo.
 const RIBBON_COLORS = ["#ffcf7a", "#d8f4ff", "#7f9cff", "#8b5cff", "#4b3fd6"];
-
-// The soft violet haze around the whole trail.
-const RIBBON_HALO = "#6a4cff";
 
 // The spark: its size (pixels), and how many embers it sheds per second.
 const SPARK_SIZE = 9;
@@ -120,6 +136,16 @@ function startScrollRibbon() {
   const goldDot = makeDot("rgba(255,246,220,1)", "rgba(255,181,71,0.55)");
   const blueDot = makeDot("rgba(216,244,255,1)", "rgba(127,156,255,0.45)");
   const violetDot = makeDot("rgba(230,220,255,1)", "rgba(139,92,255,0.45)");
+  // Soft dots in each of the trail's colors (no bright core, so they melt together).
+  const tints = RIBBON_COLORS.map(function (hex) {
+    const n = parseInt(hex.slice(1), 16);
+    const rgb = ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255);
+    return makeDot("rgba(" + rgb + ",1)", "rgba(" + rgb + ",0.7)");
+  });
+  function hash(i) {
+    const x = Math.sin(i * 12.9898) * 43758.5453;
+    return x - Math.floor(x);
+  }
 
   function resize() {
     ratio = Math.min(window.devicePixelRatio || 1, phone.matches ? 1 : RIBBON_PIXEL_RATIO);
@@ -162,15 +188,35 @@ function startScrollRibbon() {
 
 
   /* 3. THE PATH AND THE SPARK
-     The path runs down the whole page. "distance" is measured in pixels of page height.
-     Its side-to-side position is a mix of two slow waves, so it sweeps gracefully and never zigzags. */
-  function pathX(distance) {
-    const u = distance / (height * RIBBON_SWEEP_LENGTH);
-    const wave = Math.sin(u * Math.PI * 2 + seed) * 0.75 + Math.sin(u * Math.PI * 0.9 + seed * 1.7) * 0.25;
-    return width * (0.5 + RIBBON_SWEEP * wave);
+     The path runs down the whole page; "d" is how far along it is, in pixels of scrolling.
+     - Its lane: which side margin it's in. A smoothed on/off switch holds it on one side for a
+       long stretch, then flips quickly, so it crosses the middle in a brief swoop.
+     - Its loops: it also circles around that lane. Where the circle is big, it swings back on
+       itself and draws a loop; where the circle shrinks away, it flows straight. */
+  // Each page starts with the trail settled in one margin (which one depends on the page), and
+  // the crossings are quick swoops.
+  const startSide = seed % 2 === 0 ? 1 : -1;
+  function lane(d) {
+    const wave = Math.cos(d / (height * RIBBON_CROSSING_EVERY) * Math.PI);
+    return startSide * Math.tanh(wave * 6); // close to -1 (left) or +1 (right) most of the time
+  }
+  function loopSize(d) {
+    const wave = Math.max(0, Math.sin(d / (height * RIBBON_LOOP_EVERY) * Math.PI * 2 + seed * 1.9));
+    return wave * wave * width * RIBBON_LOOP_SIZE;
+  }
+  // Where a point of the path shows on screen. The spark rides near RIBBON_SPARK_HEIGHT; the rest
+  // of the path is squeezed by RIBBON_DEPTH, so the trail moves slowly, far behind the page.
+  function onScreen(d, sparkD) {
+    const turn = d / (height * RIBBON_LOOP_TURN) * Math.PI * 2;
+    const r = loopSize(d);
+    return {
+      x: width * (0.5 + RIBBON_LANE * lane(d)) + r * Math.cos(turn) + width * 0.015 * Math.sin(d / height * 2.3),
+      y: height * RIBBON_SPARK_HEIGHT + (d - sparkD) * RIBBON_DEPTH + r * Math.sin(turn)
+    };
   }
 
   let sparkAt = window.scrollY + height * RIBBON_SPARK_HEIGHT; // where the spark is along the path
+  let drift = 0;                                                // the idle drift so far
   const embers = [];
 
 
@@ -235,62 +281,74 @@ function startScrollRibbon() {
     ctx.clearRect(0, 0, width, height);
     ctx.globalCompositeOperation = "lighter";
 
-    // The spark glides toward its spot (a little below the middle of what you're reading).
-    const target = window.scrollY + height * RIBBON_SPARK_HEIGHT;
+    // The spark glides toward its spot (a little below the middle of what you're reading),
+    // and keeps drifting gently along its path even when you stop scrolling.
+    drift += RIBBON_IDLE_DRIFT * dt;
+    const target = window.scrollY + height * RIBBON_SPARK_HEIGHT + drift;
     sparkAt += (target - sparkAt) * (1 - Math.pow(1 - RIBBON_GLIDE, dt * 60));
     const fade = RIBBON_BRIGHTNESS * (1 - quiet * 0.5);
-    const sway = Math.sin(time * 0.6) * 10;
 
-    // Where a point of the path shows on screen: the spark rides at RIBBON_SPARK_HEIGHT, and the
-    // path behind it is squeezed by RIBBON_DEPTH, so it trails slowly, far behind the page.
-    function onScreen(distance) {
-      return {
-        x: pathX(distance) + sway * Math.sin(distance * 0.002),
-        y: height * RIBBON_SPARK_HEIGHT + (distance - sparkAt) * RIBBON_DEPTH
-      };
+    // THE TRAIL, drawn as many soft glowing dots overlapping like an airbrush: no hard edges, so no
+    // seams on the curves, and the colors blend smoothly from gold to violet along it.
+    const trailSpan = height * RIBBON_TRAIL_LENGTH / RIBBON_DEPTH;
+    const dots = phone.matches ? RIBBON_PHONE_DOTS : RIBBON_DOTS;
+    const glowSize = RIBBON_WIDTH * 1.7;
+    const midSize = RIBBON_WIDTH * 0.55;
+    const corePoints = [];
+    for (let i = 0; i <= dots; i++) {
+      const along = i / dots; // 0 = at the spark, 1 = the end of the tail
+      const p = onScreen(sparkAt - along * trailSpan, sparkAt);
+      corePoints.push(p);
+      if (p.y < -glowSize || p.y > height + glowSize) {
+        continue;
+      }
+      const strength = fade * Math.pow(1 - along, 1.2) * Math.min(1, along * 40 + 0.25);
+      if (strength < 0.003) {
+        continue;
+      }
+      // This dot's color from the gradient, with a little scatter so neighbors blend.
+      const pos = Math.pow(along, 0.75) * (tints.length - 1) + (hash(i) - 0.5) * 0.9;
+      const tint = tints[Math.max(0, Math.min(tints.length - 1, Math.round(pos)))];
+      const taper = 0.45 + 0.55 * (1 - along);
+      ctx.globalAlpha = strength * RIBBON_GLOW_STRENGTH;
+      ctx.drawImage(tint, p.x - glowSize * taper / 2, p.y - glowSize * taper / 2, glowSize * taper, glowSize * taper);
+      ctx.globalAlpha = strength * RIBBON_GLOW_STRENGTH * 1.6;
+      ctx.drawImage(tint, p.x - midSize * taper / 2, p.y - midSize * taper / 2, midSize * taper, midSize * taper);
     }
-
-    // THE TRAIL: soft, wide and dim at the back; a thin brighter core near the spark.
-    const trailLength = height * RIBBON_TRAIL_LENGTH / RIBBON_DEPTH;
-    const pieces = phone.matches ? 60 : 110;
-    const points = [];
-    for (let i = 0; i <= pieces; i++) {
-      const along = i / pieces; // 0 = at the spark, 1 = the end of the tail
-      points.push({ p: onScreen(sparkAt - along * trailLength), along: along });
-    }
-    // The wide outer haze is always violet (the mythical glow around the whole trail); the inner
-    // passes cool from gold to blue along the trail.
-    const passes = [
-      { width: RIBBON_WIDTH * 1.6, alpha: 0.1, halo: true },
-      { width: RIBBON_WIDTH, alpha: 0.13 },
-      { width: RIBBON_WIDTH * 0.45, alpha: 0.2 },
-      { width: RIBBON_WIDTH * 0.12, alpha: 0.45 }
-    ];
-    ctx.lineCap = "butt";
-    passes.forEach(function (pass) {
-      ctx.lineWidth = pass.width;
-      for (let i = 1; i < points.length; i++) {
-        const a = points[i - 1];
-        const b = points[i];
-        const along = b.along;
-        ctx.strokeStyle = pass.halo ? RIBBON_HALO : trailColor(along);
-        // Bright near the spark, fading out along the tail; the tail also thins.
-        const tail = pass.halo ? Math.pow(1 - along, 0.8) : Math.pow(1 - along, 1.15);
-        ctx.globalAlpha = pass.alpha * fade * tail * Math.min(1, along * 30 + 0.3);
-        ctx.lineWidth = pass.width * (0.35 + 0.65 * (1 - along));
+    // The thin bright core: a few long continuous lines, each dimmer than the last.
+    if (corePoints.length > 2) {
+      ctx.lineWidth = 1.4;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      const parts = 8;
+      const per = Math.ceil(corePoints.length / parts);
+      for (let k = 0; k < parts; k++) {
+        const from = k * per;
+        const to = Math.min(corePoints.length - 1, from + per);
+        if (to <= from) {
+          break;
+        }
+        ctx.globalAlpha = fade * 0.9 * Math.pow(1 - k / parts, 1.6);
+        ctx.strokeStyle = k < 2 ? "#ffe2ad" : "#d8f4ff";
+        // Smooth curves through the midpoints between points, so loops come out round.
         ctx.beginPath();
-        ctx.moveTo(a.p.x, a.p.y);
-        ctx.lineTo(b.p.x, b.p.y);
+        ctx.moveTo(corePoints[from].x, corePoints[from].y);
+        for (let j = from + 1; j < to; j++) {
+          const mx = (corePoints[j].x + corePoints[j + 1].x) / 2;
+          const my = (corePoints[j].y + corePoints[j + 1].y) / 2;
+          ctx.quadraticCurveTo(corePoints[j].x, corePoints[j].y, mx, my);
+        }
+        ctx.lineTo(corePoints[to].x, corePoints[to].y);
         ctx.stroke();
       }
-    });
+    }
 
     // THE SPARK: a warm glow that breathes, with a bright core.
-    const spark = onScreen(sparkAt);
+    const spark = onScreen(sparkAt, sparkAt);
     const breathe = 1 + Math.sin(time * 2.4) * 0.12;
-    const glowSize = SPARK_SIZE * 9 * breathe;
+    const haloSize = SPARK_SIZE * 9 * breathe;
     ctx.globalAlpha = 0.5 * (1 - quiet * 0.4);
-    ctx.drawImage(goldDot, spark.x - glowSize / 2, spark.y - glowSize / 2, glowSize, glowSize);
+    ctx.drawImage(goldDot, spark.x - haloSize / 2, spark.y - haloSize / 2, haloSize, haloSize);
     const coreSize = SPARK_SIZE * 2.4;
     ctx.globalAlpha = 0.95;
     ctx.drawImage(goldDot, spark.x - coreSize / 2, spark.y - coreSize / 2, coreSize, coreSize);
@@ -350,21 +408,6 @@ function startScrollRibbon() {
 
     ctx.globalAlpha = 1;
     requestAnimationFrame(frame);
-  }
-
-  // The trail's color at a point along it: gold at the spark, cooling to violet and indigo.
-  const stops = RIBBON_COLORS.map(function (hex) {
-    const n = parseInt(hex.slice(1), 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  });
-  function trailColor(along) {
-    const pos = Math.min(0.999, Math.pow(along, 0.7)) * (stops.length - 1);
-    const i = Math.floor(pos);
-    const f = pos - i;
-    const a = stops[i];
-    const b = stops[i + 1];
-    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * f) + "," +
-      Math.round(a[1] + (b[1] - a[1]) * f) + "," + Math.round(a[2] + (b[2] - a[2]) * f) + ")";
   }
 
   resize();
