@@ -131,14 +131,11 @@
       </div>
     </section>
 
-    <!-- THE WORD JUMBLE: the language of the work (words and statistics formulas), laid out across
-         and down. Each one types itself in as you scroll past, and the mouse lights them up
-         (js/glow-word.js; edit the words in its settings). Decoration only. -->
-    <section class="jumble-section" aria-hidden="true">
-      <div class="container">
-        <div class="glow-word glow-word--jumble" data-layout="jumble"></div>
-      </div>
-    </section>
+    <!-- THE WORD BACKDROP: huge words and statistics formulas behind the rest of the page, mostly
+         around the edges. They type themselves in as they scroll into view and light up where the
+         mouse's ribbon of light crosses them (js/glow-word.js; edit the words in its settings).
+         This marks where the backdrop starts (just below the page header). Decoration only. -->
+    <div class="glow-backdrop" aria-hidden="true"></div>
 
     <!-- MY STORY (picture + text) -->
     <section class="section">
