@@ -11,7 +11,7 @@
 
    Also:
    - Only one project is open at a time.
-   - A link to one project (like portfolio.html#vr2) opens that project.
+   - A link to one project (like portfolio.html#tableau) opens that project.
    - Searching the page (Ctrl+F) finds words inside closed projects and notes and opens them
      (in browsers that support it).
    - Without JavaScript, every project and note simply shows open.
@@ -108,7 +108,7 @@ const NOTE_PEEK_DELAY = 0.2;
   });
   list.classList.add("is-ready");
 
-  // A link to one project (portfolio.html#vr2), on arrival and whenever the address changes.
+  // A link to one project (portfolio.html#tableau), on arrival and whenever the address changes.
   function openFromAddress(animate) {
     const id = decodeURIComponent(location.hash.slice(1));
     const project = id && document.getElementById(id);
@@ -149,7 +149,7 @@ const NOTE_PEEK_DELAY = 0.2;
     makeRoomForNote(project);
     announce("project-open", project);
 
-    // Show this project's address (#vr2) so it can be shared, without jumping the page.
+    // Show this project's address (#tableau) so it can be shared, without jumping the page.
     if (window.history && history.replaceState) {
       history.replaceState(null, "", "#" + project.id);
     }

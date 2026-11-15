@@ -71,7 +71,7 @@ const BACKDROP_FLASH_TIME = 1.2;
 // column's middle). "mono" uses the code font.
 // EDIT ME: change the words, move them, or add more. (Formulas are standard statistics notation;
 // the numbers come from the projects: R² = 0.19 from the civic study, n = 83,439 from the salary
-// survey, 3.1× from the (VR)² turnaround.)
+// survey. x̄ is the mean.)
 const BACKDROP_WORDS = [
   { text: "DATA", x: -0.03, y: 0.02, size: 0.13 },
   { text: "REGRESSION", x: 0.955, y: 0.0, size: 0.07, down: true },
@@ -86,7 +86,7 @@ const BACKDROP_WORDS = [
   { text: "n = 83,439", x: 0.6, y: 0.68, size: 0.05, mono: true },
   { text: "TREND", x: 0.04, y: 0.74, size: 0.075, down: true },
   { text: "RMSE = √(Σ(y−ŷ)²/n)", x: 0.08, y: 0.86, size: 0.04, mono: true },
-  { text: "3.1×", x: 0.66, y: 0.9, size: 0.13 }
+  { text: "x̄", x: 0.72, y: 0.9, size: 0.13, mono: true }
 ];
 
 // Sharpness on high-resolution screens (capped to keep things smooth; the backdrop fills the

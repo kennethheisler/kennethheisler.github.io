@@ -51,7 +51,7 @@ def load(name):
 
 
 # 1. Charts already drawn on the dark navy: just lift them off their background.
-for name in ["vr2-usage.png", "crop-watersheds.png", "civic-massachusetts.png"]:
+for name in ["crop-watersheds.png", "civic-massachusetts.png"]:
     rgb = load(name)
     fg, a = color_to_alpha(rgb, DEEP_BG)
     save(name, fg, a)

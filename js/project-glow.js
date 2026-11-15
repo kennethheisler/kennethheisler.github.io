@@ -138,7 +138,7 @@ function startGlow() {
       detach();
     }
   });
-  // A project that was already open when this file started (a link like portfolio.html#vr2).
+  // A project that was already open when this file started (a link like portfolio.html#tableau).
   const alreadyOpen = document.querySelector(".project.is-open");
   if (alreadyOpen) {
     attach(alreadyOpen);
