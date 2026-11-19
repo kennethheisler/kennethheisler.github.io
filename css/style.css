@@ -1999,7 +1999,8 @@ html.lenis {
 
 
 /* 21. PROJECTS PAGE: THE BIG PROJECT LIST
-   Each project is one line (a button). Clicking it opens the project right there (section 22).
+   Projects are grouped into areas (Health and Sensor Analytics, ...). Each area has a heading and
+   its own list. Each project is one line (a button). Clicking it opens the project right there (section 22).
    21a. Phones and tablets: one card per project, with its chart on top
    21b. Wide screens: big titles on the left, an empty strip on the right for the hover chart
    21c. Hover and focus on wide screens: the other titles dim, the active one slides right
@@ -2009,14 +2010,44 @@ html.lenis {
   padding-top: var(--space-2xl);
 }
 
-/* 21a. PHONES AND TABLETS */
+/* The areas, stacked with generous room between them. */
 .project-index {
   display: grid;
+  gap: clamp(3.5rem, 2rem + 4vw, 7rem);
+}
+
+/* An area's heading: the name, then a small mono line saying what's in it. */
+.project-area-header {
+  margin-bottom: var(--space-lg);
+}
+
+.project-area-title {
+  margin: 0 0 var(--space-xs);
+  font-size: var(--text-2xl);
+}
+
+.project-area-note {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+  color: var(--color-text-muted);
+}
+
+.project-area-count {
+  color: var(--color-link);
+}
+
+/* 21a. PHONES AND TABLETS */
+.project-list {
+  display: grid;
   gap: var(--space-lg);
+  margin: 0;
+  padding: 0;
 }
 
 @media (min-width: 600px) and (max-width: 899px) {
-  .project-index {
+  .project-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -2147,9 +2178,14 @@ html.lenis {
 
 /* 21b. WIDE SCREENS: big titles on the left; the right part stays empty so the hover chart has room. */
 @media (min-width: 900px) {
-  .project-index {
+  .project-list {
     gap: 0;
     border-top: 1px solid var(--color-border);
+  }
+
+  /* The area heading lines up with the project titles, after the number column. */
+  .project-area-header {
+    padding-left: calc(4rem + var(--space-xl));
   }
 
   .project {

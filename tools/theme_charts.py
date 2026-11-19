@@ -9,7 +9,10 @@ How to run it (needs Python with: pip install pillow numpy):
 
 Adding a new chart: put the original in images/projects/, then add it to section 1 (if it's
 already drawn on the site's dark navy) or section 2 (light background) below, saying which of its
-colors become cyan and which become amber."""
+colors become cyan and which become amber.
+
+Some charts (activity recognition, heart rate, step counting, social capital) are instead redrawn from
+their project data in the site's colors by make_project_charts.py."""
 import numpy as np
 from PIL import Image
 import colorsys, os
@@ -51,7 +54,7 @@ def load(name):
 
 
 # 1. Charts already drawn on the dark navy: just lift them off their background.
-for name in ["crop-watersheds.png", "civic-massachusetts.png"]:
+for name in ["crop-watersheds.png"]:
     rgb = load(name)
     fg, a = color_to_alpha(rgb, DEEP_BG)
     save(name, fg, a)
@@ -69,26 +72,6 @@ def repaint(name, bg, colored, neutral_alpha=1.0, prep=None, sat_cut=0.35):
     out_a = np.where(is_color, a, a * neutral_alpha)
     out, out_a = colored(rgb, fg, a, hue, light, sat, is_color, out, out_a)
     save(name, out, out_a)
-
-
-# Heart rate (ggplot gray panel with white grid): treat white as background too.
-def heart_prep(rgb):
-    neutral = (rgb.max(2) - rgb.min(2)) < 0.04
-    light = rgb.min(2) > 0.88
-    rgb = rgb.copy()
-    rgb[neutral & light] = 229 / 255
-    return rgb
-
-
-def heart_colors(rgb, fg, a, hue, light, sat, is_color, out, out_a):
-    red = is_color & ((hue < 40) | (hue > 330))
-    blue = is_color & (hue > 180) & (hue < 260)
-    out = np.where(red[..., None], CYAN, out)
-    out = np.where(blue[..., None], AMBER, out)
-    return out, out_a
-
-
-repaint("heart-rate.png", (229, 229, 229), heart_colors, prep=heart_prep)
 
 
 # Developer salaries (base R, white): the gray box fill becomes a soft cyan fill.

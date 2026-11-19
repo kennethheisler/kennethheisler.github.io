@@ -70,13 +70,13 @@ const BACKDROP_FLASH_TIME = 1.2;
 // so 0.115 is as large as EXPERIENCE). "down: true" stacks the letters top to bottom (x is then the
 // column's middle). "mono" uses the code font.
 // EDIT ME: change the words, move them, or add more. (Formulas are standard statistics notation;
-// the numbers come from the projects: R² = 0.19 from the civic study, n = 83,439 from the salary
+// the numbers come from the projects: r = 0.39 from the civic study, n = 83,439 from the salary
 // survey. x̄ is the mean.)
 const BACKDROP_WORDS = [
   { text: "DATA", x: -0.03, y: 0.02, size: 0.13 },
   { text: "REGRESSION", x: 0.955, y: 0.0, size: 0.07, down: true },
   { text: "ŷ = β₀ + β₁x + ε", x: 0.03, y: 0.1, size: 0.05, mono: true },
-  { text: "R² = 0.19", x: 0.6, y: 0.17, size: 0.075, mono: true },
+  { text: "r = 0.39", x: 0.6, y: 0.17, size: 0.075, mono: true },
   { text: "MEDIAN", x: 0.04, y: 0.22, size: 0.075, down: true },
   { text: "INSIGHT", x: 0.56, y: 0.32, size: 0.12 },
   { text: "σ² = Σ(x − μ)² / N", x: 0.09, y: 0.42, size: 0.05, mono: true },
