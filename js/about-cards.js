@@ -2,7 +2,8 @@
    Four playing cards that get "dealt" as you scroll:
    - Wide screens: as the section scrolls into view, the cards rise in as a fanned stack, face
      down. Then the section holds still while you scroll: they spread out into a row and flip over
-     one after another. Scrolling back up plays it in reverse.
+     one after another, and stay put for one more scroll once all four are face up. Scrolling back
+     up plays it in reverse.
    - Smaller screens: each card flips over as it scrolls into view.
    - With a mouse, a face-up card leans toward the pointer.
    Without motion (reduce motion, or the animation libraries didn't load), the cards simply show
@@ -20,6 +21,10 @@
 
 // How long the deal lasts on wide screens, in screen heights of scrolling (1 = one full screen).
 const CARDS_DEAL_LENGTH = 1.1;
+
+// After the last card is face up, the cards stay held in place for this much more scrolling
+// (pixels) before the page moves on. 100 = about one click of a mouse wheel. 0 = no pause.
+const CARDS_HOLD = 100;
 
 // When the face-down stack starts rising in: when the section's top reaches this far down the
 // screen (0.85 = as soon as it's near the bottom of the screen).
@@ -103,15 +108,29 @@ function startAboutCards() {
       }
     });
 
-    // 2. THE DEAL: the section holds still while you scroll; the stack spreads out into a row...
+    // 2. THE HOLD: the section stays still for the whole deal, plus CARDS_HOLD more pixels, so
+    //    there's one more scroll with all four cards face up before the page moves on.
+    function dealLength() {
+      return window.innerHeight * CARDS_DEAL_LENGTH;
+    }
+    window.ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: function () {
+        return "+=" + (dealLength() + CARDS_HOLD);
+      },
+      pin: true,
+      invalidateOnRefresh: true
+    });
+
+    // 3. THE DEAL: while the section is held, the stack spreads out into a row...
     const deal = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: "top top",
         end: function () {
-          return "+=" + window.innerHeight * CARDS_DEAL_LENGTH;
+          return "+=" + dealLength();
         },
-        pin: true,
         scrub: 1,
         invalidateOnRefresh: true
       }
