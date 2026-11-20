@@ -7,18 +7,23 @@
   <!-- Makes the page fit phone screens instead of showing a tiny desktop page. -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Security rule (a "Content Security Policy"): which sites this page may load scripts, styles,
+       fonts and pictures from, and where the contact form may send messages. If you add a new
+       outside script or service, add its address here too or the browser will block it. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net; form-action https://formspree.io; base-uri 'self'; object-src 'none'">
+
   <!-- The title on the browser tab and in search results. -->
   <title>Kenneth Heisler | About &amp; Experience</title>
 
   <!-- A one-sentence summary of this page for search results. -->
-  <meta name="description" content="About Kenneth Heisler: informaticist and Technology Integration Specialist. Background, experience, and credentials across data, technology, special education, and IT.">
+  <meta name="description" content="About Kenneth Heisler: informaticist and technology integration specialist. Background, experience, and credentials across data, technology, special education, and IT.">
 
   <!-- The preview card shown when this page is shared (LinkedIn, texts, email). -->
   <link rel="canonical" href="https://www.kennethheisler.com/about.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Kenneth Heisler">
   <meta property="og:title" content="Kenneth Heisler | About &amp; Experience">
-  <meta property="og:description" content="About Kenneth Heisler: informaticist and Technology Integration Specialist. Background, experience, and credentials across data, technology, special education, and IT.">
+  <meta property="og:description" content="About Kenneth Heisler: informaticist and technology integration specialist. Background, experience, and credentials across data, technology, special education, and IT.">
   <meta property="og:url" content="https://www.kennethheisler.com/about.html">
   <meta property="og:image" content="https://www.kennethheisler.com/images/share.png">
   <meta property="og:image:width" content="1200">
@@ -26,11 +31,11 @@
   <meta property="og:image:alt" content="Kenneth Heisler, Data-Driven Informaticist">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- The small icon on the browser tab (a "favicon"). -->
-
   <!-- Fonts: Geist for headings and text, Geist Mono for small labels (from Google Fonts). -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- The small icon on the browser tab (a "favicon"). -->
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
@@ -48,10 +53,12 @@
        "defer" downloads them without slowing the page down. If they can't load, the site still
        works and js/main.js uses its own simple fade-ins instead. Settings: top of js/motion.js. -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js" crossorigin="anonymous" defer></script>
+  <!-- "integrity" is a fingerprint of each downloaded file: if the file ever changes, the browser refuses to
+       run it. If you change a version number below, update its fingerprint too (see DESIGN.md). -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" integrity="sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" integrity="sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js" integrity="sha384-R18XzqnxvVLEF+BYfhpmDx30v7eP83fAckyfoRzK7/Uf6nGqufcmsk0eAKo7S3RU" crossorigin="anonymous" defer></script>
   <script src="js/motion.js" defer></script>
   <!-- Glowing particles that follow the mouse and burst on clicks. Settings: top of js/cursor-particles.js. -->
   <script src="js/cursor-particles.js" defer></script>
@@ -125,7 +132,7 @@
 
         <!-- Page title and intro. -->
         <h1>About &amp; Experience</h1>
-        <p class="lead reveal">I am an Informaticist and Technology Integration Specialist who uses a data science background to support individuals with disabilities. I manage the systems behind data reporting, and connect data, technology, and people to make systems work better.</p>
+        <p class="lead reveal">Informatics degree, two years in special education, and now technology integration at Viability. The full timeline is below.</p>
         <!-- EDIT ME: replace resume/Kenneth_Heisler_Resume.pdf with your newest PDF (same name) to update this button. -->
         <div class="button-row reveal">
           <a class="btn btn--primary" href="resume/Kenneth_Heisler_Resume.pdf" download>Download My Resume (PDF)</a>
@@ -146,14 +153,14 @@
         <div class="split-media reveal">
           <!-- Story picture. -->
           <div class="frame">
-            <img src="images/about.svg" alt="Illustration of a graduate connected to a data network and to two people" loading="lazy">
+            <img src="images/about.svg" alt="Illustration of a graduate connected to a data network and to two people" width="800" height="600" loading="lazy">
           </div>
         </div>
         <div class="split-content reveal">
           <!-- Your story. -->
           <h2>My Story</h2>
           <p>I earned a BS in Informatics from the University of Massachusetts Amherst in 2023, with a minor in Natural Resource Economics. Before and during college, I worked in municipal roles, from data entry in Excel and SQL-based systems to IT network support.</p>
-          <p>From 2023 to 2025 I worked in special education for the City of Chicopee, designing data-driven interventions, tracking measurable student goals, and advising educators on classroom accommodations for students with autism. In 2026 I joined Viability as a Technology Integration Specialist 2, where I lead the (VR)<sup>2</sup> initiative, build interactive dashboards, and manage the platforms and devices the team relies on.</p>
+          <p>From 2023 to 2025 I worked in special education for the City of Chicopee, designing behavioral interventions, tracking measurable student goals, and advising educators on classroom accommodations for students with autism. In 2026 I joined Viability as a Technology Integration Specialist 2, where I lead the (VR)<sup>2</sup> initiative, build interactive dashboards, and manage the platforms and devices the team relies on.</p>
         </div>
       </div>
     </section>
@@ -335,11 +342,11 @@
                 <!-- The big faint suit in the middle, like an ace. -->
                 <svg class="skill-card-pip" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><use href="#suit-teamwork"></use></svg>
                 <ul class="skill-card-list" role="list">
-                  <li>Clear communicator</li>
-                  <li>Collaborator</li>
-                  <li>Organized multitasker</li>
+                  <li>Advising teachers on classroom accommodations</li>
                   <li>Training and presentation materials</li>
                   <li>Measurable goals and progress tracking</li>
+                  <li>Team projects in Python and&nbsp;R</li>
+                  <li>Excel data analysis</li>
                 </ul>
                 <div class="skill-card-bottom" aria-hidden="true">
                   <span class="skill-card-name">Teamwork</span>
@@ -359,13 +366,12 @@
         <!-- Section heading and intro sentence. -->
         <div class="section-header reveal">
           <h2>By the Numbers</h2>
-          <p>A few facts from my background.</p>
         </div>
 
         <!-- Your numbers and labels. -->
         <ul class="stats reveal" role="list">
-          <li class="stat"><span class="stat-number">2</span><span class="stat-label">Years applying data science to special education</span></li>
-          <li class="stat"><span class="stat-number">7</span><span class="stat-label">Roles across technology, education, and IT</span></li>
+          <li class="stat"><span class="stat-number">2</span><span class="stat-label">Years in special education, planning supports from student data</span></li>
+          <li class="stat"><span class="stat-number">7</span><span class="stat-label">Jobs since 2015, all listed below</span></li>
           <li class="stat"><span class="stat-number">BS</span><span class="stat-label">Informatics, UMass Amherst (2023)</span></li>
           <li class="stat"><span class="stat-number">4</span><span class="stat-label">Years of Cisco Networking Academy coursework</span></li>
         </ul>
@@ -387,31 +393,31 @@
         <ol class="timeline career" role="list">
           <li class="timeline-item career-item timeline-item--now reveal">
             <div class="career-media">
-              <img src="images/showcase-1.svg" alt="" loading="lazy">
+              <img src="images/showcase-1.svg" alt="" width="800" height="600" loading="lazy">
             </div>
             <div class="career-body">
               <p class="tag">Technology</p>
               <p class="career-meta"><span class="career-date">2026 &ndash; Present</span> <span class="career-org">Viability</span></p>
               <h3>Technology Integration Specialist 2</h3>
-              <p>I lead the (VR)<sup>2</sup> initiative, build and manage interactive dashboards and Excel data analysis, and administer ArborXR, Apple Business Manager, and Jamf, along with the software behind data reports and user and admin management.</p>
+              <p>Lead (VR)<sup>2</sup>, a virtual reality pre-employment training program. Build dashboards and Excel analyses for stakeholder reports, and administer ArborXR, Apple Business Manager and Jamf, plus the software and user accounts behind them.</p>
             </div>
           </li>
 
           <li class="timeline-item career-item reveal">
             <div class="career-media">
-              <img src="images/showcase-2.svg" alt="" loading="lazy">
+              <img src="images/showcase-2.svg" alt="" width="800" height="600" loading="lazy">
             </div>
             <div class="career-body">
               <p class="tag">Special Education</p>
               <p class="career-meta"><span class="career-date">Aug 2024 &ndash; Jun 2025</span> <span class="career-org">City of Chicopee</span></p>
               <h3>Special Education Autism Specialist</h3>
-              <p>Designed data-driven behavioral interventions, monitored measurable student goals, and advised educators on classroom accommodations for students with autism.</p>
+              <p>Designed behavioral interventions from student data, monitored measurable student goals, and advised educators on classroom accommodations for students with autism.</p>
             </div>
           </li>
 
           <li class="timeline-item career-item reveal">
             <div class="career-media">
-              <img src="images/showcase-3.svg" alt="" loading="lazy">
+              <img src="images/showcase-3.svg" alt="" width="800" height="600" loading="lazy">
             </div>
             <div class="career-body">
               <p class="tag">Special Education</p>
@@ -423,7 +429,7 @@
 
           <li class="timeline-item career-item reveal">
             <div class="career-media">
-              <img src="images/showcase-7.svg" alt="" loading="lazy">
+              <img src="images/showcase-7.svg" alt="" width="800" height="600" loading="lazy">
             </div>
             <div class="career-body">
               <p class="tag">Education</p>
@@ -435,7 +441,7 @@
 
           <li class="timeline-item career-item reveal">
             <div class="career-media">
-              <img src="images/showcase-6.svg" alt="" loading="lazy">
+              <img src="images/showcase-6.svg" alt="" width="800" height="600" loading="lazy">
             </div>
             <div class="career-body">
               <p class="tag">Community</p>
@@ -447,7 +453,7 @@
 
           <li class="timeline-item career-item reveal">
             <div class="career-media">
-              <img src="images/showcase-4.svg" alt="" loading="lazy">
+              <img src="images/showcase-4.svg" alt="" width="800" height="600" loading="lazy">
             </div>
             <div class="career-body">
               <p class="tag">IT</p>
@@ -459,7 +465,7 @@
 
           <li class="timeline-item career-item reveal">
             <div class="career-media">
-              <img src="images/showcase-5.svg" alt="" loading="lazy">
+              <img src="images/showcase-5.svg" alt="" width="800" height="600" loading="lazy">
             </div>
             <div class="career-body">
               <p class="tag">Data</p>

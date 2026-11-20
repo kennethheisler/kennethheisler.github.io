@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
   setupRevealOnScroll();
   setupHeaderLine();
   fillCurrentYear();
-  setupDemoForm();
 });
 
 
@@ -226,21 +225,5 @@ function fillCurrentYear() {
   const thisYear = new Date().getFullYear();
   document.querySelectorAll("[data-current-year]").forEach(function (element) {
     element.textContent = thisYear;
-  });
-}
-
-
-/* 9. DEMO CONTACT FORM */
-function setupDemoForm() {
-  document.querySelectorAll("form[data-demo-form]").forEach(function (form) {
-    form.addEventListener("submit", function (event) {
-      event.preventDefault(); // stop the normal send-and-reload
-
-      const status = form.querySelector("[data-form-status]");
-      if (status) {
-        // The note visitors see after pressing the button.
-        status.textContent = "Thanks! This form is a demo and isn't connected yet, so your message was not sent.";
-      }
-    });
   });
 }

@@ -7,6 +7,11 @@
   <!-- Makes the page fit phone screens instead of showing a tiny desktop page. -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Security rule (a "Content Security Policy"): which sites this page may load scripts, styles,
+       fonts and pictures from, and where the contact form may send messages. If you add a new
+       outside script or service, add its address here too or the browser will block it. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net; form-action https://formspree.io; base-uri 'self'; object-src 'none'">
+
   <!-- The title on the browser tab and in search results. -->
   <title>Kenneth Heisler | Informaticist &amp; Technology Integration</title>
 
@@ -29,11 +34,25 @@
   <!-- Proves to Google Search Console that this site is yours. Keep it here. -->
   <meta name="google-site-verification" content="qUJnjenhN-4Jcnst-CPpa54j5p_-ginNL7pE02qMuoQ">
 
-  <!-- The small icon on the browser tab (a "favicon"). -->
+  <!-- Facts about me for search engines (a "Person" record). Keep it matching the About page. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Kenneth Heisler",
+    "url": "https://www.kennethheisler.com/",
+    "jobTitle": "Technology Integration Specialist",
+    "worksFor": { "@type": "Organization", "name": "Viability" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "University of Massachusetts Amherst" },
+    "sameAs": ["https://www.linkedin.com/in/kennethcheisler"]
+  }
+  </script>
 
   <!-- Fonts: Geist for headings and text, Geist Mono for small labels (from Google Fonts). -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- The small icon on the browser tab (a "favicon"). -->
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
@@ -51,10 +70,12 @@
        "defer" downloads them without slowing the page down. If they can't load, the site still
        works and js/main.js uses its own simple fade-ins instead. Settings: top of js/motion.js. -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js" crossorigin="anonymous" defer></script>
+  <!-- "integrity" is a fingerprint of each downloaded file: if the file ever changes, the browser refuses to
+       run it. If you change a version number below, update its fingerprint too (see DESIGN.md). -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" integrity="sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" integrity="sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js" integrity="sha384-R18XzqnxvVLEF+BYfhpmDx30v7eP83fAckyfoRzK7/Uf6nGqufcmsk0eAKo7S3RU" crossorigin="anonymous" defer></script>
   <script src="js/motion.js" defer></script>
   <!-- Glowing particles that follow the mouse and burst on clicks. Settings: top of js/cursor-particles.js. -->
   <script src="js/cursor-particles.js" defer></script>
@@ -68,11 +89,15 @@
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js",
         "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      },
+      "integrity": {
+        "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js": "sha384-EU5UWigB3OuXjAXooUegndJSqYber3YSJHDoMZs6rV96yY/ol/B4W8logw4CKWkA",
+        "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.min.js": "sha384-ktZslgpl0L71WZcQ5wKV96Z04i9QSjtmiU/kYpjDQSfJ5NJ8B79qDF63oNTbQySl"
       }
     }
   </script>
-  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js" crossorigin="anonymous">
-  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.min.js" crossorigin="anonymous">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js" integrity="sha384-EU5UWigB3OuXjAXooUegndJSqYber3YSJHDoMZs6rV96yY/ol/B4W8logw4CKWkA" crossorigin="anonymous">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.min.js" integrity="sha384-ktZslgpl0L71WZcQ5wKV96Z04i9QSjtmiU/kYpjDQSfJ5NJ8B79qDF63oNTbQySl" crossorigin="anonymous">
   <script type="module" src="js/hero-scene.js" async onerror="document.documentElement.classList.add('scene-settled')"></script>
 </head>
 <body class="page-home">
@@ -138,7 +163,7 @@
           <h1 class="hero-xl-title">Data-Driven Informaticist</h1>
 
           <!-- One or two sentences about what you offer. -->
-          <p class="lead reveal">I am an Informaticist and Technology Integration Specialist who uses a data science background to support individuals with disabilities. I manage the systems behind data reporting, and connect data, technology, and people to make systems work better.</p>
+          <p class="lead reveal">I'm an informaticist and Technology Integration Specialist who uses a background in data science to support people with disabilities. I manage the systems behind data reporting and connect data, technology, and people so those systems work better.</p>
 
           <!-- Buttons. -->
           <div class="button-row reveal">
@@ -150,7 +175,7 @@
         <!-- Backup picture: shown only when the live particle scene can't run. -->
         <div class="hero-xl-fallback">
           <div class="frame">
-            <img src="images/hero.svg" alt="Illustration of a dashboard with a rising line chart">
+            <img src="images/hero.svg" alt="Illustration of a dashboard with a rising line chart" width="640" height="520">
           </div>
         </div>
 
@@ -178,7 +203,7 @@
               <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
             </div>
             <h2 class="story-title">Data &amp; Analytics</h2>
-            <p class="story-lead">I love working with big data analytic tools, cleaning complex datasets, analyzing them, and turning them into interactive dashboards that help people decide what to do next.</p>
+            <p class="story-lead">I love working with data tools: R, Python and Excel for analysis, and Tableau and Power BI for dashboards. I like the whole path from a messy spreadsheet to a chart someone can act on.</p>
             <p class="chips-label">Tools</p>
             <ul class="chips" role="list">
               <li>Excel</li>
@@ -204,14 +229,14 @@
             <div class="story-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="m12 4 10 5-10 5L2 9l10-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 11v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 9v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             </div>
-            <h2 class="story-title">Data-Driven Support</h2>
-            <p class="story-lead">Before pivoting into a nonprofit organization, I spent two years in special education designing behavioral interventions for students with autism, setting measurable goals and tracking real progress.</p>
+            <h2 class="story-title">Special Education</h2>
+            <p class="story-lead">Before Viability, I spent two years in special education for the City of Chicopee, designing behavioral interventions for students with autism and tracking each student's measurable goals.</p>
             <p class="chips-label">Strengths</p>
             <ul class="chips" role="list">
-              <li>Clear communicator</li>
-              <li>Collaborator</li>
-              <li>Organized multitasker</li>
+              <li>Advising teachers on classroom accommodations</li>
               <li>Training &amp; presentation materials</li>
+              <li>Measurable goals &amp; progress tracking</li>
+              <li>Team projects in Python and R</li>
             </ul>
           </div>
         </div>
@@ -226,7 +251,7 @@
               <svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><path d="m12 3 9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m3 13 9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h2 class="story-title">Technology Integration</h2>
-            <p class="story-lead">I manage the platforms and devices a team depends on, along with the software, reports, and user access behind them, and I lead Viability's (VR)<sup>2</sup> initiative.</p>
+            <p class="story-lead">At Viability I lead the (VR)<sup>2</sup> initiative, manage our Apple and VR devices in Jamf, Apple Business Manager and ArborXR, and handle software and user accounts.</p>
             <p class="chips-label">Platforms</p>
             <ul class="chips" role="list">
               <li>ArborXR</li>
