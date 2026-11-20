@@ -352,6 +352,7 @@ const NOTE_PEEK_DELAY = 0.2;
     parts.more.querySelector(".project-more-label").textContent = "Less";
     parts.details.inert = false;
     parts.details.removeAttribute("hidden");
+    makeRoomForNote(project, animate); // the stage grows to fit the whole write-up
     if (animate && animating()) {
       const gsap = window.gsap;
       gsap.killTweensOf(parts.details);
@@ -374,6 +375,7 @@ const NOTE_PEEK_DELAY = 0.2;
     parts.note.classList.remove("is-expanded");
     parts.more.setAttribute("aria-expanded", "false");
     parts.more.querySelector(".project-more-label").textContent = "More";
+    makeRoomForNote(project, animate); // the stage shrinks back to just the chart and the summary
 
     function fold() {
       parts.details.setAttribute("hidden", "until-found");
@@ -398,10 +400,16 @@ const NOTE_PEEK_DELAY = 0.2;
   // On wide screens the note floats over the chart. Its spot comes from the stage's settings:
   // --note-x is a share of the stage's width; --note-y is a share of the chart's height, measured
   // from the chart's top (so the note stays on the same part of the chart at any size).
-  // Then the stage is made tall enough for the note when it's fully open, so it never spills out
-  // below. (Measured whenever a project opens and when the window changes size.)
-  function makeRoomForNote(project) {
+  // Then the stage is made just tall enough for the note as it is right now: the short summary
+  // (plus room for the hover peek) while the note is folded, the whole write-up once it's open.
+  // So an open project only leaves extra space below the chart when the write-up needs it.
+  // (Measured when a project opens, when its note opens or folds, and when the window changes size.)
+  function makeRoomForNote(project, animate) {
     const parts = partsOf(project);
+    if (window.gsap) {
+      window.gsap.killTweensOf(parts.stage, "minHeight");
+    }
+    const before = parts.stage.offsetHeight;
     parts.stage.style.minHeight = "";
     if (!wideScreen.matches) {
       return;
@@ -414,24 +422,62 @@ const NOTE_PEEK_DELAY = 0.2;
       const top = chartBox.top - stageBox.top + chartBox.height * noteY;
       parts.stage.style.setProperty("--note-top", Math.round(top) + "px");
     }
-    // Measure the note as it looks fully open (wider, with its write-up showing), then put it back.
+    const natural = parts.stage.offsetHeight; // the chart's own height
+    const needed = noteBottom(parts, parts.note.classList.contains("is-expanded"));
+    const target = Math.max(natural, needed);
+
+    if (animate && animating() && target !== before) {
+      // Grow or shrink smoothly, in step with the note opening or folding.
+      const expanding = target > before;
+      window.gsap.fromTo(parts.stage, { minHeight: before }, {
+        minHeight: target,
+        duration: expanding ? NOTE_OPEN_TIME : NOTE_CLOSE_TIME,
+        ease: expanding ? "expo.out" : "power3.inOut",
+        onComplete: function () {
+          if (target === natural) {
+            parts.stage.style.minHeight = "";
+          }
+          layoutChanged();
+        }
+      });
+    } else {
+      if (needed > natural) {
+        parts.stage.style.minHeight = needed + "px";
+      }
+      if (target !== before) {
+        layoutChanged();
+      }
+    }
+  }
+
+  // How far down the stage the note reaches (pixels, plus a little breathing room), measured as it
+  // looks folded (with room for the hover peek) or fully open (wider, with its write-up showing).
+  // Everything is put back exactly as it was afterwards.
+  function noteBottom(parts, expanded) {
     const wasHidden = parts.details.hasAttribute("hidden");
     const wasExpanded = parts.note.classList.contains("is-expanded");
+    const height = parts.details.style.height;
     parts.note.style.transition = "none";
-    parts.details.removeAttribute("hidden");
-    parts.note.classList.add("is-expanded");
-    const needed = parts.note.offsetTop + parts.note.offsetHeight + 32;
-    if (!wasExpanded) {
+    if (expanded) {
+      parts.details.removeAttribute("hidden");
+      parts.details.style.height = ""; // its full height, even while it's still growing
+      parts.note.classList.add("is-expanded");
+    } else {
+      parts.details.setAttribute("hidden", "until-found");
       parts.note.classList.remove("is-expanded");
     }
+    const peekRoom = expanded ? 0 : NOTE_PEEK_HEIGHT;
+    const bottom = parts.note.offsetTop + parts.note.offsetHeight + peekRoom + 32;
+    parts.note.classList.toggle("is-expanded", wasExpanded);
     if (wasHidden) {
       parts.details.setAttribute("hidden", "until-found");
+    } else {
+      parts.details.removeAttribute("hidden");
     }
+    parts.details.style.height = height;
     parts.note.offsetWidth; // let the browser settle the measured size before transitions return
     parts.note.style.transition = "";
-    if (needed > parts.stage.offsetHeight) {
-      parts.stage.style.minHeight = needed + "px";
-    }
+    return bottom;
   }
 
 
